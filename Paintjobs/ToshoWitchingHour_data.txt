@@ -1,0 +1,8 @@
+{
+  "Name": "Tosho Witching Hour",
+  "Author": "UmaCommands",
+  "Description": "SWEEP TOSHO / 魔法",
+  "Price": 60,
+  "UsesPreviewIcon": true,
+  "ArtSource": "https://jp.pinterest.com/pin/e1_AfqPShxua1JbcDl_d26QLgC6lqxHExWZ8M0eWkn-DrfGRHS7nQZ3/"
+}

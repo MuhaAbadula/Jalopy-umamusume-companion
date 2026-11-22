@@ -1,0 +1,7 @@
+{
+  "Name": "Fukukitaru 07",
+  "Description": "Иташа с Фукукитару из Umamusume. Иллюстрация — さぼてんむし (Pixiv 93851935).",
+  "Author": "UmaCommands / さぼてんむし",
+  "Price": 60,
+  "UsesPreviewIcon": true
+}

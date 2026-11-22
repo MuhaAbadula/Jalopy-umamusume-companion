@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net35</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <GameDir Condition="'$(GameDir)' == ''">D:\SteamLibrary\steamapps\common\Jalopy</GameDir>
+    <Managed>$(GameDir)\Jalopy_Data\Managed</Managed>
+    <FrameworkPathOverride>$(Managed)</FrameworkPathOverride>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <NoStdLib>true</NoStdLib>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="src/**/*.cs" />
+    <Reference Include="$(Managed)\AstarPathfindingProject.dll"><Private>false</Private></Reference>
+    <Reference Include="$(Managed)\mscorlib.dll;$(Managed)\System.dll;$(Managed)\System.Core.dll;$(Managed)\UnityEngine*.dll;$(Managed)\Assembly-CSharp.dll;$(Managed)\JaLoader.dll;$(Managed)\JaLoader.Common.dll;$(Managed)\ValueTupleBridge.dll;$(Managed)\0Harmony.dll;$(Managed)\Assembly-CSharp-firstpass.dll">
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

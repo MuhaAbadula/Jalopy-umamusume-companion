@@ -1,0 +1,11 @@
+shop_leave=I'll pop into the shop while you get ready.
+shop_oil=oil
+shop_fuel=petrol
+shop_can=a can of petrol
+shop_and=and
+shop_kit=a repair kit
+shop_refill=I topped up our petrol can. It cost {1}.
+shop_boot_refill=I picked up {0} and topped up our petrol can. It came to {1}.
+shop_boot=I picked up {0}. It came to {1}. Everything’s in the boot.
+shop_roof={0} on the roof. It was {1}. We're running a little warehouse down here.
+shop_ground={0} by the rear bumper. It was {1}. Give me a hand making room?
