@@ -14,7 +14,7 @@ namespace UmamusumeCompanion
     /// the seat and stands on the floor about 1.1 m in front of the player, never on a bed (task 13).
     /// Task 07: as the lids open she bends over towards him, waves (Life, MorningPose.cs) and says an alarm line
     /// (story key wake_alarm, or wake_crash after a crash since the last morning); the fortune (task 08) follows at
-    /// <see cref="FukuDriver.MornAfterAlarm"/>. Task 13: she does not follow him. She stays in the room facing him;
+    /// <see cref="CompanionDriver.MornAfterAlarm"/>. Task 13: she does not follow him. She stays in the room facing him;
     /// once he turns away and she is out of his sight, she is put in her seat (WarpIn).
     /// </summary>
     public static class Morning
@@ -30,19 +30,19 @@ namespace UmamusumeCompanion
         public static void Apply()
         {
             if (applied) return;
-            var h = new Harmony("osobl.jalopy.uncleswap.morning");
+            var h = new Harmony("osobl.jalopy.umamusumecompanion.morning");
             var ready = AccessTools.Method(typeof(BedLogicC), "UncleReadyForNextDay");
             var wake = AccessTools.Method(typeof(MainMenuC), "WakeUpGeneric");
             if (ready == null || wake == null)
             {
-                Debug.LogWarning("[UncleSwap] Morning: hooks not found, the morning stays as in the game");
+                Debug.LogWarning("[Umamusume companion] Morning: hooks not found, the morning stays as in the game");
                 return;
             }
             h.Patch(ready, postfix: new HarmonyMethod(typeof(Morning), nameof(Ready)));
             h.Patch(wake, prefix: new HarmonyMethod(typeof(Morning), nameof(WakePrefix)));
             var bedTrig = AccessTools.Method(typeof(UncleBedTriggerC), "OnTriggerEnter");
             if (bedTrig != null) h.Patch(bedTrig, prefix: new HarmonyMethod(typeof(Morning), nameof(BedTriggerPrefix)));
-            else Debug.LogWarning("[UncleSwap] Morning: UncleBedTriggerC.OnTriggerEnter not found, she may sit on the bed in the morning");
+            else Debug.LogWarning("[Umamusume companion] Morning: UncleBedTriggerC.OnTriggerEnter not found, she may sit on the bed in the morning");
             applied = true;
         }
 
@@ -82,7 +82,7 @@ namespace UmamusumeCompanion
             if (Time.time > bedTrigLogAt)
             {
                 bedTrigLogAt = Time.time + 5f;
-                Debug.Log("[UncleSwap] Morning: bed trigger ignored (day started " + DayStarted + ", motel isMorning " + morning + ", no check-in yet)");
+                Debug.Log("[Umamusume companion] Morning: bed trigger ignored (day started " + DayStarted + ", motel isMorning " + morning + ", no check-in yet)");
             }
             return false;
         }
@@ -105,7 +105,7 @@ namespace UmamusumeCompanion
                 n++;
             }
             doorUnmuteAt = Mathf.Max(doorUnmuteAt, Time.time + seconds);
-            Debug.Log("[UncleSwap] Morning: her car door muted for " + seconds.ToString("0") + " s (" + why + ", " + n + " audio sources)");
+            Debug.Log("[Umamusume companion] Morning: her car door muted for " + seconds.ToString("0") + " s (" + why + ", " + n + " audio sources)");
         }
 
         /// <summary>Every frame (MornUpdate): the door gets its sound back when the window is over.</summary>
@@ -115,7 +115,7 @@ namespace UmamusumeCompanion
             foreach (var a in doorMuted) if (a != null) a.mute = false;
             doorMuted.Clear();
             doorUnmuteAt = -1f;
-            Debug.Log("[UncleSwap] Morning: her car door sound back");
+            Debug.Log("[Umamusume companion] Morning: her car door sound back");
         }
 
         /// <summary>Shorten the mute window (from now).</summary>
@@ -136,14 +136,14 @@ namespace UmamusumeCompanion
             Souvenirs.OnMorning();   // task 47
             try
             {
-                var d = UnityEngine.Object.FindObjectOfType<FukuDriver>();
+                var d = UnityEngine.Object.FindObjectOfType<CompanionDriver>();
                 if (d != null) d.MorningWake(b);
             }
-            catch (Exception e) { Debug.LogError("[UncleSwap] Morning: wake failed: " + e); }
+            catch (Exception e) { Debug.LogError("[Umamusume companion] Morning: wake failed: " + e); }
         }
     }
 
-    public partial class FukuDriver
+    public partial class CompanionDriver
     {
         // task 13: Hold for the whole morning (no follow, no walk to the car)
         enum MPhase { Off, Hold }
@@ -173,13 +173,13 @@ namespace UmamusumeCompanion
             Morning.CrashSinceMorning = false;
             var route = u != null && u.director != null ? u.director.GetComponent<RouteGeneratorC>() : null;
             bool istanbul = ReturnTrip.MorningPending;
-            Debug.Log("[UncleSwap] Morning: wake (crash since last morning: " + crash + ", route level " +
+            Debug.Log("[Umamusume companion] Morning: wake (crash since last morning: " + crash + ", route level " +
                       (route != null ? route.routeLevel.ToString() : "?") + (istanbul ? ", Istanbul morning: stays silent" : "") + ")");
             if (u != null)
             {
                 var pt = b != null && b.motelLogic != null && b.motelLogic.GetComponent<MotelLogicC>() != null && b.motelLogic.GetComponent<MotelLogicC>().parkingTrigger != null
                     ? b.motelLogic.GetComponent<MotelLogicC>().parkingTrigger.GetComponent<MotelParkingTriggerC>() : null;
-                Debug.Log("[UncleSwap] Morning: flags at wake: withinRangeOfMotel " + u.withinRangeOfMotel + ", hasSpokenWithinRangeOfMotel " + u.hasSpokenWithinRangeOfMotel +
+                Debug.Log("[Umamusume companion] Morning: flags at wake: withinRangeOfMotel " + u.withinRangeOfMotel + ", hasSpokenWithinRangeOfMotel " + u.hasSpokenWithinRangeOfMotel +
                           ", hasSaidLetsCheckIn " + u.hasSaidLetsCheckIn + ", bedTime " + (animator != null && animator.GetBool("bedTime")) + ", isSat " + u.isSat +
                           ", parking isMorning " + (pt != null ? pt.isMorning.ToString() : "-") + ", borderTalk " + u.isReadyToTalkAboutBorder + ", dayStarted " + Morning.DayStarted);
             }
@@ -191,7 +191,7 @@ namespace UmamusumeCompanion
             else if (b == null || b.homeBed) skip = "home bed";
             else if (b.path == null || b.path.Length < 3 || b.path[2] == null) skip = "bed has no standing spot";
             else if (!InCar()) skip = "she is not in the seat (" + outState + ")";
-            if (skip != null) { Debug.Log("[UncleSwap] Morning: skip (" + skip + ")"); return; }
+            if (skip != null) { Debug.Log("[Umamusume companion] Morning: skip (" + skip + ")"); return; }
 
             mornBed = b;
             mornMotel = b.motelLogic != null ? b.motelLogic.GetComponent<MotelLogicC>() : null;
@@ -226,8 +226,8 @@ namespace UmamusumeCompanion
             if (mornPose == MPose.Wait)
             {
                 if (t < 0f) return;
-                if (mornPhase != MPhase.Hold) { mornPose = MPose.None; Debug.Log("[UncleSwap] Morning: pose skipped (" + mornPhase + "/" + outState + ")"); return; }
-                if (!life.MornPoseBegin()) { mornPose = MPose.None; Debug.Log("[UncleSwap] Morning: pose skipped (Lively off or no arm bones)"); MornAfterAlarm(); return; }
+                if (mornPhase != MPhase.Hold) { mornPose = MPose.None; Debug.Log("[Umamusume companion] Morning: pose skipped (" + mornPhase + "/" + outState + ")"); return; }
+                if (!life.MornPoseBegin()) { mornPose = MPose.None; Debug.Log("[Umamusume companion] Morning: pose skipped (Lively off or no arm bones)"); MornAfterAlarm(); return; }
                 mornPose = MPose.On;
                 return;
             }
@@ -244,10 +244,10 @@ namespace UmamusumeCompanion
                 {
                     mornLineSent = true;
                     bool said = life.StorySay != null && life.StorySay(mornLineKey);
-                    Debug.Log("[UncleSwap] Morning: " + (said ? "line " + mornLineKey : "no line " + mornLineKey + " in this language"));
+                    Debug.Log("[Umamusume companion] Morning: " + (said ? "line " + mornLineKey : "no line " + mornLineKey + " in this language"));
                     if (!said) mornLineKey = null;
                 }
-                else if (t > 8f) { Debug.Log("[UncleSwap] Morning: line " + mornLineKey + " skipped (bubble busy)"); mornLineKey = null; }
+                else if (t > 8f) { Debug.Log("[Umamusume companion] Morning: line " + mornLineKey + " skipped (bubble busy)"); mornLineKey = null; }
             }
             if (mornLineSent && mornLineKey != null && animator != null)
             {
@@ -274,7 +274,7 @@ namespace UmamusumeCompanion
         {
             if (mornAfterDone) return;
             mornAfterDone = true;
-            Debug.Log("[UncleSwap] Morning: after alarm (" + mornPhase + "/" + outState + ", line " + (mornLineSent && mornLineKey != null ? mornLineKey : "none") + ")");
+            Debug.Log("[Umamusume companion] Morning: after alarm (" + mornPhase + "/" + outState + ", line " + (mornLineSent && mornLineKey != null ? mornLineKey : "none") + ")");
             FortMorning();
         }
 
@@ -314,14 +314,14 @@ namespace UmamusumeCompanion
             Vector3 s = Vector3.Scale(m.bounds.size, t.lossyScale);
             float mt = MornMetre;
             float h1 = Mathf.Abs(s[(up + 1) % 3]) / mt, h2 = Mathf.Abs(s[(up + 2) % 3]) / mt;
-            if (h1 > 3.5f || h2 > 3.5f) { Debug.Log("[UncleSwap] Morning: bed zone " + tag + " " + t.name + " skipped (too big, " + h1.ToString("F1") + " x " + h2.ToString("F1") + " m)"); return; }
+            if (h1 > 3.5f || h2 > 3.5f) { Debug.Log("[Umamusume companion] Morning: bed zone " + tag + " " + t.name + " skipped (too big, " + h1.ToString("F1") + " x " + h2.ToString("F1") + " m)"); return; }
             mornBeds.Add(new MornBedZone { Name = tag + " " + t.name, T = t, B = m.bounds, Up = up });
         }
 
         void MornBedAddBox(Bounds w, string name)
         {
             float m = MornMetre;
-            if (w.size.x > 3.5f * m || w.size.z > 3.5f * m) { Debug.Log("[UncleSwap] Morning: bed zone " + name + " skipped (too big, " + (w.size.x / m).ToString("F1") + " x " + (w.size.z / m).ToString("F1") + " m)"); return; }
+            if (w.size.x > 3.5f * m || w.size.z > 3.5f * m) { Debug.Log("[Umamusume companion] Morning: bed zone " + name + " skipped (too big, " + (w.size.x / m).ToString("F1") + " x " + (w.size.z / m).ToString("F1") + " m)"); return; }
             mornBeds.Add(new MornBedZone { Name = name, B = w });
         }
 
@@ -367,8 +367,8 @@ namespace UmamusumeCompanion
                     else MornBedAddBox(rr.bounds, "named " + rr.name);
                 }
             }
-            catch (Exception e) { Debug.Log("[UncleSwap] Morning: bed search failed: " + e.Message); }
-            var sb = new StringBuilder("[UncleSwap] Morning: beds near you: " + mornBeds.Count);
+            catch (Exception e) { Debug.Log("[Umamusume companion] Morning: bed search failed: " + e.Message); }
+            var sb = new StringBuilder("[Umamusume companion] Morning: beds near you: " + mornBeds.Count);
             foreach (var z in mornBeds)
             {
                 Vector3 c = z.T != null ? z.T.TransformPoint(z.B.center) : z.B.center;
@@ -509,7 +509,7 @@ namespace UmamusumeCompanion
                         else res = "ok";
                     }
                 }
-                Debug.Log("[UncleSwap] Morning: place try " + n + " (" + when + ", fwd " + t.x.ToString("0.0") + " side " + t.y.ToString("0.0") + " m) " +
+                Debug.Log("[Umamusume companion] Morning: place try " + n + " (" + when + ", fwd " + t.x.ToString("0.0") + " side " + t.y.ToString("0.0") + " m) " +
                           new Vector3(c.x, fy, c.z).ToString("F2") + " hit " + hit + " y " + fy.ToString("F2") + " " + res + (why.Length > 0 ? " (" + why + ")" : ""));
                 if (res != "ok") continue;
                 spot = new Vector3(c.x, fy, c.z);
@@ -545,7 +545,7 @@ namespace UmamusumeCompanion
                 else if (p.type == AnimatorControllerParameterType.Int) ps.Append(animator.GetInteger(p.name));
                 else ps.Append("trigger");
             }
-            Debug.Log("[UncleSwap] Morning: stand: uncle stays in " + MornUncleClip() + " (not run through the car exit any more); her own stance + floor. " +
+            Debug.Log("[Umamusume companion] Morning: stand: uncle stays in " + MornUncleClip() + " (not run through the car exit any more); her own stance + floor. " +
                       "Animator enabled " + animator.enabled + ", culling " + animator.cullingMode + ", update " + animator.updateMode +
                       ", state " + st.fullPathHash + " t " + st.normalizedTime.ToString("0.00") + ", in transition " + animator.IsInTransition(0) +
                       ", layers " + animator.layerCount + ", params: " + ps);
@@ -594,7 +594,7 @@ namespace UmamusumeCompanion
             Vector3 up = transform.up;
             float g = RootGround(), leg = Mathf.Max(1e-3f, walkLegLen);
             float l = (Vector3.Dot(legL.Ankle.position, up) - g) / leg - MornAnkleRest, r = (Vector3.Dot(legR.Ankle.position, up) - g) / leg - MornAnkleRest;
-            Debug.Log("[UncleSwap] Morning: feet ankles " + l.ToString("F2") + "/" + r.ToString("F2") + " legs above floor (" + when +
+            Debug.Log("[Umamusume companion] Morning: feet ankles " + l.ToString("F2") + "/" + r.ToString("F2") + " legs above floor (" + when +
                       ", target ~0; hip " + ((Vector3.Dot(hipLink.Girl.position, up) - g) / leg).ToString("F2") + " legs, root " +
                       ((Vector3.Dot(transform.position, up) - g) / leg).ToString("F2") + ", her stance " + idleW.ToString("F2") + ", uncle clip " + MornUncleClip() + ")");
         }
@@ -615,7 +615,7 @@ namespace UmamusumeCompanion
             haveRoot = false;
             rootSpeed = 0f;
             walkW = 0f;
-            Debug.Log("[UncleSwap] Morning: offsets cleared (" + when + ", uncle clip " + MornUncleClip() + ")");
+            Debug.Log("[Umamusume companion] Morning: offsets cleared (" + when + ", uncle clip " + MornUncleClip() + ")");
         }
 
         /// <summary>Put her at the spot facing the eye; her walk forgets the jump (no step from the teleport).</summary>
@@ -685,7 +685,7 @@ namespace UmamusumeCompanion
             var ai = GetComponent<AIPath>();
             if (ai != null) { ai.target = outT; ai.canMove = false; }   // task 13: she stands; the path code does not move or turn her
             if (life != null) life.MornStay = true;
-            Debug.Log("[UncleSwap] Morning: placed pos " + transform.position.ToString("F2") + " floorY " + floorY.ToString("F2") + " " +
+            Debug.Log("[Umamusume companion] Morning: placed pos " + transform.position.ToString("F2") + " floorY " + floorY.ToString("F2") + " " +
                       MornDistLog(eye) + " (" + how + "), eye path[2] " + eye.ToString("F2") + ", wave hand " +
                       (life != null ? (life.MornWaveSide > 0 ? "right" : "left") : "-") + ", leg " + walkLegLen.ToString("F2"));
         }
@@ -709,7 +709,7 @@ namespace UmamusumeCompanion
             string onBed = MornOnBed(transform.position, MornBedMarginM);
             if (dm >= 0.5f && dm <= 1.5f && ang <= 60f && onBed == null && MornOverlap(transform.position, player) == null)
             {
-                Debug.Log("[UncleSwap] Morning: placed check ok at you can walk: " + MornDistLog(eye) + ", " + ang.ToString("0") + " deg off the view, camera " + eye.ToString("F2"));
+                Debug.Log("[Umamusume companion] Morning: placed check ok at you can walk: " + MornDistLog(eye) + ", " + ang.ToString("0") + " deg off the view, camera " + eye.ToString("F2"));
                 return;
             }
             Vector3 spot;
@@ -717,7 +717,7 @@ namespace UmamusumeCompanion
             string how;
             MornPick(eye, fwd, player, "you can walk", out spot, out floorY, out how);
             MornSet(spot, eye);
-            Debug.Log("[UncleSwap] Morning: placed pos " + transform.position.ToString("F2") + " floorY " + floorY.ToString("F2") + " " +
+            Debug.Log("[Umamusume companion] Morning: placed pos " + transform.position.ToString("F2") + " floorY " + floorY.ToString("F2") + " " +
                       MornDistLog(eye) + " (again at you can walk, was " + dm.ToString("F2") + " m / " + ang.ToString("0") + " deg" +
                       (onBed != null ? " on " + onBed : "") + "; " + how + "), camera " + eye.ToString("F2") + ", wave hand " +
                       (life != null ? (life.MornWaveSide > 0 ? "right" : "left") : "-"));
@@ -733,7 +733,7 @@ namespace UmamusumeCompanion
             Vector3 eye = cam.transform.position;
             var ci = animator != null ? animator.GetCurrentAnimatorClipInfo(0) : null;
             string onBed = MornOnBed(transform.position, 0f);
-            Debug.Log("[UncleSwap] Morning: view " + MornDistLog(eye) + ", " + Vector3.Angle(Flat(cam.transform.forward), Flat(transform.position - eye)).ToString("0") +
+            Debug.Log("[Umamusume companion] Morning: view " + MornDistLog(eye) + ", " + Vector3.Angle(Flat(cam.transform.forward), Flat(transform.position - eye)).ToString("0") +
                       " deg off the view, camera " + (eye.y - transform.position.y).ToString("F2") + " u above her feet, uncle clip " +
                       (ci != null && ci.Length > 0 && ci[0].clip != null ? ci[0].clip.name : "-") + ", walkW " + walkW.ToString("F2") +
                       ", on a bed: " + (onBed ?? "no") + MornFeetLog());
@@ -770,7 +770,7 @@ namespace UmamusumeCompanion
             if (mornFreeAt < 0f && pctl != null && pctl.enabled)
             {
                 mornFreeAt = now;
-                Debug.Log("[UncleSwap] Morning: you can walk");
+                Debug.Log("[Umamusume companion] Morning: you can walk");
                 MornRecheck(u);
                 mornWakeForward = Camera.main != null ? Camera.main.transform.forward : Vector3.zero;
             }
@@ -786,7 +786,7 @@ namespace UmamusumeCompanion
             if (!mornLeft && (MornLeftRoom(pp) || far > 6f))
             {
                 mornLeft = true;
-                Debug.Log("[UncleSwap] Morning: you left the room (" + far.ToString("F1") + " m from her)");
+                Debug.Log("[Umamusume companion] Morning: you left the room (" + far.ToString("F1") + " m from her)");
             }
             bool sat = PlayerSat(), moving = CarSpeed() > 3f;
             movingFor = moving ? movingFor + Time.deltaTime : 0f;
@@ -801,7 +801,7 @@ namespace UmamusumeCompanion
             if (!unseen && mornSeenSince < 0f)
             {
                 mornSeenSince = now;
-                Debug.Log("[UncleSwap] Morning: " + why + ", waiting until she is out of your sight");
+                Debug.Log("[Umamusume companion] Morning: " + why + ", waiting until she is out of your sight");
             }
             string force = null;
             if (!unseen)
@@ -811,7 +811,7 @@ namespace UmamusumeCompanion
                 else if (now - mornSeenSince > 60f) force = "seen 60 s";
             }
             if (!unseen && force == null) { MornLog(u, pp); return; }
-            Debug.Log("[UncleSwap] Morning: warp seat (" + why + (unseen ? ", out of your sight" : ", still seen: " + force) + ", " +
+            Debug.Log("[Umamusume companion] Morning: warp seat (" + why + (unseen ? ", out of your sight" : ", still seen: " + force) + ", " +
                       (now - mornAt).ToString("0") + " s after the wake)");
             mornWarpNow = true;
             Morning.DoorMute(u, 4f, "morning warp to her seat");
@@ -839,7 +839,7 @@ namespace UmamusumeCompanion
         {
             if (Time.time < mornLogAt || Time.time - mornAt > 120f) return;
             mornLogAt = Time.time + 5f;
-            Debug.Log("[UncleSwap] Morning: " + mornPhase + "/" + outState + " t " + (Time.time - mornAt).ToString("0") + " s, she " + transform.position.ToString("F1") +
+            Debug.Log("[Umamusume companion] Morning: " + mornPhase + "/" + outState + " t " + (Time.time - mornAt).ToString("0") + " s, she " + transform.position.ToString("F1") +
                       ", you " + pp.ToString("F1") + " (" + (Flat(pp - transform.position).magnitude / MornMetre).ToString("F1") + " m), left room " + mornLeft +
                       ", you sat " + PlayerSat());
         }
@@ -866,19 +866,19 @@ namespace UmamusumeCompanion
                         // only the route hint (un_newday_02) is said, when you are near her, as the game would
                         mornHintPending = true;
                         mornHintAt = Time.time + 1f;
-                        Debug.Log("[UncleSwap] Morning: car greeting skipped (un_newday_01, she greeted you in the room); route hint un_newday_02 waits for you (" + how + ")");
+                        Debug.Log("[Umamusume companion] Morning: car greeting skipped (un_newday_01, she greeted you in the room); route hint un_newday_02 waits for you (" + how + ")");
                     }
                     else
                     {
                         // the game's morning talk (un_newday_01 + 02) as it would be without the mod
                         u.isReadyToTalkAboutBorder = true;
-                        Debug.Log("[UncleSwap] Morning: game's morning talk released (" + how + (greeted ? "" : ", no greeting in the room") + ")");
+                        Debug.Log("[Umamusume companion] Morning: game's morning talk released (" + how + (greeted ? "" : ", no greeting in the room") + ")");
                     }
                 }
             }
             if (mornPose != MPose.None && life != null) life.MornPoseEnd("morning over: " + how);
             mornPose = MPose.None;
-            Debug.Log("[UncleSwap] Morning: " + how + " (" + (Time.time - mornAt).ToString("0") + " s after the wake)");
+            Debug.Log("[Umamusume companion] Morning: " + how + " (" + (Time.time - mornAt).ToString("0") + " s after the wake)");
         }
 
         // ------------------------------------------------------------ task 13: the route hint without the second good morning
@@ -902,15 +902,15 @@ namespace UmamusumeCompanion
         IEnumerator MornRouteHint(UncleLogicC u)
         {
             string text = MornGameLine("un_newday_02");
-            if (string.IsNullOrEmpty(text)) { Debug.Log("[UncleSwap] Morning: route hint: no text for un_newday_02"); yield break; }
+            if (string.IsNullOrEmpty(text)) { Debug.Log("[Umamusume companion] Morning: route hint: no text for un_newday_02"); yield break; }
             u.dialogueChecker = "DemoOutro";          // as LetsGoBorderCross
             u.StartCoroutine("DialogueCheck");
             yield return new WaitForSeconds(0.1f);
-            if (!u.canSpeak) { Debug.Log("[UncleSwap] Morning: route hint not said (the game says she can't speak now)"); yield break; }
+            if (!u.canSpeak) { Debug.Log("[Umamusume companion] Morning: route hint not said (the game says she can't speak now)"); yield break; }
             u.speechStack.Clear();
             u.speechStack.Add(text);
             u.StartCoroutine("DialogueSpeech");
-            Debug.Log("[UncleSwap] Morning: route hint said (un_newday_02)");
+            Debug.Log("[Umamusume companion] Morning: route hint said (un_newday_02)");
         }
 
         /// <summary>The game's own line: Language.Get(key, "Speech") lives in Assembly-CSharp-firstpass (not referenced here).</summary>
@@ -922,7 +922,7 @@ namespace UmamusumeCompanion
                 var m = t != null ? t.GetMethod("Get", new[] { typeof(string), typeof(string) }) : null;
                 return m != null ? m.Invoke(null, new object[] { key, "Speech" }) as string : null;
             }
-            catch (Exception e) { Debug.Log("[UncleSwap] Morning: Language.Get failed: " + e.Message); return null; }
+            catch (Exception e) { Debug.Log("[Umamusume companion] Morning: Language.Get failed: " + e.Message); return null; }
         }
 
         // ------------------------------------------------------------ helpers (also used by Outing.cs)
@@ -979,7 +979,7 @@ namespace UmamusumeCompanion
         // ------------------------------------------------------------ probe: where things are at the real morning
         void MornProbe(UncleLogicC u, BedLogicC b, string when)
         {
-            var sb = new StringBuilder("[UncleSwap] Morning: probe " + when + ": bed " + b.name + " path1 " + b.path[1].position.ToString("F1") +
+            var sb = new StringBuilder("[Umamusume companion] Morning: probe " + when + ": bed " + b.name + " path1 " + b.path[1].position.ToString("F1") +
                 " path2 " + b.path[2].position.ToString("F1") + " (fwd " + Flat(b.path[2].forward).normalized.ToString("F2") + ")" +
                 "; she " + transform.position.ToString("F1") + " seat " + (u.uncleCarTransform != null ? u.uncleCarTransform.position.ToString("F1") : "-") +
                 "; you " + (u.player != null ? u.player.transform.position.ToString("F1") : "-") + "; leg " + walkLegLen.ToString("F2"));

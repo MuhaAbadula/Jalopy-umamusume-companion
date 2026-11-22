@@ -13,7 +13,7 @@ namespace UmamusumeCompanion
     /// When: a shop in country K (ShopC.PlayerTriggerEnter, K = StoreC.countryCode + 1) or the motel morning in town K (routeLevel K,
     /// not Turkey: the Istanbul morning is her story) marks K pending; she places it at the next boarding (Life: LifeSouvenirs.cs).
     /// Only heading east. After a load, missing countries 1..routeLevel (max 5) are caught up at the first boarding.
-    /// State: ModSaves\FukuUncle\souvenirs.txt, a line per pack folder `fukukitaru=1:3,2:5` (country:daysPassed at placement); an older
+    /// State: ModSaves\UmamusumeCompanion\souvenirs.txt, a line per pack folder `fukukitaru=1:3,2:5` (country:daysPassed at placement); an older
     /// save shows only entries with day &lt;= daysPassed. New game (MainMenuClickersC.EraseSaveData) and "return home"
     /// (MainMenuC.SaveAndReturnHome) clear every pack. Meshes: props\souv_&lt;code&gt;.obj + souvenirs.png (PropMesh), grey boxes until then.
     /// Log: Souvenir: &lt;pack&gt; &lt;item&gt; &lt;country&gt; placed|click|reset|skip|pending ...
@@ -21,7 +21,7 @@ namespace UmamusumeCompanion
     public static class Souvenirs
     {
         public static bool Enabled = true;
-        /// <summary>Pack folder name (set by FukuUncle from the Model dropdown).</summary>
+        /// <summary>Pack folder name (set by UmamusumeCompanion from the Model dropdown).</summary>
         public static string Pack = "?";
 
         public static readonly string[] Codes = { "ger", "csfr", "hun", "yugo", "bul", "turk" };
@@ -41,7 +41,7 @@ namespace UmamusumeCompanion
 
         public static string Item(int k) { return "souv_" + Codes[k - 1]; }
         public static string Country(int k) { return Countries[k - 1]; }
-        public static void Log(string s) { Debug.Log("[UncleSwap] Souvenir: " + s); }
+        public static void Log(string s) { Debug.Log("[Umamusume companion] Souvenir: " + s); }
         public static void Log(int k, string what) { Log(Pack + " " + (k >= 1 && k <= 6 ? Item(k) + " " + Country(k) : "- -") + " " + what); }
 
         // ------------------------------------------------------------ state of this pack
@@ -55,7 +55,7 @@ namespace UmamusumeCompanion
 
         static string StatePath
         {
-            get { return Path.Combine(Path.Combine(Path.Combine(Application.persistentDataPath, "ModSaves"), "FukuUncle"), "souvenirs.txt"); }
+            get { return Path.Combine(CompanionStorage.SaveDirectory, "souvenirs.txt"); }
         }
 
         static Dictionary<string, string> ReadAll()
@@ -72,7 +72,7 @@ namespace UmamusumeCompanion
                         all[line.Substring(0, eq).Trim()] = line.Substring(eq + 1).Trim();
                     }
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] Souvenir: state not read: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] Souvenir: state not read: " + e.Message); }
             return all;
         }
 
@@ -81,11 +81,11 @@ namespace UmamusumeCompanion
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(StatePath));
-                var lines = new List<string> { "# FukuUncle souvenirs: pack=country:daysPassed,... (1 Germany ... 6 Turkey)" };
+                var lines = new List<string> { "# UmamusumeCompanion souvenirs: pack=country:daysPassed,... (1 Germany ... 6 Turkey)" };
                 foreach (var kv in all) if (!string.IsNullOrEmpty(kv.Value)) lines.Add(kv.Key + "=" + kv.Value);
                 File.WriteAllLines(StatePath, lines.ToArray());
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] Souvenir: state not saved: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] Souvenir: state not saved: " + e.Message); }
         }
 
         static void Load()
@@ -192,15 +192,15 @@ namespace UmamusumeCompanion
         {
             if (applied) return;
             applied = true;
-            var h = new Harmony("osobl.jalopy.uncleswap.souvenirs");
+            var h = new Harmony("osobl.jalopy.umamusumecompanion.souvenirs");
             var erase = AccessTools.Method(typeof(MainMenuClickersC), "EraseSaveData");
             if (erase != null) h.Patch(erase, postfix: new HarmonyMethod(typeof(Souvenirs), nameof(NewGame)));
-            else Debug.LogWarning("[UncleSwap] Souvenir: MainMenuClickersC.EraseSaveData not found, a new game keeps them");
+            else Debug.LogWarning("[Umamusume companion] Souvenir: MainMenuClickersC.EraseSaveData not found, a new game keeps them");
             var home = AccessTools.Method(typeof(MainMenuC), "SaveAndReturnHome");
             if (home != null) h.Patch(home, prefix: new HarmonyMethod(typeof(Souvenirs), nameof(ReturnHome)));
             var shop = AccessTools.Method(typeof(ShopC), "PlayerTriggerEnter");
             if (shop != null) h.Patch(shop, postfix: new HarmonyMethod(typeof(Souvenirs), nameof(ShopEnter)));
-            Debug.Log("[UncleSwap] Souvenir: patches on (new game " + (erase != null) + ", return home " + (home != null) + ", shop " + (shop != null) + ")");
+            Debug.Log("[Umamusume companion] Souvenir: patches on (new game " + (erase != null) + ", return home " + (home != null) + ", shop " + (shop != null) + ")");
         }
 
         static void Reset(string why)
@@ -211,8 +211,8 @@ namespace UmamusumeCompanion
             Log(Pack + " - - reset (" + why + ", every pack)");
         }
 
-        static void NewGame() { try { Reset("new game"); } catch (Exception e) { Debug.LogWarning("[UncleSwap] Souvenir: reset failed: " + e.Message); } }
-        static void ReturnHome() { try { Reset("return home"); } catch (Exception e) { Debug.LogWarning("[UncleSwap] Souvenir: reset failed: " + e.Message); } }
+        static void NewGame() { try { Reset("new game"); } catch (Exception e) { Debug.LogWarning("[Umamusume companion] Souvenir: reset failed: " + e.Message); } }
+        static void ReturnHome() { try { Reset("return home"); } catch (Exception e) { Debug.LogWarning("[Umamusume companion] Souvenir: reset failed: " + e.Message); } }
 
         static void ShopEnter(ShopC __instance)
         {
@@ -226,7 +226,7 @@ namespace UmamusumeCompanion
                 if (rg.drivingTowardsHome) return;   // only on the way east
                 Mark(k, "shop", true);
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] Souvenir: shop hook: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] Souvenir: shop hook: " + e.Message); }
         }
 
         /// <summary>From Morning.WakePrefix (a real motel wake): the morning in town routeLevel, east, never Turkey.</summary>
@@ -238,7 +238,7 @@ namespace UmamusumeCompanion
                 if (!Here || rg == null || rg.drivingTowardsHome) return;
                 if (rg.routeLevel >= 1 && rg.routeLevel <= 5) Mark(rg.routeLevel, "morning", true);
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] Souvenir: morning hook: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] Souvenir: morning hook: " + e.Message); }
         }
 
         /// <summary>Once per scene when the save's day is in: countries 1..routeLevel (max 5, east) not on the dash are due.</summary>

@@ -26,27 +26,27 @@ namespace UmamusumeCompanion
         {
             if (applied) return;
             applied = true;
-            var h = new Harmony("osobl.jalopy.uncleswap.luckwear");
+            var h = new Harmony("osobl.jalopy.umamusumecompanion.luckwear");
             int ok = 0;
             foreach (string name in new[] { "CarburettorDurabilityLossCalc", "AirFilterDurabilityLossCalc", "EngineDurabilityLossCalc", "TyreDurabilityLossCalc" })
             {
                 var m = AccessTools.Method(typeof(EngineComponentC), name);
-                if (m == null) { Debug.LogWarning("[UncleSwap] LuckFx: Wear: " + name + " not found, skipped"); continue; }
+                if (m == null) { Debug.LogWarning("[Umamusume companion] LuckFx: Wear: " + name + " not found, skipped"); continue; }
                 try
                 {
                     h.Patch(m, prefix: new HarmonyMethod(typeof(LuckWear), name == "EngineDurabilityLossCalc" ? nameof(EnterEngine) : nameof(Enter)), finalizer: new HarmonyMethod(typeof(LuckWear), nameof(Leave)));
                     ok++;
                 }
-                catch (System.Exception e) { Debug.LogWarning("[UncleSwap] LuckFx: Wear: " + name + " patch failed: " + e.Message); }
+                catch (System.Exception e) { Debug.LogWarning("[Umamusume companion] LuckFx: Wear: " + name + " patch failed: " + e.Message); }
             }
             var set = AccessTools.PropertySetter(typeof(EngineComponentC), "Condition");
-            if (set == null) Debug.LogWarning("[UncleSwap] LuckFx: Wear: EngineComponentC.set_Condition not found, nothing scaled");
+            if (set == null) Debug.LogWarning("[Umamusume companion] LuckFx: Wear: EngineComponentC.set_Condition not found, nothing scaled");
             else
             {
                 try { h.Patch(set, prefix: new HarmonyMethod(typeof(LuckWear), nameof(SetCondition))); }
-                catch (System.Exception e) { Debug.LogWarning("[UncleSwap] LuckFx: Wear: set_Condition patch failed: " + e.Message); set = null; }
+                catch (System.Exception e) { Debug.LogWarning("[Umamusume companion] LuckFx: Wear: set_Condition patch failed: " + e.Message); set = null; }
             }
-            Debug.Log("[UncleSwap] LuckFx: Wear patched " + ok + "/4" + (set != null ? "" : " (set_Condition missing)"));
+            Debug.Log("[Umamusume companion] LuckFx: Wear patched " + ok + "/4" + (set != null ? "" : " (set_Condition missing)"));
         }
 
         static void Enter() { inWear = true; ticks++; }
@@ -84,13 +84,13 @@ namespace UmamusumeCompanion
         }
     }
 
-    public partial class FukuDriver
+    public partial class CompanionDriver
     {
-        // Unity calls it on AddComponent, before Build: the one place to hook LuckWear without touching FukuUncle.cs
+        // Unity calls it on AddComponent, before Build: the one place to hook LuckWear without touching CompanionMod.cs
         void OnEnable()
         {
             try { LuckWear.Apply(); }
-            catch (System.Exception e) { Debug.LogWarning("[UncleSwap] LuckFx: Wear patch failed: " + e.Message); }
+            catch (System.Exception e) { Debug.LogWarning("[Umamusume companion] LuckFx: Wear patch failed: " + e.Message); }
         }
     }
 }

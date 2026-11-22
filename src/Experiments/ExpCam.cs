@@ -10,7 +10,7 @@ namespace UmamusumeCompanion
     /// Camera effects (FOV, roll, height, hiccup kick) are applied in OnPreCull and undone in OnPostRender of a component on the
     /// player camera: MouseLook / RigidbodyControllerC rewrite FOV and height every frame, raycasts and game logic keep the real
     /// transform (recon 87). Overlays (tint, rainbow, tunnel) in OnGUI; double vision copies the frame in OnRenderImage (ExpGhost).
-    /// Strong effects end within 2 s when the player sits down to drive (OnCut). Log: [UncleSwap] Exp: E? start|end|cut.
+    /// Strong effects end within 2 s when the player sits down to drive (OnCut). Log: [Umamusume companion] Exp: E? start|end|cut.
     /// </summary>
     public static class ExpFx
     {
@@ -88,7 +88,7 @@ namespace UmamusumeCompanion
             if (notify && OnEnd != null)
             {
                 try { OnEnd(id, wasCut); }
-                catch (Exception e) { Debug.LogWarning("[UncleSwap] Exp: OnEnd: " + e.Message); }
+                catch (Exception e) { Debug.LogWarning("[Umamusume companion] Exp: OnEnd: " + e.Message); }
             }
         }
 
@@ -102,7 +102,7 @@ namespace UmamusumeCompanion
             return true;
         }
 
-        internal static void Log(string s) { Debug.Log("[UncleSwap] Exp: " + s); }
+        internal static void Log(string s) { Debug.Log("[Umamusume companion] Exp: " + s); }
 
         // ------------------------------------------------------------ E2: walking speed
         static class Patches
@@ -115,13 +115,13 @@ namespace UmamusumeCompanion
                 done = true;
                 try
                 {
-                    var h = new Harmony("osobl.jalopy.uncleswap.expfx");
+                    var h = new Harmony("osobl.jalopy.umamusumecompanion.expfx");
                     var m = AccessTools.Method(typeof(RigidbodyControllerC), "FixedUpdate");
-                    if (m == null) { Debug.LogWarning("[UncleSwap] Exp: RigidbodyControllerC.FixedUpdate not found, E2 off"); return; }
+                    if (m == null) { Debug.LogWarning("[Umamusume companion] Exp: RigidbodyControllerC.FixedUpdate not found, E2 off"); return; }
                     h.Patch(m, prefix: new HarmonyMethod(typeof(Patches), nameof(Pre)), postfix: new HarmonyMethod(typeof(Patches), nameof(Post)));
                     Log("walk speed patch on");
                 }
-                catch (Exception e) { Debug.LogWarning("[UncleSwap] Exp: walk speed patch failed: " + e.Message); }
+                catch (Exception e) { Debug.LogWarning("[Umamusume companion] Exp: walk speed patch failed: " + e.Message); }
             }
 
             // Bug (user 2026-11-19, v0.52.0): the postfix multiplied the CURRENT velocity every step, also when the game had not

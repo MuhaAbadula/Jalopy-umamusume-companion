@@ -27,14 +27,14 @@ namespace UmamusumeCompanion
             applied = true;
             var iter = AccessTools.FirstInner(typeof(BorderLogicC), t => t.Name.Contains("ReadThroughPapers"));
             var move = iter != null ? AccessTools.Method(iter, "MoveNext") : null;
-            if (move == null || range == null) { Debug.LogWarning("[UncleSwap] LuckFx: Border transpiler not found (no iterator)"); return; }
-            var h = new Harmony("osobl.jalopy.uncleswap.luckborder");
+            if (move == null || range == null) { Debug.LogWarning("[Umamusume companion] LuckFx: Border transpiler not found (no iterator)"); return; }
+            var h = new Harmony("osobl.jalopy.umamusumecompanion.luckborder");
             h.Patch(move,
                 prefix: new HarmonyMethod(typeof(LuckBorder), nameof(Before)),
                 postfix: new HarmonyMethod(typeof(LuckBorder), nameof(After)),
                 transpiler: new HarmonyMethod(typeof(LuckBorder), nameof(Swap)));
-            Debug.Log(swapped > 0 ? "[UncleSwap] LuckFx: Border transpiler ok (" + swapped + " calls)"
-                                  : "[UncleSwap] LuckFx: Border transpiler not found");
+            Debug.Log(swapped > 0 ? "[Umamusume companion] LuckFx: Border transpiler ok (" + swapped + " calls)"
+                                  : "[Umamusume companion] LuckFx: Border transpiler not found");
         }
 
         static int swapped;
@@ -153,12 +153,12 @@ namespace UmamusumeCompanion
                     if (u != null && !u.restrictTalk) break;
                     yield return new WaitForSeconds(0.5f);
                 }
-                if (Time.time >= until) { Debug.Log("[UncleSwap] LuckFx: line " + key + " skipped (border still holds her talk)"); yield break; }
+                if (Time.time >= until) { Debug.Log("[Umamusume companion] LuckFx: line " + key + " skipped (border still holds her talk)"); yield break; }
                 yield return new WaitForSeconds(2.5f);
                 for (int i = 0; i < 10; i++)   // the guard's last bubble may still be up: retry for ~10 s
                 {
                     var u = UnityEngine.Object.FindObjectOfType<UncleLogicC>();
-                    var rem = u != null ? u.GetComponent<FukuDriver>() : null;
+                    var rem = u != null ? u.GetComponent<CompanionDriver>() : null;
                     if (u != null && !u.isTalking && rem != null && rem.LuckFxReady()) break;
                     yield return new WaitForSeconds(1f);
                 }
@@ -167,7 +167,7 @@ namespace UmamusumeCompanion
         }
     }
 
-    public partial class FukuDriver
+    public partial class CompanionDriver
     {
         /// <summary>Her remark bubble is free (used to wait out the guard's last line before a LuckFx remark).</summary>
         internal bool LuckFxReady()

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UmamusumeCompanion
 {
-    public partial class FukuDriver
+    public partial class CompanionDriver
     {
         const float FetchRadius = 15f;
         GameObject fetchBox;
@@ -188,7 +188,7 @@ namespace UmamusumeCompanion
             liftStart = fetchBox.transform.localPosition;
             liftTime = 0f;
             fetchBox.transform.rotation = transform.rotation;
-            Debug.Log("[UncleSwap] crate picked up: " + fetchBox.name);
+            Debug.Log("[Umamusume companion] crate picked up: " + fetchBox.name);
             bootSide = 0f;
             bootLeg = detours = 0;
             carrying = true;

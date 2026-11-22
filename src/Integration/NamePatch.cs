@@ -15,7 +15,7 @@ namespace UmamusumeCompanion
         public static void Apply()
         {
             if (applied) return;
-            var harmony = new Harmony("osobl.jalopy.uncleswap");
+            var harmony = new Harmony("osobl.jalopy.umamusumecompanion");
             harmony.Patch(AccessTools.Method(typeof(DirectorC), "BubbleOn"),
                 postfix: new HarmonyMethod(typeof(NamePatch), nameof(Postfix)));
             applied = true;

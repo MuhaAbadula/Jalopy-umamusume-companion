@@ -18,7 +18,7 @@ namespace UmamusumeCompanion
         public static void Apply()
         {
             if (applied) return;
-            var h = new Harmony("osobl.jalopy.uncleswap.react");
+            var h = new Harmony("osobl.jalopy.umamusumecompanion.react");
             h.Patch(AccessTools.Method(typeof(UncleLogicC), "CarCollisionLight"), postfix: new HarmonyMethod(typeof(ReactPatch), nameof(Light)));
             h.Patch(AccessTools.Method(typeof(UncleLogicC), "CarCollisionMed"), postfix: new HarmonyMethod(typeof(ReactPatch), nameof(Med)));
             var heavy = AccessTools.Method(typeof(UncleLogicC), "CarCollisionHeavy");
@@ -26,7 +26,7 @@ namespace UmamusumeCompanion
             var iter = AccessTools.FirstInner(typeof(UncleLogicC), t => t.Name.Contains("InterruptSpeech"));
             if (iter != null)
                 h.Patch(AccessTools.Method(iter, "MoveNext"), postfix: new HarmonyMethod(typeof(ReactPatch), nameof(SpeechStep)));
-            else Debug.LogWarning("[UncleSwap] InterruptSpeech iterator not found: crash lines keep the talking pose");
+            else Debug.LogWarning("[Umamusume companion] InterruptSpeech iterator not found: crash lines keep the talking pose");
             h.Patch(AccessTools.Method(typeof(UncleLogicC), "CarSpeech"), prefix: new HarmonyMethod(typeof(ReactPatch), nameof(CarSpeechPrefix)));
             var horn = AccessTools.Method(typeof(CarHornC), "Trigger");
             if (horn != null) h.Patch(horn, postfix: new HarmonyMethod(typeof(ReactPatch), nameof(Horn)));

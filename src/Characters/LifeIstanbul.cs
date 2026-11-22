@@ -28,7 +28,7 @@ namespace UmamusumeCompanion
             if (now - homeAt > 180f) { homeSaid = true; return; }
             if (CanSay != null && !CanSay()) return;
             homeSaid = true;
-            Debug.Log("[UncleSwap] event: heading home together");
+            Debug.Log("[Umamusume companion] event: heading home together");
             Attend(Look.Player, 2.5f, 0.9f);
             Emote("happy", 2.5f, 0.9f);
             SayMaybe("home_way", 1f, 600f);

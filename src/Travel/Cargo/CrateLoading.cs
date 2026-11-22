@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UmamusumeCompanion
 {
-    public partial class FukuDriver
+    public partial class CompanionDriver
     {
         bool StowCrate()
         {
@@ -50,7 +50,7 @@ namespace UmamusumeCompanion
             Destroy(fetchBox.GetComponent<Rigidbody>());
             pickup.inventoryPlacedAt = slot.transform;
             carrying = false; // Ownership has passed to the boot.
-            Debug.Log("[UncleSwap] crate stored: " + fetchBox.name + " in " + location.name);
+            Debug.Log("[Umamusume companion] crate stored: " + fetchBox.name + " in " + location.name);
             slot.Occupy();
             inventory.SendMessage("ModifyWeight", fetchBox.transform);
             fetchBox.SendMessage("IntoInventory");
@@ -89,7 +89,7 @@ namespace UmamusumeCompanion
             return allStored;
         }
 
-        static void PutDown(BoxContentsC box, FukuDriver driver, InventoryLogicC boot)
+        static void PutDown(BoxContentsC box, CompanionDriver driver, InventoryLogicC boot)
         {
             var actor = driver.GetComponent<CharacterController>().bounds;
             var away = Vector3.ProjectOnPlane(actor.center - boot.transform.position, Vector3.up).normalized;

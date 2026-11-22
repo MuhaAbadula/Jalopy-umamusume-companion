@@ -74,7 +74,7 @@ namespace UmamusumeCompanion
                     hairIdx = sm.Indices;
                     break;
                 }
-                Debug.Log("[UncleSwap] Props: " + NoHat + " hidden at start, swaps with body hair " + (hairSub >= 0 ? d.SubMeshes[hairSub].Material : "(none found)")
+                Debug.Log("[Umamusume companion] Props: " + NoHat + " hidden at start, swaps with body hair " + (hairSub >= 0 ? d.SubMeshes[hairSub].Material : "(none found)")
                     + ", " + Get(NoHat).ShapeMap.Length + " shapes copied");
             }
         }
@@ -97,7 +97,7 @@ namespace UmamusumeCompanion
             nh.Renderer.enabled = on;
             if (body != null && body.sharedMesh != null && hairSub >= 0 && hairSub < body.sharedMesh.subMeshCount)
                 body.sharedMesh.SetTriangles(on ? new int[0] : hairIdx, hairSub, false);
-            Debug.Log("[UncleSwap] Props: head " + (on ? "hatless (" + NoHat + ")" : "with hat (body hair)"));
+            Debug.Log("[Umamusume companion] Props: head " + (on ? "hatless (" + NoHat + ")" : "with hat (body hair)"));
         }
 
         /// <summary>Every frame after the face: props with blend shapes (head_nohat's ears) take the body's weights.</summary>

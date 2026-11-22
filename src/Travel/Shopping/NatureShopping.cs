@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UmamusumeCompanion
 {
-    public partial class FukuDriver
+    public partial class CompanionDriver
     {
         sealed class Purchase
         {
@@ -318,7 +318,7 @@ namespace UmamusumeCompanion
         string ReportPurchase(string result)
         {
             shopResult = result;
-            Debug.Log("[UncleSwap] Shopping: " + result);
+            Debug.Log("[Umamusume companion] Shopping: " + result);
             return result;
         }
 

@@ -112,11 +112,11 @@ namespace UmamusumeCompanion
                 storedPending.RemoveAt(i);
                 if (s.Obj == null || !s.Obj.transform.IsChildOf(s.Storage))
                 {
-                    Debug.Log("[UncleSwap] boot: " + (s.Obj != null ? s.Obj.name + " is not inside (did not fit?)" : "item gone"));
+                    Debug.Log("[Umamusume companion] boot: " + (s.Obj != null ? s.Obj.name + " is not inside (did not fit?)" : "item gone"));
                     continue;
                 }
                 string k = BootKind(s.Obj, now);
-                Debug.Log("[UncleSwap] boot: " + s.Obj.name + " -> " + (k ?? "nothing to say"));
+                Debug.Log("[Umamusume companion] boot: " + s.Obj.name + " -> " + (k ?? "nothing to say"));
                 if (k == null) continue;
                 var kind = Kinds[k];
                 if (batchBest == null || kind.Rank > batchBest.Rank) batchBest = kind;
@@ -131,7 +131,7 @@ namespace UmamusumeCompanion
                 if (batchFarSince < 0f)
                 {
                     batchFarSince = now;
-                    Debug.Log("[UncleSwap] boot: player " + near.ToString("F1") + " arm lengths away, waiting for him (" + batchBest.Key + ")");
+                    Debug.Log("[Umamusume companion] boot: player " + near.ToString("F1") + " arm lengths away, waiting for him (" + batchBest.Key + ")");
                 }
                 if (now - batchFarSince > 180f) { batchBest = null; batchCount = 0; batchFarSince = -1f; }
                 return;
@@ -141,19 +141,19 @@ namespace UmamusumeCompanion
             batchBest = null;
             batchCount = 0;
             if (!Enabled || asleepNow) return;
-            Debug.Log("[UncleSwap] boot: player " + near.ToString("F1") + " arm lengths away, " + best.Key);
+            Debug.Log("[Umamusume companion] boot: player " + near.ToString("F1") + " arm lengths away, " + best.Key);
 
             if (!talkingNow) Emote(best.Face, best.FaceDur, 0.85f);
             if (best.Key == "boot_laika" && inCarNow) Attend(Look.Player, 2f, 0.9f);
-            if (talkingNow || now < nextBootTalk) { Debug.Log("[UncleSwap] boot remark held back (" + best.Key + ")"); return; }
+            if (talkingNow || now < nextBootTalk) { Debug.Log("[Umamusume companion] boot remark held back (" + best.Key + ")"); return; }
             float chance = Mathf.Max(best.Floor, best.Chance * Mathf.Pow(0.65f, best.Said));
             float until;
             if (sayCool.TryGetValue(best.Key, out until) && now < until) return;
-            if (Random.value > chance) { Debug.Log("[UncleSwap] boot remark rolled away (" + best.Key + ", " + chance.ToString("F2") + ")"); return; }
+            if (Random.value > chance) { Debug.Log("[Umamusume companion] boot remark rolled away (" + best.Key + ", " + chance.ToString("F2") + ")"); return; }
             best.Said++;
             nextBootTalk = now + 60f;
             sayCool[best.Key] = now + best.Cool;
-            Debug.Log("[UncleSwap] remark: " + best.Key);
+            Debug.Log("[Umamusume companion] remark: " + best.Key);
             if (Say != null) Say(best.Key);
         }
     }

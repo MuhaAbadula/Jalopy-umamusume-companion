@@ -10,7 +10,7 @@ namespace UmamusumeCompanion
 {
     /// <summary>
     /// Task 55 (concept 11 step 2): our own road segment in a leg, test only, spawned by the debug button.
-    /// Task 56/58: the template comes from the bundle Mods\Assets\FukuUncle\road\japan.unity3d, built by
+    /// Task 56/58: the template comes from the bundle Mods\Assets\UmamusumeCompanion\road\japan.unity3d, built by
     /// tools\build_road.ps1: prefab JapanLook (task 58, concept 11a: the whole Japanese look, own textures, night glow),
     /// else prefab JapanGrey (task 56, grey geometry only); root scale 2, model 0.5, RouteContinue (dx/2, dy/2, -500)
     /// directly under the root. Bundle missing or broken = the code-made placeholder of task 55 (flat road 20 x 1000 u).
@@ -21,12 +21,12 @@ namespace UmamusumeCompanion
     /// the game instantiates it, positions it (east: at the previous continueNode, home: previous position + (0,0,1000)),
     /// adds it to spawnedRouteSegments, and DeleteRoute (motel sleep) destroys it. The slot is restored as soon as the
     /// clone exists. Hard rules: 1000 u along -z, root scale 2, continueNode at local (0,0,-500), seams size 0 (20 u, y 0).
-    /// Logs: "[UncleSwap] JapanRoad: ...".
+    /// Logs: "[Umamusume companion] JapanRoad: ...".
     /// </summary>
     public static class JapanRoad
     {
         public static bool Armed;
-        public static string Dir;         // Mods\Assets\FukuUncle\road (set by FukuUncleMod.Start)
+        public static string Dir;         // Mods\Assets\UmamusumeCompanion\road (set by CompanionMod.Start)
         const string BundleFile = "japan.unity3d";
         static readonly string[] PrefabNames = { "JapanLook", "JapanGrey" };   // the look, else the grey geometry
 
@@ -55,7 +55,7 @@ namespace UmamusumeCompanion
         internal static readonly List<JapanRoadSeg> Live = new List<JapanRoadSeg>();
         static readonly CultureInfo IC = CultureInfo.InvariantCulture;
 
-        internal static void Log(string s) { Debug.Log("[UncleSwap] JapanRoad: " + s); }
+        internal static void Log(string s) { Debug.Log("[Umamusume companion] JapanRoad: " + s); }
         internal static string F(float v) { return v.ToString("0.00", IC); }
         internal static string P(Vector3 v) { return "(" + v.x.ToString("0.0", IC) + ", " + v.y.ToString("0.0", IC) + ", " + v.z.ToString("0.0", IC) + ")"; }
 
@@ -63,12 +63,12 @@ namespace UmamusumeCompanion
         public static void Apply()
         {
             if (applied) return;
-            var h = new Harmony("osobl.jalopy.uncleswap.japanroad");
+            var h = new Harmony("osobl.jalopy.umamusumecompanion.japanroad");
             int n = 0;
             for (int i = 1; i <= 4; i++)
             {
                 var m = AccessTools.Method(typeof(RouteGeneratorC), "SpawnRoute" + i);
-                if (m == null) { Debug.LogWarning("[UncleSwap] JapanRoad: SpawnRoute" + i + " not found"); continue; }
+                if (m == null) { Debug.LogWarning("[Umamusume companion] JapanRoad: SpawnRoute" + i + " not found"); continue; }
                 h.Patch(m, prefix: new HarmonyMethod(typeof(JapanRoad), "Pre" + i));
                 n++;
             }
@@ -173,7 +173,7 @@ namespace UmamusumeCompanion
                 Armed = false;
                 Log("slot " + leg + " k=" + pick + " replaces " + (pendOrig != null ? pendOrig.name : "?") + " (0-0 slots: " + ok.Count + ")" + rolled);
             }
-            catch (Exception e) { Debug.LogError("[UncleSwap] JapanRoad: fail prefix " + e); }
+            catch (Exception e) { Debug.LogError("[Umamusume companion] JapanRoad: fail prefix " + e); }
         }
 
         internal static void RestoreSlot()
@@ -193,13 +193,13 @@ namespace UmamusumeCompanion
         {
             if (template != null) return true;
             try { Build(); return template != null; }
-            catch (Exception e) { Debug.LogError("[UncleSwap] JapanRoad: fail template " + e); return false; }
+            catch (Exception e) { Debug.LogError("[Umamusume companion] JapanRoad: fail template " + e); return false; }
         }
 
         static void Build()
         {
             if (holder != null) UnityEngine.Object.Destroy(holder);
-            holder = new GameObject("FukuUncle_JapanRoadHolder");
+            holder = new GameObject("UmamusumeCompanion_JapanRoadHolder");
             holder.SetActive(false);
             UnityEngine.Object.DontDestroyOnLoad(holder);
             string why;

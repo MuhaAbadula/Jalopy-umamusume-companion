@@ -9,19 +9,19 @@ namespace UmamusumeCompanion
 {
     /// <summary>
     /// Replaces the uncle with any character exported by blender/export_char.py.
-    /// Packs live in Mods\Assets\FukuUncle\models\&lt;name&gt;\char.bin (+ textures); pick one in the settings.
+    /// Packs live in Mods\Assets\UmamusumeCompanion\models\&lt;name&gt;\char.bin (+ textures); pick one in the settings.
     /// </summary>
     public sealed partial class CompanionMod : Mod
     {
-        public override string ModID => "FukuUncle";
+        public override string ModID => CompanionStorage.ModId;
         public override string ModName => "Umamusume companion";
         public override string ModAuthor => "Osobl";
         public override string ModDescription => "Travel with an Umamusume companion. Use the command wheel to ask her to follow, wait, board the car or fetch a crate.";
-        public override string ModVersion => "0.55.0";
+        public override string ModVersion => "0.55.1";
         public override JaLoader.Common.WhenToInit WhenToInitMod => JaLoader.Common.WhenToInit.InGame;
         public override bool UseAssets => true;
 
-        FukuDriver driver;
+        CompanionDriver driver;
         DebugPanel panel;
         string[] models = new string[0];
 
@@ -29,6 +29,7 @@ namespace UmamusumeCompanion
 
         public override void SettingsDeclaration()
         {
+            CompanionStorage.ImportPreviousSave();
             base.SettingsDeclaration();
             InstantiateSettings();
             AddKeybind("Wheel", "Круговое меню команд (удерживать)", LegacyWheelBinding());
@@ -69,7 +70,7 @@ namespace UmamusumeCompanion
             AddToggle("StayIstanbul", "She does not leave in Istanbul and rides back home with you", true);
             AddSlider("ReturnTalkGap", "Way home: minutes of driving between her talks", 2, 10, 4, true);   // task 60
             AddToggle("HideSuitcase", "Hide the uncle's suitcase while she carries it (it still works in the car)", true);
-            AddToggle("UmaFm", "Uma FM: click the radio once more for Uma Musume songs (ogg in Mods/Assets/FukuUncle/radio/umafm)", true);
+            AddToggle("UmaFm", "Uma FM: click the radio once more for Uma Musume songs (ogg in Mods/Assets/UmamusumeCompanion/radio/umafm)", true);
             AddToggle("NewsGame", "Новости на радио игры", true);   // task 52
             AddToggle("NewsUma", "Новости скачек на Uma FM", true);
             AddSlider("NewsGap", "Перерыв между выпусками, мин", 1, 30, 8, true);
@@ -325,7 +326,7 @@ namespace UmamusumeCompanion
             charInfo = dir != null ? CharInfo.Load(dir) : new CharInfo();
             CharFeatures.Load(charInfo);
             float h = charInfo.GetFloat("height_m", 1.56f);
-            if (h < 0.5f || h > 3f) { Debug.LogWarning("[UncleSwap] Char: height_m=" + h + " out of 0.5..3, 1.56 used"); h = 1.56f; }
+            if (h < 0.5f || h > 3f) { Debug.LogWarning("[Umamusume companion] Char: height_m=" + h + " out of 0.5..3, 1.56 used"); h = 1.56f; }
             RoadSpots.HerMetres = h;
         }
 
@@ -364,9 +365,9 @@ namespace UmamusumeCompanion
             Life.BoardDelay = GetSliderValue("SelfActDelay");
             Life.PranksOn = GetToggleValue("Pranks");
             Life.PrankMinutes = GetSliderValue("PrankMinutes");
-            FukuDriver.ExpOn = GetToggleValue("Experiments");
-            FukuDriver.PotionMinutes = GetSliderValue("PotionMinutes");
-            FukuDriver.AddonMinutes = GetSliderValue("AddonMinutes");
+            CompanionDriver.ExpOn = GetToggleValue("Experiments");
+            CompanionDriver.PotionMinutes = GetSliderValue("PotionMinutes");
+            CompanionDriver.AddonMinutes = GetSliderValue("AddonMinutes");
             ExpFx.StrongOn = GetToggleValue("ExpStrong");
             driver.OwnWalk = GetToggleValue("OwnWalk");
             driver.WalkPace = GetSliderValue("WalkPace3") / 100f;
@@ -410,7 +411,7 @@ namespace UmamusumeCompanion
                 JaLoader.Console.LogError(ModID, "Uncle not found, nothing to replace.");
                 yield break;
             }
-            if (uncle.GetComponent<FukuDriver>() != null) yield break;
+            if (uncle.GetComponent<CompanionDriver>() != null) yield break;
             if (models.Length == 0)
             {
                 JaLoader.Console.LogError(ModID, "No character packs in " + ModelsDir);
@@ -424,9 +425,9 @@ namespace UmamusumeCompanion
                 if (charInfo == null) LoadCharInfo();
                 var info = charInfo;
                 var pack = CharPack.Load(Path.Combine(dir, "char.bin"));
-                driver = uncle.gameObject.AddComponent<FukuDriver>();
+                driver = uncle.gameObject.AddComponent<CompanionDriver>();
                 float bs = info.GetFloat("body_scale", 1f);
-                if (bs < 0.5f || bs > 1.5f) { Debug.LogWarning("[UncleSwap] Char: body_scale=" + bs + " out of 0.5..1.5, 1 used"); bs = 1f; }
+                if (bs < 0.5f || bs > 1.5f) { Debug.LogWarning("[Umamusume companion] Char: body_scale=" + bs + " out of 0.5..1.5, 1 used"); bs = 1f; }
                 driver.BodyScale = bs;
                 driver.Build(pack, dir, !GetToggleValue("ShowUncle"));
                 RoadSpots.HerHeight = driver.HeightUnits;
@@ -434,9 +435,9 @@ namespace UmamusumeCompanion
 
                 NamePatch.Name = info.Get("name", models[pick]);
                 NamePatch.NameEn = info.Get("name_en", NamePatch.Name);
-                Debug.Log("[UncleSwap] Char: " + NamePatch.NameEn + " features=" + CharFeatures.List
+                Debug.Log("[Umamusume companion] Char: " + NamePatch.NameEn + " features=" + CharFeatures.List
                     + " height_m=" + RoadSpots.HerMetres.ToString(System.Globalization.CultureInfo.InvariantCulture) + " props=" + Props.Names);
-                Debug.Log("[UncleSwap] Char: " + NamePatch.NameEn + " body_scale " + bs.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)
+                Debug.Log("[Umamusume companion] Char: " + NamePatch.NameEn + " body_scale " + bs.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)
                     + " height " + driver.HeightBind.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture) + " u (hatless), "
                     + driver.HeightUnits.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) + " in game units");
                 try { NamePatch.Apply(); }

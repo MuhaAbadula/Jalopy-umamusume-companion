@@ -22,7 +22,7 @@ namespace UmamusumeCompanion
             if (aiTagBroken) return new SmartAICar[0];
             GameObject[] gos;
             try { gos = GameObject.FindGameObjectsWithTag("AICar"); }
-            catch (UnityException) { aiTagBroken = true; Debug.Log("[UncleSwap] traffic: no AICar tag in this game, no traffic list"); return new SmartAICar[0]; }
+            catch (UnityException) { aiTagBroken = true; Debug.Log("[Umamusume companion] traffic: no AICar tag in this game, no traffic list"); return new SmartAICar[0]; }
             var l = new List<SmartAICar>();
             foreach (var g in gos)
             {
@@ -32,12 +32,12 @@ namespace UmamusumeCompanion
                 if (c == null) c = g.GetComponentInParent<SmartAICar>();
                 if (c != null && !l.Contains(c)) l.Add(c);
             }
-            if (!aiTagLogged && l.Count > 0) { aiTagLogged = true; Debug.Log("[UncleSwap] traffic: AICar tag gives " + l.Count + " cars (" + gos.Length + " tagged)"); }
+            if (!aiTagLogged && l.Count > 0) { aiTagLogged = true; Debug.Log("[Umamusume companion] traffic: AICar tag gives " + l.Count + " cars (" + gos.Length + " tagged)"); }
             if (!aiTagEmptyLogged && gos.Length > 0 && l.Count == 0)
             {
                 aiTagEmptyLogged = true;
                 // the player's own car frame (FrameHolder) carries the tag too: in town with no traffic that is all there is
-                Debug.Log("[UncleSwap] traffic: no AI cars yet (" + gos.Length + " tagged: " + gos[0].name + ", our own car frame), tag lookup stays on");
+                Debug.Log("[Umamusume companion] traffic: no AI cars yet (" + gos.Length + " tagged: " + gos[0].name + ", our own car frame), tag lookup stays on");
             }
             return l.ToArray();
         }
@@ -114,7 +114,7 @@ namespace UmamusumeCompanion
             reachShortLogged = false;
             nextBeat = Time.time + 30f;
             beat = new Beat { Name = "reach_test", Dur = 3.2f, Look = Look.Reach, LookW = 0.9f };
-            Debug.Log("[UncleSwap] Debug: reach test " + n + " (" + t.name + ")");
+            Debug.Log("[Umamusume companion] Debug: reach test " + n + " (" + t.name + ")");
             return "reach test: " + n + " (" + t.name + (reachTestLocal != Vector3.zero ? ", aim " + t.TransformPoint(reachTestLocal).ToString("F2") + " pivot " + t.position.ToString("F2") : "") + ")";
         }
 
@@ -150,7 +150,7 @@ namespace UmamusumeCompanion
             if (flat.sqrMagnitude < 1e-6f) return;
             Vector3 shoulder = eye + flat.normalized * 0.45f - up * 0.45f;
             ReachLog("poke", inner, shoulder);
-            Debug.Log("[UncleSwap] reach: poke detail: her shoulder to his " + (shoulder - inner.Upper.position).magnitude.ToString("F2")
+            Debug.Log("[Umamusume companion] reach: poke detail: her shoulder to his " + (shoulder - inner.Upper.position).magnitude.ToString("F2")
                 + " u, his eyes to her head " + (head.T.position - eye).magnitude.ToString("F2") + " u, her arm " + ArmLen(inner).ToString("F3") + " u");
         }
 
@@ -175,7 +175,7 @@ namespace UmamusumeCompanion
             if (!fogLogged)
             {
                 fogLogged = true;
-                Debug.Log("[UncleSwap] traffic: camera far clip " + cam.farClipPlane.ToString("F0") + " u, fog " + (RenderSettings.fog
+                Debug.Log("[Umamusume companion] traffic: camera far clip " + cam.farClipPlane.ToString("F0") + " u, fog " + (RenderSettings.fog
                     ? RenderSettings.fogMode + " density " + RenderSettings.fogDensity.ToString("F4") + " start " + RenderSettings.fogStartDistance.ToString("F0")
                       + " end " + RenderSettings.fogEndDistance.ToString("F0") : "off"));
             }
@@ -207,7 +207,7 @@ namespace UmamusumeCompanion
                 float ahead = Vector3.Dot(c.transform.position - eye, cf);
                 float way = Vector3.Dot(c.transform.forward, cf);
                 trafficLogs++;
-                Debug.Log("[UncleSwap] traffic: first seen " + s.First.ToString("F0") + " u / visible " + d.ToString("F0") + " u (in view from "
+                Debug.Log("[Umamusume companion] traffic: first seen " + s.First.ToString("F0") + " u / visible " + d.ToString("F0") + " u (in view from "
                     + s.InView.ToString("F0") + " u, " + (now - s.FirstT).ToString("F1") + " s after first seen, " + (ahead >= 0f ? "ahead" : "behind")
                     + ", " + (way < -0.5f ? "oncoming" : way > 0.5f ? "same way" : "across") + ", us " + SpeedKmh().ToString("F0") + " km/h)");
             }
@@ -222,10 +222,10 @@ namespace UmamusumeCompanion
                 seenCars.Remove(id);
                 if (s.Done || trafficLogs >= TrafficLogCap) continue;
                 trafficLogs++;
-                Debug.Log("[UncleSwap] traffic: first seen " + s.First.ToString("F0") + " u / never visible (gone after " + (now - s.FirstT).ToString("F0")
+                Debug.Log("[Umamusume companion] traffic: first seen " + s.First.ToString("F0") + " u / never visible (gone after " + (now - s.FirstT).ToString("F0")
                     + " s" + (s.InView >= 0f ? ", in view from " + s.InView.ToString("F0") + " u but blocked" : "") + ")");
             }
-            if (trafficLogs >= TrafficLogCap) Debug.Log("[UncleSwap] traffic: " + TrafficLogCap + " lines, probe stops for this session");
+            if (trafficLogs >= TrafficLogCap) Debug.Log("[Umamusume companion] traffic: " + TrafficLogCap + " lines, probe stops for this session");
         }
 
         /// <summary>Nothing solid between the player's eyes and the car but the car itself, our car, the player and her.</summary>

@@ -53,7 +53,7 @@ namespace UmamusumeCompanion
             mornEarR = new EarMove { Name = "fwd_r", Start = now + 0.33f, In = 0.25f, Hold = 30f, Out = 0.6f, W = 1f };
             earMoves.Add(mornEarL);
             earMoves.Add(mornEarR);
-            Debug.Log("[UncleSwap] Morning: pose lean");
+            Debug.Log("[Umamusume companion] Morning: pose lean");
             return true;
         }
 
@@ -64,7 +64,7 @@ namespace UmamusumeCompanion
             float now = Time.time;
             foreach (var m in new[] { mornEarL, mornEarR })
                 if (m != null) m.Hold = Mathf.Max(0f, Mathf.Min(m.Hold, now - m.Start - m.In));
-            Debug.Log("[UncleSwap] Morning: pose ending (" + why + ", " + mornT.ToString("0.0") + " s)");
+            Debug.Log("[Umamusume companion] Morning: pose ending (" + why + ", " + mornT.ToString("0.0") + " s)");
         }
 
         /// <summary>From Update, after DozeApply: timeline, smile.</summary>
@@ -86,7 +86,7 @@ namespace UmamusumeCompanion
                     mornT = mornOutT = -1f;
                     mornLeanW = mornWaveW = mornArmW = 0f;
                     mornEarL = mornEarR = null;
-                    Debug.Log("[UncleSwap] Morning: pose done");
+                    Debug.Log("[Umamusume companion] Morning: pose done");
                     return;
                 }
             }
@@ -139,7 +139,7 @@ namespace UmamusumeCompanion
             if (!mornLeanLogged && mornLeanW > 0.98f)
             {
                 mornLeanLogged = true;
-                Debug.Log("[UncleSwap] Morning: pose lean hips " + lean.ToString("0") + " spine 0 chest " + (mornWaist != null ? -chestUp : lean).ToString("0") +
+                Debug.Log("[Umamusume companion] Morning: pose lean hips " + lean.ToString("0") + " spine 0 chest " + (mornWaist != null ? -chestUp : lean).ToString("0") +
                           " neck pitch " + (pitch * MornNeckPitchK / (1f - MornNeckPitchK)).ToString("0") + " head pitch " + pitch.ToString("0") +
                           " (forward from vertical: waist-spine " + MornTip(mornWaist, mornSpine, fwd, up) + ", spine-chest " + MornTip(mornSpine, chest != null ? chest.T : null, fwd, up) +
                           ", chest-neck " + MornTip(chest != null ? chest.T : null, neck != null ? neck.T : null, fwd, up) + ", neck-head " + MornTip(neck != null ? neck.T : null, head.T, fwd, up) + ")");
@@ -187,7 +187,7 @@ namespace UmamusumeCompanion
             {
                 mornWaveLogged = true;
                 Vector3 palmN = Vector3.Cross(Knuckles(a) - a.Hand.position, MornAcross(a));
-                Debug.Log("[UncleSwap] Morning: pose wave (" + (side > 0f ? "right" : "left") + " hand, wrist " +
+                Debug.Log("[Umamusume companion] Morning: pose wave (" + (side > 0f ? "right" : "left") + " hand, wrist " +
                           (Vector3.Dot(a.Hand.position - head.T.position, up) / len).ToString("F2") + " arm above the head bone, " +
                           (Vector3.Dot(a.Hand.position - sh, fwd) / len).ToString("F2") + " arm in front of the shoulder, lean " +
                           (MornLeanDeg * mornLeanW).ToString("0") + " deg, palm normal . to his eye " + Vector3.Dot(palmN.normalized, (eye - a.Hand.position).normalized).ToString("F2") +

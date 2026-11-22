@@ -16,7 +16,7 @@ namespace UmamusumeCompanion
         public static void Apply()
         {
             if (applied) return;
-            var h = new Harmony("osobl.jalopy.uncleswap.shorttrip");
+            var h = new Harmony("osobl.jalopy.umamusumecompanion.shorttrip");
             h.Patch(AccessTools.Method(typeof(MapRelayC), "SpawnRoute"),
                 prefix: new HarmonyMethod(typeof(ShortTripPatch), nameof(Prefix)),
                 postfix: new HarmonyMethod(typeof(ShortTripPatch), nameof(Postfix)));

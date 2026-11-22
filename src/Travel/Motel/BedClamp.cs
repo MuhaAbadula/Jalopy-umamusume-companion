@@ -12,7 +12,7 @@ namespace UmamusumeCompanion
     /// The mattress is a rectangle on two horizontal world axes; every frame her key points are measured and her root
     /// is shifted to keep them inside.
     /// </summary>
-    public partial class FukuDriver
+    public partial class CompanionDriver
     {
         bool bedHave;                       // a rectangle (or at least the sitting edge) is known
         string bedSrc;                      // "mesh <name>" / "edge <trigger>" for the log
@@ -186,13 +186,13 @@ namespace UmamusumeCompanion
 
             // one-time survey for the next bug report: what is around his hips
             cands.Sort((x, y) => x.Contains != y.Contains ? (x.Contains ? -1 : 1) : x.Rank.CompareTo(y.Rank));
-            Debug.Log("[UncleSwap] bed: " + cands.Count + " candidates within 3 legs of his hips, leg " + leg.ToString("F2")
+            Debug.Log("[Umamusume companion] bed: " + cands.Count + " candidates within 3 legs of his hips, leg " + leg.ToString("F2")
                 + ", floor " + (bedSurveyed ? "surveyed" : "guessed") + " " + (hip.y - floorY).ToString("F2") + " below hips, trigger "
                 + (trig != null ? BedPath(trig.transform) + " at " + trig.transform.position.ToString("F2") + " fwd " + trig.transform.forward.ToString("F2") : "none"));
             for (int i = 0; i < cands.Count && i < 20; i++)
             {
                 var c = cands[i];
-                Debug.Log("[UncleSwap] bed:   cand " + c.Kind + " " + c.Path + " [" + c.Comps + "] "
+                Debug.Log("[Umamusume companion] bed:   cand " + c.Kind + " " + c.Path + " [" + c.Comps + "] "
                     + ((c.Hi1 - c.Lo1) / leg).ToString("F2") + " x " + ((c.Hi2 - c.Lo2) / leg).ToString("F2") + " legs, top "
                     + ((c.Top - floorY) / leg).ToString("F2") + " legs above floor" + (c.Contains ? ", holds hips" : "") + (c.Plausible ? ", PLAUSIBLE" : ""));
             }
@@ -211,7 +211,7 @@ namespace UmamusumeCompanion
                 bedLo2 = pick.Lo2 + in2; bedHi2 = pick.Hi2 - in2;
                 bedLongDir = pick.Hi1 - pick.Lo1 >= pick.Hi2 - pick.Lo2 ? bedE1 : bedE2;
                 bedSrc = "mesh " + pick.Name;
-                Debug.Log("[UncleSwap] bed: mesh " + pick.Kind + " " + pick.Path + " found, "
+                Debug.Log("[Umamusume companion] bed: mesh " + pick.Kind + " " + pick.Path + " found, "
                     + ((pick.Hi1 - pick.Lo1) / leg).ToString("F2") + " x " + ((pick.Hi2 - pick.Lo2) / leg).ToString("F2")
                     + " legs, long side " + bedLongDir.ToString("F2"));
             }
@@ -229,12 +229,12 @@ namespace UmamusumeCompanion
                 bedLo2 = float.NegativeInfinity; bedHi2 = 0f;
                 bedLongDir = bedE1;
                 bedSrc = "edge " + trig.name;
-                Debug.Log("[UncleSwap] bed: no bed mesh fits, clamping to the edge he sat on at " + bedO.ToString("F2")
+                Debug.Log("[Umamusume companion] bed: no bed mesh fits, clamping to the edge he sat on at " + bedO.ToString("F2")
                     + ", out " + outDir.ToString("F2") + (flipped ? " (trigger faced into the bed, flipped)" : ""));
             }
             else
             {
-                Debug.Log("[UncleSwap] bed: no bed mesh and no UncleBedTriggerC near his hips");
+                Debug.Log("[Umamusume companion] bed: no bed mesh and no UncleBedTriggerC near his hips");
                 return false;
             }
             bedHave = true;
@@ -254,7 +254,7 @@ namespace UmamusumeCompanion
             if (!bedHave || ua.sqrMagnitude < 1e-6f || bedLongDir.sqrMagnitude < 1e-6f) return ua;
             float ang = Vector3.Angle(ua, bedLongDir);
             if (ang > 90f) ang = 180f - ang;
-            Debug.Log("[UncleSwap] bed: uncle axis is " + ang.ToString("F0") + " deg off the long side" + (ang <= 60f ? ", snapped" : ", kept"));
+            Debug.Log("[Umamusume companion] bed: uncle axis is " + ang.ToString("F0") + " deg off the long side" + (ang <= 60f ? ", snapped" : ", kept"));
             if (ang > 60f) return ua;
             return (Vector3.Dot(ua, bedLongDir) >= 0f ? bedLongDir : -bedLongDir) * ua.magnitude;
         }
@@ -287,7 +287,7 @@ namespace UmamusumeCompanion
                 bedFitLogged = true;
                 float leg = uAnkleL != null && uHip != null ? Mathf.Max(0.05f, (uHip.position - uAnkleL.position).magnitude) : 1f;
                 bool wide = mx2 - mn2 >= bedHi2 - bedLo2 || mx1 - mn1 >= bedHi1 - bedLo1;
-                Debug.Log("[UncleSwap] bed: clip " + gestures.BedName(bedClip) + " spans " + ((mx1 - mn1) / leg).ToString("F2") + " x "
+                Debug.Log("[Umamusume companion] bed: clip " + gestures.BedName(bedClip) + " spans " + ((mx1 - mn1) / leg).ToString("F2") + " x "
                     + ((mx2 - mn2) / leg).ToString("F2") + " legs, bed " + ((bedHi1 - bedLo1) / leg).ToString("F2") + " x "
                     + ((bedHi2 - bedLo2) / leg).ToString("F2") + (wide ? ", WIDER than the bed: centred, still sticks out" : ", fits"));
             }
@@ -297,7 +297,7 @@ namespace UmamusumeCompanion
             if (!bedShiftLogged && (Mathf.Abs(want1) > 1e-3f || Mathf.Abs(want2) > 1e-3f))
             {
                 bedShiftLogged = true;
-                Debug.Log("[UncleSwap] bed: shift applied, needed " + bedOver.ToString("F2") + " (" + bedSrc + ")");
+                Debug.Log("[Umamusume companion] bed: shift applied, needed " + bedOver.ToString("F2") + " (" + bedSrc + ")");
             }
             return (bedE1 * bedClampS.x + bedE2 * bedClampS.y) * w;
         }
@@ -307,7 +307,7 @@ namespace UmamusumeCompanion
             bedLogT += Time.deltaTime;
             if (bedLogT < 6f || !bedHave) return;
             bedLogT = 0f;
-            Debug.Log("[UncleSwap] bed: pose " + gestures.BedName(bedClip) + " t " + bedT.ToString("F0") + " root "
+            Debug.Log("[Umamusume companion] bed: pose " + gestures.BedName(bedClip) + " t " + bedT.ToString("F0") + " root "
                 + hipLink.Girl.position.ToString("F2") + " " + bedSrc + " needed shift " + bedOver.ToString("F2")
                 + " shift applied " + bedClampS.ToString("F2"));
         }

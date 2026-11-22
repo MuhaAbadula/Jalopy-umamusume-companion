@@ -206,7 +206,7 @@ namespace UmamusumeCompanion
             /// glass vertex (object space) to the texture coordinate it samples; the reflection texture shows world X where the main
             /// camera would see R(X) (R = reflection across the plane through pivot + m_ClipPlaneOffset * up). Logs the texture
             /// coordinates of the glass middle and corners and of her eyes, the reflection camera, what lies on the reflected ray, and
-            /// saves the reflection texture as ModSaves/FukuUncle/mirror_probe_N.png (green = glass middle, yellow = the part of the
+            /// saves the reflection texture as ModSaves/UmamusumeCompanion/mirror_probe_N.png (green = glass middle, yellow = the part of the
             /// texture the glass shows, red = her eyes).
             /// </summary>
             void Probe()
@@ -280,7 +280,7 @@ namespace UmamusumeCompanion
                 cross(uvC, Color.green, 14);
                 cross(new Vector2(vpE.x, vpE.y), Color.red, 14);
                 tex.Apply();
-                string dir2 = System.IO.Path.Combine(System.IO.Path.Combine(Application.persistentDataPath, "ModSaves"), "FukuUncle");
+                string dir2 = CompanionStorage.SaveDirectory;
                 System.IO.Directory.CreateDirectory(dir2);
                 string path = System.IO.Path.Combine(dir2, "mirror_probe_" + (++probeN) + ".png");
                 System.IO.File.WriteAllBytes(path, tex.EncodeToPNG());

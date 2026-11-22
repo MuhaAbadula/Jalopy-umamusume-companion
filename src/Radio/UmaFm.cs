@@ -10,11 +10,11 @@ namespace UmamusumeCompanion
 {
     /// <summary>
     /// Task 44 (concept 08): Uma FM, a third position of the Laika radio's power click: off -> game radio -> Uma FM -> off.
-    /// Tracks = Mods\Assets\FukuUncle\radio\umafm\*.ogg (none = no third position). They play on the game's own radio
+    /// Tracks = Mods\Assets\UmamusumeCompanion\radio\umafm\*.ogg (none = no third position). They play on the game's own radio
     /// AudioSource (3D, volume knob, ramps, pause menu pitch stay the game's): prefix on NextSong plays the next Uma track
     /// instead of the game's list, prefix on Trigger adds the third click, postfix on Update drives everything else.
     /// One track in memory at a time (WWW + GetAudioClipCompressed, seekable). Radio power off on Uma FM pauses the track,
-    /// back on Uma FM resumes it where it stopped. Hiss muted on Uma FM. State in ModSaves\FukuUncle\umafm.txt.
+    /// back on Uma FM resumes it where it stopped. Hiss muted on Uma FM. State in ModSaves\UmamusumeCompanion\umafm.txt.
     /// </summary>
     public static class UmaFm
     {
@@ -60,13 +60,13 @@ namespace UmamusumeCompanion
                 && src.pitch > 0.001f && clipTime >= clip.length - 2f;
         }
 
-        static void Log(string s) { Debug.Log("[UncleSwap] UmaFM: " + s); }
+        static void Log(string s) { Debug.Log("[Umamusume companion] UmaFM: " + s); }
 
         public static void Apply()
         {
             if (applied) return;
             applied = true;
-            var h = new Harmony("osobl.jalopy.uncleswap.umafm");
+            var h = new Harmony("osobl.jalopy.umamusumecompanion.umafm");
             var t = typeof(RadioFreqLogicC);
             h.Patch(AccessTools.Method(t, "Trigger"), prefix: new HarmonyMethod(typeof(UmaFm), nameof(TriggerPrefix)));
             h.Patch(AccessTools.Method(t, "NextSong"), prefix: new HarmonyMethod(typeof(UmaFm), nameof(NextPrefix)));
@@ -109,7 +109,7 @@ namespace UmamusumeCompanion
                 if (!string.IsNullOrEmpty(Dir) && Directory.Exists(Dir))
                     foreach (var f in Directory.GetFiles(Dir, "*.ogg")) files.Add(Path.GetFileName(f));
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] UmaFM: can't list " + Dir + ": " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] UmaFM: can't list " + Dir + ": " + e.Message); }
             files.Sort(StringComparer.OrdinalIgnoreCase);
             bag.RemoveAll(f => !files.Contains(f));
             if (files.Count != lastCount)
@@ -183,7 +183,7 @@ namespace UmamusumeCompanion
             if (id != loadId) { if (c != null) UnityEngine.Object.Destroy(c); yield break; }
             if (err != null)
             {
-                Debug.LogWarning("[UncleSwap] UmaFM: " + file + " skipped: " + err);
+                Debug.LogWarning("[Umamusume companion] UmaFM: " + file + " skipped: " + err);
                 if (c != null) UnityEngine.Object.Destroy(c);
                 files.Remove(file);
                 pending = false;
@@ -314,7 +314,7 @@ namespace UmamusumeCompanion
             }
             catch (Exception e)
             {
-                Debug.LogWarning("[UncleSwap] UmaFM: Trigger failed, game behaviour: " + e);
+                Debug.LogWarning("[Umamusume companion] UmaFM: Trigger failed, game behaviour: " + e);
                 return true;
             }
         }
@@ -369,7 +369,7 @@ namespace UmamusumeCompanion
             }
             catch (Exception e)
             {
-                Debug.LogWarning("[UncleSwap] UmaFM: NextSong failed, back to the game radio: " + e);
+                Debug.LogWarning("[Umamusume companion] UmaFM: NextSong failed, back to the game radio: " + e);
                 uma = false;
                 SetHiss();
                 return true;
@@ -389,7 +389,7 @@ namespace UmamusumeCompanion
             {
                 bool more;
                 try { more = inner.MoveNext(); }
-                catch (Exception e) { Debug.LogWarning("[UncleSwap] UmaFM: TurnRadioOn: " + e.Message); yield break; }
+                catch (Exception e) { Debug.LogWarning("[Umamusume companion] UmaFM: TurnRadioOn: " + e.Message); yield break; }
                 if (first)
                 {
                     first = false;
@@ -432,7 +432,7 @@ namespace UmamusumeCompanion
             }
             catch (Exception e)
             {
-                Debug.LogWarning("[UncleSwap] UmaFM: tick failed, back to the game radio: " + e);
+                Debug.LogWarning("[Umamusume companion] UmaFM: tick failed, back to the game radio: " + e);
                 try { ToGame(); } catch (Exception) { uma = false; }
             }
         }
@@ -462,10 +462,10 @@ namespace UmamusumeCompanion
             return "Uma FM " + (clip != null ? clip.name + " " + Clock(clipTime) : pending ? "loading" : "-") + (paused ? " (paused)" : "");
         }
 
-        // ------------------------------------------------------------ state (ModSaves\FukuUncle\umafm.txt)
+        // ------------------------------------------------------------ state (ModSaves\UmamusumeCompanion\umafm.txt)
         static string StatePath
         {
-            get { return Path.Combine(Path.Combine(Path.Combine(Application.persistentDataPath, "ModSaves"), "FukuUncle"), "umafm.txt"); }
+            get { return Path.Combine(CompanionStorage.SaveDirectory, "umafm.txt"); }
         }
 
         static void SaveState()
@@ -481,7 +481,7 @@ namespace UmamusumeCompanion
                     + "last=" + (lastPlayed ?? "") + "\n"
                     + "bag=" + string.Join("|", bag.ToArray()) + "\n");
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] UmaFM: state not saved: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] UmaFM: state not saved: " + e.Message); }
         }
 
         static void ReadState()
@@ -508,7 +508,7 @@ namespace UmamusumeCompanion
                 }
                 Log("state: station " + (uma ? "Uma FM" : "game") + (clipFile != null ? ", " + clipFile + " at " + Clock(clipTime) : "") + ", " + bag.Count + " in the round");
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] UmaFM: state not read: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] UmaFM: state not read: " + e.Message); }
         }
 
         static string Clock(float s)

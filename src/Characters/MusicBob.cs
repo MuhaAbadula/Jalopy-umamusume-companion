@@ -48,7 +48,7 @@ namespace UmamusumeCompanion
             return Random.Range(60f, 180f) * mul;
         }
 
-        void BobLog(string what) { Debug.Log("[UncleSwap] MusicBob: " + what); }
+        void BobLog(string what) { Debug.Log("[Umamusume companion] MusicBob: " + what); }
 
         void BobStep(float dt, float now, bool music, bool talking, bool reacting)
         {

@@ -31,7 +31,7 @@ namespace UmamusumeCompanion
         public static void Apply()
         {
             if (applied) return;
-            var harmony = new Harmony("osobl.jalopy.uncleswap.voice");
+            var harmony = new Harmony("osobl.jalopy.umamusumecompanion.voice");
             harmony.Patch(AccessTools.Method(typeof(UncleLogicC), "AudioSpeech"),
                 prefix: new HarmonyMethod(typeof(VoicePatch), nameof(Prefix)));
             applied = true;

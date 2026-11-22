@@ -167,7 +167,7 @@ namespace UmamusumeCompanion
             if (Say == null) { souvLine = null; return; }
             if (CanSay == null || CanSay())
             {
-                Debug.Log("[UncleSwap] remark: " + souvLine);
+                Debug.Log("[Umamusume companion] remark: " + souvLine);
                 Say(souvLine);
                 souvLine = null;
             }
@@ -240,7 +240,7 @@ namespace UmamusumeCompanion
             if (why != null) { Souvenirs.Log(k, "click skip " + why); return; }
             souvClickOk = now + 10f;
             Souvenirs.Log(k, "click");
-            Debug.Log("[UncleSwap] remark: souvenir_" + Souvenirs.Codes[k - 1]);
+            Debug.Log("[Umamusume companion] remark: souvenir_" + Souvenirs.Codes[k - 1]);
             Say("souvenir_" + Souvenirs.Codes[k - 1]);
             // a glance at the item, then at him
             var spot = Souvenirs.Row.Live.Spots[k - 1];

@@ -12,7 +12,7 @@ namespace UmamusumeCompanion
     /// queue behind it). Mode "istanbul": "istanbul_morning" once both sit in the car in Istanbul, then per leg N the keys
     /// back_N, back_N_2, back_N_3.. (as long as the key exists). Mode "turn" (task 60, heading home without Istanbul,
     /// level 1..5): "turn_start" once, then home_N, home_N_2.. per leg. The first talk of a leg after 45 s of driving, every
-    /// next one after GapMinutes of driving. State lives in ModSaves\FukuUncle\return_trip.txt (the game save has fixed
+    /// next one after GapMinutes of driving. State lives in ModSaves\UmamusumeCompanion\return_trip.txt (the game save has fixed
     /// fields only) and is dropped at home (routeLevel 0) or if she is gone for good.
     /// </summary>
     public class ReturnTrip : MonoBehaviour
@@ -39,7 +39,7 @@ namespace UmamusumeCompanion
 
         static string StatePath
         {
-            get { return Path.Combine(Path.Combine(Path.Combine(Application.persistentDataPath, "ModSaves"), "FukuUncle"), "return_trip.txt"); }
+            get { return Path.Combine(CompanionStorage.SaveDirectory, "return_trip.txt"); }
         }
 
         /// <summary>On the way home with her (after Istanbul).</summary>
@@ -74,8 +74,8 @@ namespace UmamusumeCompanion
                         else if (l.StartsWith("said=")) said.Add(l.Substring(5));
                     }
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] return trip: can't read state: " + e.Message); }
-            if (active) Debug.Log("[UncleSwap] return trip: on the way home, mode " + mode + " (said: " + string.Join(",", new List<string>(said).ToArray()) + ")");
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] return trip: can't read state: " + e.Message); }
+            if (active) Debug.Log("[Umamusume companion] return trip: on the way home, mode " + mode + " (said: " + string.Join(",", new List<string>(said).ToArray()) + ")");
         }
 
         void Save()
@@ -88,7 +88,7 @@ namespace UmamusumeCompanion
                 foreach (var s in said) lines.Add("said=" + s);
                 File.WriteAllLines(StatePath, lines.ToArray());
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] return trip: can't save state: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] return trip: can't save state: " + e.Message); }
         }
 
         /// <summary>She stayed in Istanbul just now.</summary>
@@ -109,7 +109,7 @@ namespace UmamusumeCompanion
             if (u == null) return;
             // a talk of ours cut off by the game (crash line etc.) lands in its queue; the game can't start it by
             // name, and it would block the queue: take it out, the talk plays again later
-            if (u.textQueue != null && u.textQueue.Remove(Item)) Debug.Log("[UncleSwap] return trip: talk interrupted, later again");
+            if (u.textQueue != null && u.textQueue.Remove(Item)) Debug.Log("[Umamusume companion] return trip: talk interrupted, later again");
             if (playing || Time.time < nextCheck) return;
             nextCheck = Time.time + 0.25f;
 
@@ -117,9 +117,9 @@ namespace UmamusumeCompanion
             if (route == null) return;
             int level = route.routeLevel;
             if (!active && level == 6 && !u.uncleGoneForever && IstanbulPatch.Stay) Begin(); // older save already in Istanbul
-            if (!active && TurnAroundReady(level)) { Begin("turn"); Debug.Log("[UncleSwap] return trip: turn-around start (level " + level + ")"); }
+            if (!active && TurnAroundReady(level)) { Begin("turn"); Debug.Log("[Umamusume companion] return trip: turn-around start (level " + level + ")"); }
             if (!active) return;
-            if (level == 0 || u.uncleGoneForever) { active = false; said.Clear(); Save(); Debug.Log("[UncleSwap] return trip: over"); return; }
+            if (level == 0 || u.uncleGoneForever) { active = false; said.Clear(); Save(); Debug.Log("[Umamusume companion] return trip: over"); return; }
             if (level != lastLevel) { lastLevel = level; drivenFor = 0f; talksThisLeg = 0; }   // a new leg: its first talk after 45 s again
 
             bool both = BothSeated();
@@ -166,7 +166,7 @@ namespace UmamusumeCompanion
                 {
                     if (Story != null && Story.All("turn_start") != null) return "turn_start";
                     said.Add("turn_start");   // no line: skip it for good, the leg talks go on
-                    Debug.Log("[UncleSwap] return trip: no lines for turn_start");
+                    Debug.Log("[Umamusume companion] return trip: no lines for turn_start");
                 }
                 head = "home_" + level;
             }
@@ -183,7 +183,7 @@ namespace UmamusumeCompanion
 
         string MissingKey(string key, int level)
         {
-            if (missingLogged.Add(level)) Debug.Log("[UncleSwap] return trip: no lines for " + key + " (level " + level + ", nothing more this leg)");
+            if (missingLogged.Add(level)) Debug.Log("[Umamusume companion] return trip: no lines for " + key + " (level " + level + ", nothing more this leg)");
             return null;
         }
 
@@ -208,7 +208,7 @@ namespace UmamusumeCompanion
             {
                 if (!t.TurnAroundReady(level)) return "not heading home at level 1..5 with her aboard (level " + level + ")";
                 t.Begin("turn");
-                Debug.Log("[UncleSwap] return trip: turn-around start (level " + level + ", debug)");
+                Debug.Log("[Umamusume companion] return trip: turn-around start (level " + level + ", debug)");
             }
             string key = t.NextKey(level);
             if (key == null) return "no talk due: no more keys on level " + level + " (mode " + t.mode + ")";
@@ -237,7 +237,7 @@ namespace UmamusumeCompanion
                 playing = false;
                 yield break;
             }
-            Debug.Log("[UncleSwap] return trip: talk " + key + " (" + lines.Count + " lines)");
+            Debug.Log("[Umamusume companion] return trip: talk " + key + " (" + lines.Count + " lines)");
             u.speechStack.Clear();
             u.speechStack.AddRange(lines);
             u.StartCoroutine("DialogueSpeech");

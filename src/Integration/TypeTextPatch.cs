@@ -21,7 +21,7 @@ namespace UmamusumeCompanion
         public static void Apply()
         {
             if (applied) return;
-            var harmony = new Harmony("osobl.jalopy.uncleswap.typetext");
+            var harmony = new Harmony("osobl.jalopy.umamusumecompanion.typetext");
             harmony.Patch(AccessTools.Method(typeof(DialogueStuffsC), "StartTypeText"),
                 prefix: new HarmonyMethod(typeof(TypeTextPatch), nameof(StartPrefix)),
                 postfix: new HarmonyMethod(typeof(TypeTextPatch), nameof(StartPostfix)));

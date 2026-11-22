@@ -7,9 +7,9 @@ namespace UmamusumeCompanion
     /// v0.25.6 twitch detector (debug). Each frame, after the whole pose (physics, backpack, hands), the world positions
     /// of key points are kept; a point whose second difference (a jolt) is several times its usual size is logged
     /// with what was going on: phase, contacts, pins, the uncle's animator state, his root jolt, the frame time.
-    /// Logs only while her walk runs outside the car. "[UncleSwap] twitch: ..."
+    /// Logs only while her walk runs outside the car. "[Umamusume companion] twitch: ..."
     /// </summary>
-    public partial class FukuDriver
+    public partial class CompanionDriver
     {
         class Probe { public string Name; public Transform T; public Vector3 P0, P1, P2; public int N; public float Ema, NextLog; }
         List<Probe> probes;
@@ -66,7 +66,7 @@ namespace UmamusumeCompanion
                         anim = (ci != null && ci.Length > 0 && ci[0].clip != null ? ci[0].clip.name : "-") + " t" + st.normalizedTime.ToString("F2")
                             + (animator.IsInTransition(0) ? " (transition)" : "") + " ws " + animator.GetFloat("walkSpeed").ToString("F2");
                     }
-                    Debug.Log("[UncleSwap] twitch: " + p.Name + " jolt " + j.ToString("F4") + " (usual " + p.Ema.ToString("F4") + ") t " + now.ToString("F3")
+                    Debug.Log("[Umamusume companion] twitch: " + p.Name + " jolt " + j.ToString("F4") + " (usual " + p.Ema.ToString("F4") + ") t " + now.ToString("F3")
                         + " dt " + (dt * 1000f).ToString("F1") + "ms ph " + walkPhase.ToString("F3") + " c " + cl.ToString("F2") + "/" + cr.ToString("F2")
                         + " pin " + (legL != null ? legL.LockW.ToString("F2") : "-") + "/" + (legR != null ? legR.LockW.ToString("F2") : "-")
                         + " | uncle root jolt " + rootJ.ToString("F4") + " hip jolt " + hipJ.ToString("F4") + " | " + anim

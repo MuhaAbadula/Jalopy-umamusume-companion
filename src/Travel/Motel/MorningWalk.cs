@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UmamusumeCompanion
 {
-    public partial class FukuDriver
+    public partial class CompanionDriver
     {
         internal sealed class MorningWalk
         {
@@ -63,9 +63,9 @@ namespace UmamusumeCompanion
 
             static readonly int EnterCar = Animator.StringToHash("Base Layer.Uncle_Enter_Car");
             static MorningWalk current;
-            internal static bool IsWalking(FukuDriver d) => current != null && current.driver == d;
+            internal static bool IsWalking(CompanionDriver d) => current != null && current.driver == d;
 
-            readonly FukuDriver driver;
+            readonly CompanionDriver driver;
             readonly UncleLogicC actor;
             readonly AIPath ai;
             readonly AIDestinationSetter destination;
@@ -80,7 +80,7 @@ namespace UmamusumeCompanion
             float waitUntil, progressAt, nextStallLog;
             Vector3 lastPosition;
 
-            internal static bool UpdateDeparture(FukuDriver d)
+            internal static bool UpdateDeparture(CompanionDriver d)
             {
                 if (current == null || current.driver != d)
                 {
@@ -98,7 +98,7 @@ namespace UmamusumeCompanion
                 return true;
             }
 
-            internal static void EndMorning(FukuDriver driver)
+            internal static void EndMorning(CompanionDriver driver)
             {
                 if (current != null && current.driver == driver) current = null;
             }
@@ -106,7 +106,7 @@ namespace UmamusumeCompanion
             // Pose() copies the seated uncle's pelvis before every render. MornFeet only
             // centres it while standing still. Keep it over the controller during the walk
             // too, before WalkIK adds the gait's sway and plants the feet.
-            internal static void CenterWalkingPose(FukuDriver driver, bool inCar)
+            internal static void CenterWalkingPose(CompanionDriver driver, bool inCar)
             {
                 if (!IsWalking(driver) || inCar || current.hips == null || current.body == null || !current.body.enabled) return;
                 var root = driver.transform;
@@ -114,14 +114,14 @@ namespace UmamusumeCompanion
                 driver.hipOffSet = false;
             }
 
-            MorningWalk(FukuDriver d, MotelLogicC motel)
+            MorningWalk(CompanionDriver d, MotelLogicC motel)
             {
                 driver = d;
                 actor = d.GetComponent<UncleLogicC>();
                 body = d.GetComponent<CharacterController>();
                 hips = d.hipLink == null ? null : d.hipLink.Girl;
                 ai = d.GetComponent<AIPath>();
-                destination = d.GetComponent<AIDestinationSetter>(); // created by FukuUncle when it places her in the room
+                destination = d.GetComponent<AIDestinationSetter>(); // created by UmamusumeCompanion when it places her in the room
                 int r = motel.roomNumber;
                 var door = At(motel.doorNodes, r);
                 var handle = At(motel.roomDoors, r);

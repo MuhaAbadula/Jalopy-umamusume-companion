@@ -6,10 +6,10 @@ namespace UmamusumeCompanion
 
     internal sealed class Companion
     {
-        readonly FukuDriver driver;
+        readonly CompanionDriver driver;
         readonly UncleLogicC actor;
 
-        public Companion(FukuDriver driver)
+        public Companion(CompanionDriver driver)
         {
             this.driver = driver;
             actor = driver.GetComponent<UncleLogicC>();
@@ -20,22 +20,22 @@ namespace UmamusumeCompanion
         public string Unavailable(Command cmd)
         {
             if (!Present) return "Умы сейчас нет рядом";
-            if (FukuDriver.MorningWalk.IsWalking(driver) && !actor.readyToBoard) return "Ума идёт к машине";
+            if (CompanionDriver.MorningWalk.IsWalking(driver) && !actor.readyToBoard) return "Ума идёт к машине";
             var state = driver.OutingState;
-            if (state == FukuDriver.Out.Exiting) return "Ума выходит из машины";
-            if (state == FukuDriver.Out.Boarding || actor.readyToBoard) return "Ума садится в машину";
+            if (state == CompanionDriver.Out.Exiting) return "Ума выходит из машины";
+            if (state == CompanionDriver.Out.Boarding || actor.readyToBoard) return "Ума садится в машину";
             if (driver.MornHolding) return "Ума ждёт в номере";
-            bool seated = state == FukuDriver.Out.InCar && actor.isSat;
-            bool outside = state == FukuDriver.Out.Follow || state == FukuDriver.Out.Wait;
+            bool seated = state == CompanionDriver.Out.InCar && actor.isSat;
+            bool outside = state == CompanionDriver.Out.Follow || state == CompanionDriver.Out.Wait;
             bool fetching = driver.Fetching;
             switch (cmd)
             {
                 case Command.Exit: return seated ? null : "Ума уже снаружи";
                 case Command.Follow:
-                    if (state == FukuDriver.Out.Follow && !fetching) return "Ума уже идёт за тобой";
+                    if (state == CompanionDriver.Out.Follow && !fetching) return "Ума уже идёт за тобой";
                     break;
                 case Command.Stop:
-                    if (state == FukuDriver.Out.Wait) return "Ума уже ждёт";
+                    if (state == CompanionDriver.Out.Wait) return "Ума уже ждёт";
                     break;
                 case Command.Board:
                     if (seated) return "Ума уже в машине";
@@ -59,7 +59,7 @@ namespace UmamusumeCompanion
             {
                 driver.EndFetch();
                 // A fetch temporarily uses the follow state with the crate as target.
-                // Once cancelled, FukuDriver refreshes the player target on its next update.
+                // Once cancelled, CompanionDriver refreshes the player target on its next update.
                 if (cmd == Command.Follow) return "Ума идёт за тобой";
             }
             if (cmd == Command.Board)

@@ -24,10 +24,10 @@ namespace UmamusumeCompanion
             var iter = AccessTools.FirstInner(typeof(UncleLogicC), t => t.Name.Contains("SuitCaseOutOfBed"));
             if (iter == null)
             {
-                Debug.LogWarning("[UncleSwap] SuitCaseOutOfBed iterator not found: she will leave in Istanbul");
+                Debug.LogWarning("[Umamusume companion] SuitCaseOutOfBed iterator not found: she will leave in Istanbul");
                 return;
             }
-            var h = new Harmony("osobl.jalopy.uncleswap.istanbul");
+            var h = new Harmony("osobl.jalopy.umamusumecompanion.istanbul");
             h.Patch(AccessTools.Method(iter, "MoveNext"),
                 prefix: new HarmonyMethod(typeof(IstanbulPatch), nameof(Before)),
                 postfix: new HarmonyMethod(typeof(IstanbulPatch), nameof(After)));
@@ -48,8 +48,8 @@ namespace UmamusumeCompanion
             u.uncleGoneForever = false;
             KeptAt = Time.time;
             if (ReturnTrip.Current != null) ReturnTrip.Current.Begin();
-            Debug.Log("[UncleSwap] istanbul: the game sent her away for good, she stays and rides back with you");
-            JaLoader.Console.Log("FukuUncle", "Istanbul: she stays with you for the way back.");
+            Debug.Log("[Umamusume companion] istanbul: the game sent her away for good, she stays and rides back with you");
+            JaLoader.Console.Log(CompanionStorage.ModId, "Istanbul: she stays with you for the way back.");
         }
     }
 }

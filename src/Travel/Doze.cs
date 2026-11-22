@@ -15,7 +15,7 @@ namespace UmamusumeCompanion
     /// </summary>
     public static class Doze
     {
-        // settings (FukuUncle.ApplySettings)
+        // settings (CompanionMod.ApplySettings)
         public static bool Enabled = true;
         public static float Minutes = 6f;
         public static int NightFrom = 22, NightTo = 5;
@@ -43,12 +43,12 @@ namespace UmamusumeCompanion
         public static void Apply()
         {
             if (applied) return;
-            var h = new Harmony("osobl.jalopy.uncleswap.doze");
+            var h = new Harmony("osobl.jalopy.umamusumecompanion.doze");
             foreach (var n in new[] { "PotHoleHitFLWheel", "PotHoleHitFRWheel", "PotHoleHitRLWheel", "PotHoleHitRRWheel" })
             {
                 var m = AccessTools.Method(typeof(CarPerformanceC), n);
                 if (m != null) h.Patch(m, postfix: new HarmonyMethod(typeof(Doze), nameof(PotHole)));
-                else Debug.LogWarning("[UncleSwap] Doze: " + n + " not found, that wheel will not wake her");
+                else Debug.LogWarning("[Umamusume companion] Doze: " + n + " not found, that wheel will not wake her");
             }
             applied = true;
         }
@@ -83,7 +83,7 @@ namespace UmamusumeCompanion
 
         const float YawnLen = 4f, WakeLen = 2.5f;   // 4 s: the hand goes to the mouth and back (2.8 s was rushed)
 
-        void DozeLog(string what) { Debug.Log("[UncleSwap] Doze: " + what); }
+        void DozeLog(string what) { Debug.Log("[Umamusume companion] Doze: " + what); }
 
         void DozeSet(DozePhase p, string why)
         {

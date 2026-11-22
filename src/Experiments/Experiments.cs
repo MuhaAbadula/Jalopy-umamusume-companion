@@ -9,10 +9,10 @@ namespace UmamusumeCompanion
     /// (x0.7..1.3, none in the first 5 min after boarding) she holds out a glowing vial (exp_offer). A click on it within 15 s:
     /// the vial goes to the player's mouth, an effect starts (ExpFx, E1..E15; strong ones only on foot and with the setting on).
     /// No click: exp_refused, and 2-5 min later the effect starts anyway (exp_sneak). The effect's end: exp_log_name, or exp_cut
-    /// when the player sat down. Journal: ModSaves\FukuUncle\experiments.txt (samples, fails); in Istanbul exp_summary once.
-    /// The vial is a mod-made primitive (no pack prop needed). Log: [UncleSwap] Exp: ...
+    /// when the player sat down. Journal: ModSaves\UmamusumeCompanion\experiments.txt (samples, fails); in Istanbul exp_summary once.
+    /// The vial is a mod-made primitive (no pack prop needed). Log: [Umamusume companion] Exp: ...
     /// </summary>
-    public partial class FukuDriver
+    public partial class CompanionDriver
     {
         /// <summary>Settings: "Experiments", "PotionMinutes", "AddonMinutes" (0 = never).</summary>
         public static bool ExpOn = true;
@@ -72,7 +72,7 @@ namespace UmamusumeCompanion
 
         static string JournalPath
         {
-            get { return Path.Combine(Path.Combine(Path.Combine(Application.persistentDataPath, "ModSaves"), "FukuUncle"), "experiments.txt"); }
+            get { return Path.Combine(CompanionStorage.SaveDirectory, "experiments.txt"); }
         }
 
         void JournalLoad()
@@ -91,7 +91,7 @@ namespace UmamusumeCompanion
                     if (k == "summary") expSummarySaid = v == "1";
                 }
             }
-            catch (System.Exception e) { Debug.LogWarning("[UncleSwap] Exp: journal not read: " + e.Message); }
+            catch (System.Exception e) { Debug.LogWarning("[Umamusume companion] Exp: journal not read: " + e.Message); }
         }
 
         void JournalSave(string entry)
@@ -99,13 +99,13 @@ namespace UmamusumeCompanion
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(JournalPath));
-                var lines = new List<string> { "# FukuUncle: Tachyon's experiment journal", "samples=" + expSamples, "fails=" + expFails, "summary=" + (expSummarySaid ? "1" : "0") };
+                var lines = new List<string> { "# UmamusumeCompanion: Tachyon's experiment journal", "samples=" + expSamples, "fails=" + expFails, "summary=" + (expSummarySaid ? "1" : "0") };
                 if (File.Exists(JournalPath))
                     foreach (var l in File.ReadAllLines(JournalPath)) if (l.StartsWith("log ")) lines.Add(l);
                 if (entry != null) lines.Add("log " + entry);
                 File.WriteAllLines(JournalPath, lines.ToArray());
             }
-            catch (System.Exception e) { Debug.LogWarning("[UncleSwap] Exp: journal not saved: " + e.Message); }
+            catch (System.Exception e) { Debug.LogWarning("[Umamusume companion] Exp: journal not saved: " + e.Message); }
         }
 
         void JournalAdd(string what, bool fail)

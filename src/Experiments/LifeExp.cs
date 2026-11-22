@@ -4,7 +4,7 @@ using UnityEngine;
 namespace UmamusumeCompanion
 {
     /// <summary>
-    /// Task 87: what Experiments (FukuDriver) needs from her body: one hand held out (the vial offer, the pour), a look at the
+    /// Task 87: what Experiments (CompanionDriver) needs from her body: one hand held out (the vial offer, the pour), a look at the
     /// player, a face, the game's click, extra crosshair targets and a pat that is answered with "not now".
     /// </summary>
     public partial class Life

@@ -15,14 +15,14 @@ namespace UmamusumeCompanion
     /// prefix, calls TakeNext first) the bulletin plays on the radio's own AudioSource instead of the next song, piece by
     /// piece; when it is over NextSong runs as usual (the game drops the finished song, Uma FM loads its next track).
     /// Nothing is cut. Power off / station switch / toggle off mid-bulletin = dropped (the items stay unheard, still armed).
-    /// Files: Mods\Assets\FukuUncle\radio\news\{game,umafm}\ (task 51), or radio\news_test\ when news\ has no list.tsv.
-    /// Pools without repeats (each country, WORLD+SPORT, UMA); heard ids + timer in ModSaves\FukuUncle\news_heard.txt.
+    /// Files: Mods\Assets\UmamusumeCompanion\radio\news\{game,umafm}\ (task 51), or radio\news_test\ when news\ has no list.tsv.
+    /// Pools without repeats (each country, WORLD+SPORT, UMA); heard ids + timer in ModSaves\UmamusumeCompanion\news_heard.txt.
     /// </summary>
     public static class News
     {
         public static bool GameOn = true, UmaOn = true;
         public static float GapMinutes = 8f;
-        public static string RadioDir;          // Mods\Assets\FukuUncle\radio
+        public static string RadioDir;          // Mods\Assets\UmamusumeCompanion\radio
 
         class Item { public string Id, Country; public float Sec; }
 
@@ -59,7 +59,7 @@ namespace UmamusumeCompanion
 
         static float GapSec { get { return Mathf.Max(1f, GapMinutes) * 60f; } }
 
-        static void Log(string s) { Debug.Log("[UncleSwap] News: " + s); }
+        static void Log(string s) { Debug.Log("[Umamusume companion] News: " + s); }
         static string St(bool uma) { return uma ? "umafm" : "game"; }
         static bool StationOn(bool uma) { return uma ? UmaOn : GameOn; }
 
@@ -69,7 +69,7 @@ namespace UmamusumeCompanion
         {
             if (applied) return;
             applied = true;
-            var h = new Harmony("osobl.jalopy.uncleswap.news");
+            var h = new Harmony("osobl.jalopy.umamusumecompanion.news");
             var erase = AccessTools.Method(typeof(MainMenuClickersC), "EraseSaveData");
             if (erase != null) h.Patch(erase, postfix: new HarmonyMethod(typeof(News), nameof(NewGame)));
             var home = AccessTools.Method(typeof(MainMenuC), "SaveAndReturnHome");
@@ -77,8 +77,8 @@ namespace UmamusumeCompanion
             Log("patches on (new game " + (erase != null) + ", return home " + (home != null) + ")");
         }
 
-        static void NewGame() { try { Reset("new game"); } catch (Exception e) { Debug.LogWarning("[UncleSwap] News: reset failed: " + e.Message); } }
-        static void ReturnHome() { try { Reset("return home"); } catch (Exception e) { Debug.LogWarning("[UncleSwap] News: reset failed: " + e.Message); } }
+        static void NewGame() { try { Reset("new game"); } catch (Exception e) { Debug.LogWarning("[Umamusume companion] News: reset failed: " + e.Message); } }
+        static void ReturnHome() { try { Reset("return home"); } catch (Exception e) { Debug.LogWarning("[Umamusume companion] News: reset failed: " + e.Message); } }
 
         static void Reset(string why)
         {
@@ -140,7 +140,7 @@ namespace UmamusumeCompanion
                 }
                 if (Time.realtimeSinceStartup >= saveAt) SaveState();
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] News: tick failed: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] News: tick failed: " + e.Message); }
         }
 
         static int curPiece = -1;
@@ -187,7 +187,7 @@ namespace UmamusumeCompanion
             }
             catch (Exception e)
             {
-                Debug.LogWarning("[UncleSwap] News: NextSong hook failed, radio as usual: " + e);
+                Debug.LogWarning("[Umamusume companion] News: NextSong hook failed, radio as usual: " + e);
                 try { Cleanup(); } catch (Exception) { }
                 return false;
             }
@@ -224,7 +224,7 @@ namespace UmamusumeCompanion
                     st.Items.Add(new Item { Id = id, Country = c, Sec = sec });
                 }
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] News: can't read " + list + ": " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] News: can't read " + list + ": " + e.Message); }
             return st;
         }
 
@@ -466,10 +466,10 @@ namespace UmamusumeCompanion
             return "news in " + Clock(Mathf.Max(0f, GapSec - timer));
         }
 
-        // ------------------------------------------------------------ state (ModSaves\FukuUncle\news_heard.txt)
+        // ------------------------------------------------------------ state (ModSaves\UmamusumeCompanion\news_heard.txt)
         static string StatePath
         {
-            get { return Path.Combine(Path.Combine(Path.Combine(Application.persistentDataPath, "ModSaves"), "FukuUncle"), "news_heard.txt"); }
+            get { return Path.Combine(CompanionStorage.SaveDirectory, "news_heard.txt"); }
         }
 
         static void SaveState()
@@ -492,7 +492,7 @@ namespace UmamusumeCompanion
                     + "game=" + string.Join("|", g.ToArray()) + "\n"
                     + "umafm=" + string.Join("|", u.ToArray()) + "\n");
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] News: state not saved: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] News: state not saved: " + e.Message); }
         }
 
         static void ReadState()
@@ -511,7 +511,7 @@ namespace UmamusumeCompanion
                 }
                 Log("state: " + heard.Count + " heard, next bulletin in " + Clock(Mathf.Max(0f, GapSec - timer)) + " of radio");
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] News: state not read: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] News: state not read: " + e.Message); }
         }
 
         static string Clock(float sec)

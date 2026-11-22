@@ -30,7 +30,7 @@ namespace UmamusumeCompanion
         {
             if (applied) return;
             applied = true;
-            var h = new Harmony("osobl.jalopy.uncleswap.luckshop");
+            var h = new Harmony("osobl.jalopy.umamusumecompanion.luckshop");
             h.Patch(AccessTools.Method(typeof(ObjectPickupC), "SetPriceTag"),
                 prefix: new HarmonyMethod(typeof(LuckShop), nameof(TagPrefix)),
                 postfix: new HarmonyMethod(typeof(LuckShop), nameof(TagPostfix)));
@@ -39,7 +39,7 @@ namespace UmamusumeCompanion
             h.Patch(AccessTools.Method(typeof(ShopC), "PlaceObjectIntoShoppingBagConvertToMoney"),
                 prefix: new HarmonyMethod(typeof(LuckShop), nameof(SoldPrefix)));
             h.Patch(AccessTools.Method(typeof(ShopC), "Update"), postfix: new HarmonyMethod(typeof(LuckShop), nameof(Tick)));
-            Debug.Log("[UncleSwap] LuckFx: Shop patches on");
+            Debug.Log("[Umamusume companion] LuckFx: Shop patches on");
         }
 
         // ------------------------------------------------------------ shelf items
@@ -66,7 +66,7 @@ namespace UmamusumeCompanion
                 if (now != s.game && logged.Add(s.store + "|" + Name(o) + "|" + s.game + "|" + now))
                     LuckFx.Log("Shop", Name(o) + " " + s.game, now.ToString());
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] LuckFx: Shop tag failed: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] LuckFx: Shop tag failed: " + e.Message); }
         }
 
         static float ShelfPrice(ObjectPickupC o, float game)
@@ -104,7 +104,7 @@ namespace UmamusumeCompanion
                 o.sellValue = now;
                 SellTag(o);
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] LuckFx: Crates tag failed: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] LuckFx: Crates tag failed: " + e.Message); }
         }
 
         /// <summary>The game's sell tag format (ObjectPickupC.SetPriceTag).</summary>
@@ -143,7 +143,7 @@ namespace UmamusumeCompanion
                 foreach (var o in held.GetComponentsInChildren<ObjectPickupC>(true))
                     if (o.isTradeGood && o.isPurchased && !o.isInShoppingKart) o.SetPriceTag();
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] LuckFx: Crates counter failed: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] LuckFx: Crates counter failed: " + e.Message); }
         }
 
         static void SoldPrefix(ShopC __instance)
@@ -159,7 +159,7 @@ namespace UmamusumeCompanion
                 LuckFx.Log("Crates", Name(o) + " " + game, o.sellValue.ToString());
                 if (LuckFx.L > 0 && o.sellValue > game) LuckFx.TrySay("luckfx_crate_good");
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] LuckFx: Crates sale failed: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] LuckFx: Crates sale failed: " + e.Message); }
         }
 
         // ------------------------------------------------------------ remark, refresh
@@ -173,7 +173,7 @@ namespace UmamusumeCompanion
                 if (l == 0 || LuckFx.ShopMult() == 1f) return;
                 if (LuckFx.TrySay(l > 0 ? "luckfx_shop_good" : "luckfx_shop_bad")) LuckFx.ShopRemarkDoneToday = true;
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] LuckFx: Shop remark failed: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] LuckFx: Shop remark failed: " + e.Message); }
         }
 
         /// <summary>ShopC.Update (any loaded shop): twice a second, re-tag everything when a multiplier changed.</summary>
@@ -196,11 +196,11 @@ namespace UmamusumeCompanion
                     if (s != appliedShop && !o.isPurchased && !o.isTradeGood && shelf.ContainsKey(o)) { o.SetPriceTag(); ns++; }
                     else if (c != appliedCrate && o.isTradeGood && o.isPurchased) { o.SetPriceTag(); nc++; }
                 }
-                Debug.Log("[UncleSwap] LuckFx: Shop L=" + LuckFx.L + " re-tagged " + ns + " shelf items (x" + s + "), " + nc + " crates (x" + c + ")");
+                Debug.Log("[Umamusume companion] LuckFx: Shop L=" + LuckFx.L + " re-tagged " + ns + " shelf items (x" + s + "), " + nc + " crates (x" + c + ")");
                 appliedShop = s;
                 appliedCrate = c;
             }
-            catch (Exception e) { nextTick = t + 5f; Debug.LogWarning("[UncleSwap] LuckFx: Shop refresh failed: " + e.Message); }
+            catch (Exception e) { nextTick = t + 5f; Debug.LogWarning("[Umamusume companion] LuckFx: Shop refresh failed: " + e.Message); }
         }
 
         static bool EconomyReady()
@@ -227,13 +227,13 @@ namespace UmamusumeCompanion
         }
     }
 
-    public partial class FukuDriver
+    public partial class CompanionDriver
     {
-        // Unity calls it once after Build (OnEnable is LuckWear's hook): applies the shop patches without touching FukuUncle.cs
+        // Unity calls it once after Build (OnEnable is LuckWear's hook): applies the shop patches without touching CompanionMod.cs
         void Start()
         {
             try { LuckShop.Apply(); }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] LuckFx: Shop patch failed: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] LuckFx: Shop patch failed: " + e.Message); }
         }
     }
 }

@@ -74,7 +74,7 @@ namespace UmamusumeCompanion
             return s;
         }
 
-        static void Skip(string why) { Debug.Log("[UncleSwap] remark skipped: " + why); }
+        static void Skip(string why) { Debug.Log("[Umamusume companion] remark skipped: " + why); }
 
         /// <summary>Would a remark show right now (same checks as Say).</summary>
         public bool CanSay(UncleLogicC u)

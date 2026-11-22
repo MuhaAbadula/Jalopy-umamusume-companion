@@ -13,7 +13,7 @@ namespace UmamusumeCompanion
     /// make it (far away, no path, door gone, car driving off) she is put in her seat the way the game does it
     /// every morning (UncleEnterCar).
     /// </summary>
-    public partial class FukuDriver
+    public partial class CompanionDriver
     {
         internal enum Out { InCar, Exiting, Follow, Wait, Boarding }
         internal Out OutingState => outState;
@@ -76,7 +76,7 @@ namespace UmamusumeCompanion
                 Transform t = h.collider.transform;
                 if (t.IsChildOf(car.root) || t.IsChildOf(transform) || t.root == transform.root) continue;
                 if (u.player != null && t.IsChildOf(u.player.transform)) continue;
-                Debug.Log("[UncleSwap] outing: door blocked by " + t.name + " (root " + t.root.name + ") at " + h.distance.ToString("0.00"));
+                Debug.Log("[Umamusume companion] outing: door blocked by " + t.name + " (root " + t.root.name + ") at " + h.distance.ToString("0.00"));
                 return false;
             }
             return true;
@@ -97,7 +97,7 @@ namespace UmamusumeCompanion
             if (ai != null && ai.target != null && ai.target == u.bonnetNode) return "repair tutorial";
             if (BubbleShown(u)) return "talking";
             if (u.isTalking)   // the game's flag sticks sometimes (a cut-off line); only the bubble counts
-                Debug.Log("[UncleSwap] outing: isTalking stuck (dialogue '" + u.dialogueConvoItem + "', interrupt '" +
+                Debug.Log("[Umamusume companion] outing: isTalking stuck (dialogue '" + u.dialogueConvoItem + "', interrupt '" +
                           u.interruptConvoItem + "', queue " + u.textQueue.Count + "), ignored");
             return null;
         }
@@ -146,7 +146,7 @@ namespace UmamusumeCompanion
         IEnumerator ExitCar(UncleLogicC u, string line = "out_go")
         {
             outState = Out.Exiting;
-            Debug.Log("[UncleSwap] outing: she gets out");
+            Debug.Log("[Umamusume companion] outing: she gets out");
             var an = GetComponent<Animator>();
             var door = u.uncleDoorTrigger;
             transform.parent = null;
@@ -200,7 +200,7 @@ namespace UmamusumeCompanion
 
         internal void StartBoarding(UncleLogicC u, string why)
         {
-            Debug.Log("[UncleSwap] outing: back to the car (" + why + ")");
+            Debug.Log("[Umamusume companion] outing: back to the car (" + why + ")");
             outState = Out.Boarding;
             boardAt = Time.time;
             boardLastPos = transform.position;
@@ -270,7 +270,7 @@ namespace UmamusumeCompanion
             Transform tgt = ai.target;
             string what = tgt == null ? "none" : tgt == outT ? "you" : tgt == u.relayNodeTransform ? "relay node" :
                           tgt == u.uncleCarTransform ? "her seat" : tgt.name;
-            var sb = new System.Text.StringBuilder("[UncleSwap] outing: follow " + outState + ", mode " + (direct ? "direct" : "A*") +
+            var sb = new System.Text.StringBuilder("[Umamusume companion] outing: follow " + outState + ", mode " + (direct ? "direct" : "A*") +
                 ", target " + what + " " + (far / walkLegLen).ToString("0.0") + " legs, speed " + spd.ToString("0.00") + " legs/s");
             if (direct)
             {
@@ -293,7 +293,7 @@ namespace UmamusumeCompanion
         {
             direct = true;
             directSince = Time.time;
-            var sb = new System.Text.StringBuilder("[UncleSwap] outing: walking without the path grid (" + why + "); hasPath " +
+            var sb = new System.Text.StringBuilder("[Umamusume companion] outing: walking without the path grid (" + why + "); hasPath " +
                 ai.hasPath + ", pending " + ai.pathPending + ", reached " + ai.reachedEndOfPath + "; graphs:");
             if (AstarPath.active != null && AstarPath.active.data != null && AstarPath.active.data.graphs != null)
                 foreach (var g in AstarPath.active.data.graphs)
@@ -353,7 +353,7 @@ namespace UmamusumeCompanion
                     stuckPos = pos;
                     stuckSince = Time.time;
                     shortFor = 0f;
-                    Debug.Log("[UncleSwap] outing: back on the path grid (she and the target are next to nodes)");
+                    Debug.Log("[Umamusume companion] outing: back on the path grid (she and the target are next to nodes)");
                     return;
                 }
             }
@@ -380,7 +380,7 @@ namespace UmamusumeCompanion
                 if (radioStuck < 1.5f) return;
                 u.isTalking = false;
                 u.interruptConvoItem = string.Empty;
-                Debug.Log("[UncleSwap] radio: cleared the game's stuck talking flag (RadioTurnedDown said nothing)");
+                Debug.Log("[Umamusume companion] radio: cleared the game's stuck talking flag (RadioTurnedDown said nothing)");
             }
             radioStuck = 0f;
         }
@@ -390,7 +390,7 @@ namespace UmamusumeCompanion
             if (!MornWarpOk(why)) return;
             if (mornPhase != MPhase.Off) mornWarped = true;
             direct = false;
-            Debug.Log("[UncleSwap] outing: put in her seat (" + why + ")");
+            Debug.Log("[Umamusume companion] outing: put in her seat (" + why + ")");
             var ai = GetComponent<AIPath>();
             if (ai != null) ai.target = null;
             outState = Out.InCar;
@@ -398,7 +398,7 @@ namespace UmamusumeCompanion
             // task 14: the morning warp is silent (she did not chase you, no out_left); the G outing keeps it
             bool morning = mornPhase != MPhase.Off;
             outLeftSayAt = morning ? -1f : Time.time + 6f;
-            if (morning) Debug.Log("[UncleSwap] Morning: warp without the out_left line");
+            if (morning) Debug.Log("[Umamusume companion] Morning: warp without the out_left line");
         }
 
         // every motel door the player opens sets her AIPath target to the room (EnvironmentDoorsC), she would walk back
@@ -406,7 +406,7 @@ namespace UmamusumeCompanion
         {
             var ai = GetComponent<AIPath>();
             if (ai == null || outT == null || ai.target == outT || !IsMotelNode(u, ai.target)) return;
-            Debug.Log("[UncleSwap] outing: a motel door sent her back to the room, target restored");
+            Debug.Log("[Umamusume companion] outing: a motel door sent her back to the room, target restored");
             ai.target = outT;
         }
 
@@ -431,7 +431,7 @@ namespace UmamusumeCompanion
                 direct = false;
                 EndFetch();
                 if (pouring) EndPour(null, "she is in the car again", false);
-                Debug.Log("[UncleSwap] outing: in the car again");
+                Debug.Log("[Umamusume companion] outing: in the car again");
                 return;
             }
 

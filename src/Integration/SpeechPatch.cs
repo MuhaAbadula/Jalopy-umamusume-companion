@@ -43,7 +43,7 @@ namespace UmamusumeCompanion
         public static void Apply()
         {
             if (applied) return;
-            var harmony = new Harmony("osobl.jalopy.uncleswap.speech");
+            var harmony = new Harmony("osobl.jalopy.umamusumecompanion.speech");
             harmony.Patch(AccessTools.Method(typeof(Language), "Get", new[] { typeof(string), typeof(string) }),
                 postfix: new HarmonyMethod(typeof(SpeechPatch), nameof(Postfix)));
             applied = true;

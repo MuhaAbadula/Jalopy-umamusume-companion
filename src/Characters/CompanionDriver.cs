@@ -10,7 +10,7 @@ namespace UmamusumeCompanion
     /// then runs helper bones, spring physics and the face. Nothing here knows a specific rig:
     /// bone names come from the pack (see blender/profiles/*.json).
     /// </summary>
-    public partial class FukuDriver : MonoBehaviour
+    public partial class CompanionDriver : MonoBehaviour
     {
         class Link
         {
@@ -211,7 +211,7 @@ namespace UmamusumeCompanion
                 found = true;
                 break;
             }
-            Debug.Log("[UncleSwap] bed: floor " + (found ? "found " + (uHip.position.y - bedFloorY).ToString("F2") + " below her hips" : "not found"));
+            Debug.Log("[Umamusume companion] bed: floor " + (found ? "found " + (uHip.position.y - bedFloorY).ToString("F2") + " below her hips" : "not found"));
             return found;
         }
 
@@ -260,7 +260,7 @@ namespace UmamusumeCompanion
                 ext[side] = reach;
             }
             float shift = (ext[0] - ext[1]) * 0.5f * h;   // towards the wider side, up to the middle
-            Debug.Log("[UncleSwap] bed: mattress across her " + ext[0].ToString("F2") + " / " + ext[1].ToString("F2")
+            Debug.Log("[Umamusume companion] bed: mattress across her " + ext[0].ToString("F2") + " / " + ext[1].ToString("F2")
                 + " hip heights, moving her " + (shift / h).ToString("F2") + " to the middle");
             return perp * shift;
         }
@@ -282,7 +282,7 @@ namespace UmamusumeCompanion
             {
                 bedClip = Random.Range(0, gestures.BedCount);
                 bedT = 0f;
-                Debug.Log("[UncleSwap] bed: pose " + bedClip + ", uncle hips->head " + (uHead.position - uHip.position).ToString("F2"));
+                Debug.Log("[Umamusume companion] bed: pose " + bedClip + ", uncle hips->head " + (uHead.position - uHip.position).ToString("F2"));
             }
             bedW = Mathf.MoveTowards(bedW, on ? 1f : 0f, dt / 1.5f);
             bedT += dt;
@@ -307,7 +307,7 @@ namespace UmamusumeCompanion
                 bool flat = full.y < 0.35f * full.magnitude;
                 bedSettleT = flat ? bedSettleT + Time.deltaTime : 0f;
                 if (bedSettleT < 0.5f && bedT < 6f) return;
-                Debug.Log("[UncleSwap] bed: lying axis set at " + bedT.ToString("F1") + " s" + (bedSettleT < 0.5f ? " (timeout, not flat)" : "")
+                Debug.Log("[Umamusume companion] bed: lying axis set at " + bedT.ToString("F1") + " s" + (bedSettleT < 0.5f ? " (timeout, not flat)" : "")
                     + ", uncle hips->head " + full.ToString("F2"));
                 Vector3 ua = Vector3.ProjectOnPlane(uHead.position - uHip.position, up);
                 bool bedFound = BedFind(uHip.position);
@@ -321,7 +321,7 @@ namespace UmamusumeCompanion
                 bedFrameSet = true;
                 // the clamp below replaces the ray survey (it found 0.00 / 0.00: no solid mattress collider)
                 bedShift = !bedFound && bedSurveyed ? BedCentre(hipLink.Girl.position, ua, bedFloorY) : Vector3.zero;
-                Debug.Log("[UncleSwap] bed: pose " + gestures.BedName(bedClip) + " root " + hipLink.Girl.position.ToString("F2")
+                Debug.Log("[Umamusume companion] bed: pose " + gestures.BedName(bedClip) + " root " + hipLink.Girl.position.ToString("F2")
                     + " bed " + (bedHave ? bedSrc + " at " + bedO.ToString("F2") : "none"));
             }
             hipLink.Girl.position += up * (BedLift * girlRoot.lossyScale.x * w) + bedShift * w;
@@ -367,7 +367,7 @@ namespace UmamusumeCompanion
                 Vector3 v = Quaternion.Inverse(s.rotation) * Vector3.up;
                 int k = Mathf.Abs(v.x) > Mathf.Abs(v.y) ? (Mathf.Abs(v.x) > Mathf.Abs(v.z) ? 0 : 2) : (Mathf.Abs(v.y) > Mathf.Abs(v.z) ? 1 : 2);
                 upL = k == 0 ? new Vector3(Mathf.Sign(v.x), 0, 0) : k == 1 ? new Vector3(0, Mathf.Sign(v.y), 0) : new Vector3(0, 0, Mathf.Sign(v.z));
-                Debug.Log("[UncleSwap] bed: suitcase up axis (local, from the carry) " + upL);
+                Debug.Log("[Umamusume companion] bed: suitcase up axis (local, from the carry) " + upL);
             }
             // lying flat on its broad side, the handle towards her bed (user). upL is the handle side (up while carried);
             // of the two other local axes the thinner one goes up
@@ -402,7 +402,7 @@ namespace UmamusumeCompanion
             suitcaseAnchor.rotation = floorRot;
             s.SetParent(suitcaseAnchor, true);
             suitcaseOnFloor = true;
-            Debug.Log("[UncleSwap] bed: suitcase on the floor at " + floorPos.ToString("F2") + ", uncle at " + transform.position.ToString("F2"));
+            Debug.Log("[Umamusume companion] bed: suitcase on the floor at " + floorPos.ToString("F2") + ", uncle at " + transform.position.ToString("F2"));
         }
 
         void UpdateSuitcase()
@@ -451,7 +451,7 @@ namespace UmamusumeCompanion
         void UpdateWalk(float dt, bool inCar)
         {
             if (gestures == null || !gestures.HasWalk || uAnkleL == null || uAnkleR == null || uHip == null) { walkW = 0f; return; }
-            if (NewWalk) { UpdateWalk2(dt, inCar); return; }   // v5 clip: distance-driven phase + foot IK (FukuWalk.cs)
+            if (NewWalk) { UpdateWalk2(dt, inCar); return; }   // v5 clip: distance-driven phase + foot IK (CompanionWalk.cs)
             float ws = animator != null ? animator.GetFloat("walkSpeed") : 0f;
             bool walking = OwnWalk && !inCar && seatBlend <= 0f && ws > 0.2f && (life == null || life.Enabled);
             Vector3 up = transform.up;
@@ -549,7 +549,7 @@ namespace UmamusumeCompanion
             int lb = uncleBone["LowerBack"];
             Matrix4x4 D0 = ubones[lb].localToWorldMatrix * ubinds[lb];
             float bindScale = D0.GetColumn(0).magnitude;
-            girlRoot = new GameObject("UncleSwapCharacter").transform;
+            girlRoot = new GameObject("UmamusumeCompanionCharacter").transform;
             girlRoot.SetParent(transform, false);
             if (BodyScale <= 0f) BodyScale = 1f;
             bindWorld = bindScale;
@@ -577,7 +577,7 @@ namespace UmamusumeCompanion
             }
 
             // mesh
-            var mesh = new Mesh { name = "UncleSwapCharacter" };
+            var mesh = new Mesh { name = "UmamusumeCompanionCharacter" };
             mesh.vertices = d.Positions;
             mesh.normals = d.Normals;
             mesh.uv = d.UVs;
@@ -719,7 +719,7 @@ namespace UmamusumeCompanion
                 life.Say = key =>
                 {
                     string text = remarks.Pick(key);
-                    if (text == null) Debug.Log("[UncleSwap] remark skipped: no line for " + key + " in this language");
+                    if (text == null) Debug.Log("[Umamusume companion] remark skipped: no line for " + key + " in this language");
                     else StartCoroutine(remarks.Say(GetComponent<UncleLogicC>(), text));
                 };
             life.CanSay = () => remarks.CanSay(GetComponent<UncleLogicC>());
@@ -851,7 +851,7 @@ namespace UmamusumeCompanion
             {
                 var www = new WWW(new System.Uri(f).AbsoluteUri);
                 yield return www;
-                if (!string.IsNullOrEmpty(www.error)) { Debug.LogWarning("[UncleSwap] voice " + f + ": " + www.error); continue; }
+                if (!string.IsNullOrEmpty(www.error)) { Debug.LogWarning("[Umamusume companion] voice " + f + ": " + www.error); continue; }
                 var type = Path.GetExtension(f).ToLowerInvariant() == ".ogg" ? AudioType.OGGVORBIS : AudioType.WAV;
                 var clip = www.GetAudioClip(false, false, type);
                 while (clip != null && clip.loadState == AudioDataLoadState.Loading) yield return null;
@@ -862,9 +862,9 @@ namespace UmamusumeCompanion
             // played from a shuffle bag (no repeats in a row), see VoicePatch
             VoicePatch.SetClips(uncleLogic.speech);
             try { VoicePatch.Apply(); }
-            catch (System.Exception e) { Debug.LogWarning("[UncleSwap] voice patch failed, game picks clips itself: " + e.Message); }
+            catch (System.Exception e) { Debug.LogWarning("[Umamusume companion] voice patch failed, game picks clips itself: " + e.Message); }
             VoiceSummary = clips.Count + " voice clips, shuffled";
-            JaLoader.Console.Log("FukuUncle", "Voice: " + VoiceSummary);
+            JaLoader.Console.Log(CompanionStorage.ModId, "Voice: " + VoiceSummary);
         }
 
         void PitchUncle(float pitch)
@@ -892,13 +892,13 @@ namespace UmamusumeCompanion
                     nc.SetData(res, 0);
                     outClips.Add(nc);
                 }
-                catch (System.Exception e) { Debug.LogWarning("[UncleSwap] pitch " + c.name + ": " + e.Message); }
+                catch (System.Exception e) { Debug.LogWarning("[Umamusume companion] pitch " + c.name + ": " + e.Message); }
             }
             if (outClips.Count > 0)
             {
                 uncleLogic.speech = outClips.ToArray();
                 VoicePatch.SetClips(uncleLogic.speech);
-                try { VoicePatch.Apply(); } catch (System.Exception e) { Debug.LogWarning("[UncleSwap] voice patch: " + e.Message); }
+                try { VoicePatch.Apply(); } catch (System.Exception e) { Debug.LogWarning("[Umamusume companion] voice patch: " + e.Message); }
                 VoiceSummary = "uncle's voice x" + pitch;
             }
             else VoiceSummary = "uncle's voice (could not pitch)";
@@ -1032,7 +1032,7 @@ namespace UmamusumeCompanion
             catch (System.Exception e)
             {
                 springs.Enabled = false; // one bad chain must not freeze the whole character
-                Debug.LogError("[UncleSwap] physics disabled: " + e);
+                Debug.LogError("[Umamusume companion] physics disabled: " + e);
             }
 
             if (backpack != null && life != null && hipLink != null)

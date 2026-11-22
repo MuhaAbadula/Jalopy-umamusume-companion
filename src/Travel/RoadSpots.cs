@@ -20,7 +20,7 @@ namespace UmamusumeCompanion
 
         /// <summary>Her height in metres: info.txt height_m (task 30), default 1.56 (Fukukitaru's mesh).</summary>
         public static float HerMetres = 1.56f;
-        /// <summary>Her rest height in game units (FukuDriver.HeightUnits, set once she is built); 0 = unknown.</summary>
+        /// <summary>Her rest height in game units (CompanionDriver.HeightUnits, set once she is built); 0 = unknown.</summary>
         public static float HerHeight;
 
         static readonly CultureInfo IC = CultureInfo.InvariantCulture;
@@ -392,7 +392,7 @@ namespace UmamusumeCompanion
             catch (Exception e)
             {
                 if (go != null) UnityEngine.Object.Destroy(go);
-                Debug.LogWarning("[UncleSwap] RoadSpots: tree copy failed: " + e.Message);
+                Debug.LogWarning("[Umamusume companion] RoadSpots: tree copy failed: " + e.Message);
                 return "none (error)";
             }
         }
@@ -459,7 +459,7 @@ namespace UmamusumeCompanion
                     probeBox = Place(sp.Pos, sp.Rot, Vector3.one * sp.Scale);   // 1 m cube
                     UnityEngine.Object.Destroy(probeBox, 60f);
                     float dist = Vector3.Distance(sp.Pos, car.transform.position);
-                    Debug.Log("[UncleSwap] RoadSpots: probe spot " + P(sp.Pos) + " | " + sp.Info + ", " + dist.ToString("0", IC) + " u from the car");
+                    Debug.Log("[Umamusume companion] RoadSpots: probe spot " + P(sp.Pos) + " | " + sp.Info + ", " + dist.ToString("0", IC) + " u from the car");
                     return "spot " + P(sp.Pos) + " in " + (Country(sc.name) ?? "?") + ", " + dist.ToString("0", IC) + " u from the car, grey box for 60 s";
                 }
                 reasons.Add(Clean(sc.name) + ": " + why);
@@ -470,7 +470,7 @@ namespace UmamusumeCompanion
 
         static string Log(string text)
         {
-            Debug.Log("[UncleSwap] RoadSpots: probe " + text);
+            Debug.Log("[Umamusume companion] RoadSpots: probe " + text);
             return text;
         }
     }

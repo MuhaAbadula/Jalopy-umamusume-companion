@@ -268,7 +268,7 @@ namespace UmamusumeCompanion
             float miss, dist, r;
             bool hit = AimAtHead(out miss, out dist, out r);
             if (r > 0f && dist < 8f)
-                Debug.Log("[UncleSwap] pat: " + (hit ? "hit" : "miss") + ", off by " + (miss / r).ToString("F2") + " head radii, distance "
+                Debug.Log("[Umamusume companion] pat: " + (hit ? "hit" : "miss") + ", off by " + (miss / r).ToString("F2") + " head radii, distance "
                     + dist.ToString("F2") + " units");
             if (!hit) return;
             // a click while she is still being patted extends it (full weight, no restart from zero):
@@ -333,7 +333,7 @@ namespace UmamusumeCompanion
         {
             if (!Enabled) return;
             float now = Time.time;
-            Debug.Log("[UncleSwap] event: thunder");
+            Debug.Log("[Umamusume companion] event: thunder");
             if (Doze.Gate) { DozeWake("thunder"); return; }   // wakes with her own line, no remark
             flinchT = 0f;
             if (asleepNow)
@@ -454,7 +454,7 @@ namespace UmamusumeCompanion
             if (signs.Count != lastSignCount)
             {
                 lastSignCount = signs.Count;
-                Debug.Log("[UncleSwap] signs: " + signs.Count + " in the world (" + scanVisited + " objects in " + scanFrames
+                Debug.Log("[Umamusume companion] signs: " + signs.Count + " in the world (" + scanVisited + " objects in " + scanFrames
                     + " frames, " + (scanMs / Mathf.Max(1, scanFrames)).ToString("F2") + " ms per frame)");
             }
         }
@@ -503,7 +503,7 @@ namespace UmamusumeCompanion
                 // her window side = our side of the road; signs across the road are for the oncoming lane (user)
                 if (Vector3.Dot(SpotCentre(best.T) - head.T.position, w0) <= 0f)
                 {
-                    Debug.Log("[UncleSwap] sign skipped (oncoming side): " + best.T.name);
+                    Debug.Log("[Umamusume companion] sign skipped (oncoming side): " + best.T.name);
                     return;
                 }
             }
@@ -519,7 +519,7 @@ namespace UmamusumeCompanion
             beat = null;
             nextBeat = now + Random.Range(4f, 8f);
             nextPointOk = now + 12f;
-            Debug.Log("[UncleSwap] event: points at " + best.T.name + " (" + best.Kind.Key + ")");
+            Debug.Log("[Umamusume companion] event: points at " + best.T.name + " (" + best.Kind.Key + ")");
             if (best.Kind.Remark && !talking) SayMaybe(best.Kind.Key, 0.6f, 150f);
         }
 
@@ -552,7 +552,7 @@ namespace UmamusumeCompanion
             bool windowSide = Vector3.Dot(d, winDir) > 0f;
             StartAct(Act.Wave, 2.0f, windowSide ? outer : inner);
             nextWaveOk = now + 40f;
-            Debug.Log("[UncleSwap] event: waves at " + watch.name);
+            Debug.Log("[Umamusume companion] event: waves at " + watch.name);
         }
     }
 }

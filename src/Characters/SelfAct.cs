@@ -23,7 +23,7 @@ namespace UmamusumeCompanion
                 if (BoardDelay > 0.5f)
                 {
                     selfActLeft = Random.Range(BoardDelay * 0.667f, BoardDelay * 1.333f);
-                    Debug.Log("[UncleSwap] SelfAct: boarded, radio/window blocked for " + Mathf.RoundToInt(selfActLeft) + " s");
+                    Debug.Log("[Umamusume companion] SelfAct: boarded, radio/window blocked for " + Mathf.RoundToInt(selfActLeft) + " s");
                 }
                 else selfActLeft = 0f;
             }
@@ -31,7 +31,7 @@ namespace UmamusumeCompanion
             if (selfActLeft > 0f && inCar && PlayerSeated())
             {
                 selfActLeft -= dt;
-                if (selfActLeft <= 0f) Debug.Log("[UncleSwap] SelfAct: block over, radio/window free");
+                if (selfActLeft <= 0f) Debug.Log("[Umamusume companion] SelfAct: block over, radio/window free");
             }
         }
 

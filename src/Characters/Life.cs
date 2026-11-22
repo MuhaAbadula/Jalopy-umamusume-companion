@@ -84,7 +84,7 @@ namespace UmamusumeCompanion
                     List<KeyValuePair<int, string>> hits;
                     if (!index.TryGetValue(group + "(" + tag + ")", out hits))
                     {
-                        Debug.LogWarning("[UncleSwap] face.txt: no shape " + group + "(" + tag + ") for " + name);
+                        Debug.LogWarning("[Umamusume companion] face.txt: no shape " + group + "(" + tag + ") for " + name);
                         continue;
                     }
                     foreach (var h in hits)
@@ -342,7 +342,7 @@ namespace UmamusumeCompanion
             if (sayCool.TryGetValue(key, out until) && now < until) return false;
             if (Random.value > chance) return false;
             sayCool[key] = now + cooldown;
-            Debug.Log("[UncleSwap] remark: " + key);
+            Debug.Log("[Umamusume companion] remark: " + key);
             Say(key);
             return true;
         }
@@ -360,7 +360,7 @@ namespace UmamusumeCompanion
             if (asleepNow || Doze.Phase != DozePhase.Awake) return "skip asleep";
             if (Say == null) return "skip no remarks";
             if (CanSay != null && !CanSay()) return "skip busy";
-            Debug.Log("[UncleSwap] remark: " + key);
+            Debug.Log("[Umamusume companion] remark: " + key);
             Say(key);
             return "line";
         }
@@ -405,13 +405,13 @@ namespace UmamusumeCompanion
                 {
                     playerLeftAt = now;
                     Attend(Look.Player, 4f, 0.8f);
-                    Debug.Log("[UncleSwap] event: player got out");
+                    Debug.Log("[Umamusume companion] event: player got out");
                     SayMaybe("player_leaves", 0.5f, 60f);
                 }
                 else if (!playerSat && sat && playerLeftAt >= 0f)
                 {
                     float away = now - playerLeftAt;
-                    Debug.Log("[UncleSwap] event: player back after " + away.ToString("F0") + " s");
+                    Debug.Log("[Umamusume companion] event: player back after " + away.ToString("F0") + " s");
                     if (away > 15f)
                     {
                         Attend(Look.Player, 2.5f, 0.9f);
@@ -483,7 +483,7 @@ namespace UmamusumeCompanion
                 if (windowOpen != wasOpen || (herWindow != null) != hadWindow)
                 {
                     hadWindow = herWindow != null;
-                    Debug.Log("[UncleSwap] wind: her window " + (herWindow != null ? herWindow.name + (windowOpen ? " open" : " shut") : "not found"));
+                    Debug.Log("[Umamusume companion] wind: her window " + (herWindow != null ? herWindow.name + (windowOpen ? " open" : " shut") : "not found"));
                 }
                 if (carBody == null && car != null)
                 {
@@ -998,7 +998,7 @@ namespace UmamusumeCompanion
             float len = (a.Fore.position - a.Upper.position).magnitude + (a.Hand.position - a.Fore.position).magnitude;
             if (len < 1e-5f) return;
             float r = (target - a.Upper.position).magnitude / len;
-            Debug.Log("[UncleSwap] reach: " + what + " " + r.ToString("F2") + " arm lengths from the shoulder" + (r > 1f ? " (short, hand stops "
+            Debug.Log("[Umamusume companion] reach: " + what + " " + r.ToString("F2") + " arm lengths from the shoulder" + (r > 1f ? " (short, hand stops "
                 + ((r - 1f) * len).ToString("F3") + " u away)" : " (ok)"));
         }
 
@@ -1070,7 +1070,7 @@ namespace UmamusumeCompanion
                 if (!reachShortLogged && w >= 0.99f)
                 {
                     reachShortLogged = true;
-                    Debug.Log("[UncleSwap] reach: " + name + " short " + gap.ToString("F3") + " u (" + (gap / L).ToString("F2") + " arm, "
+                    Debug.Log("[Umamusume companion] reach: " + name + " short " + gap.ToString("F3") + " u (" + (gap / L).ToString("F2") + " arm, "
                         + (grip ? "wrist" : "fingertips") + ", shoulder slid " + ((a.Upper.position - S0).magnitude / L).ToString("F2") + " arm, " + a.Upper.name + ")");
                 }
             }
@@ -1165,7 +1165,7 @@ namespace UmamusumeCompanion
                 if (!leanLogged)
                 {
                     leanLogged = true;
-                    Debug.Log("[UncleSwap] lean: sill from shoulder lateral " + latS.ToString("F2") + " up " + upS.ToString("F2")
+                    Debug.Log("[Umamusume companion] lean: sill from shoulder lateral " + latS.ToString("F2") + " up " + upS.ToString("F2")
                         + " (arm units), " + (sillOk ? "used" : "ignored, default elbow point"));
                 }
                 // forearm lies forward along the door's edge, the hand a little outside (no face contact: with the
@@ -1176,7 +1176,7 @@ namespace UmamusumeCompanion
                 {
                     leanLogged2 = true;
                     Vector3 e = outer.Fore.position - sh, h = outer.Hand.position - sh;
-                    Debug.Log("[UncleSwap] lean pose: " + outer.Upper.name + " elbow out " + (Vector3.Dot(e, winDir) / s).ToString("F2")
+                    Debug.Log("[Umamusume companion] lean pose: " + outer.Upper.name + " elbow out " + (Vector3.Dot(e, winDir) / s).ToString("F2")
                         + " up " + (Vector3.Dot(e, up) / s).ToString("F2") + " fwd " + (Vector3.Dot(e, fwd) / s).ToString("F2")
                         + "; hand out " + (Vector3.Dot(h, winDir) / s).ToString("F2") + " up " + (Vector3.Dot(h, up) / s).ToString("F2")
                         + " fwd " + (Vector3.Dot(h, fwd) / s).ToString("F2"));
@@ -1243,7 +1243,7 @@ namespace UmamusumeCompanion
                         break;
                 }
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] own action " + name + ": " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] own action " + name + ": " + e.Message); }
         }
 
         void Pending(string action, float now)
@@ -1340,7 +1340,7 @@ namespace UmamusumeCompanion
                 if (Time.time >= nextWindLog)
                 {
                     nextWindLog = Time.time + 10f;
-                    Debug.Log("[UncleSwap] wind: speed " + speed.ToString("F0") + " km/h, strength " + want.magnitude.ToString("F2"));
+                    Debug.Log("[Umamusume companion] wind: speed " + speed.ToString("F0") + " km/h, strength " + want.magnitude.ToString("F2"));
                 }
             }
             windSmooth = Vector3.Lerp(windSmooth, want, 1f - Mathf.Exp(-dt / 0.15f));

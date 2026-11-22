@@ -9,7 +9,7 @@ namespace UmamusumeCompanion
     /// rising), from a source at that foot, pitch +-5 %, shuffle bag. While her own walk runs, the uncle's shoe timer
     /// (UncleLogicC.shoeAudio, a heavy step every 0.4 s whatever the legs do) plays a silent clip instead.
     /// </summary>
-    public partial class FukuDriver
+    public partial class CompanionDriver
     {
         readonly List<AudioClip> stepClips = new List<AudioClip>();
         readonly List<int> stepBag = new List<int>();
@@ -40,19 +40,19 @@ namespace UmamusumeCompanion
             {
                 var www = new WWW(new System.Uri(f).AbsoluteUri);
                 yield return www;
-                if (!string.IsNullOrEmpty(www.error)) { Debug.LogWarning("[UncleSwap] step " + f + ": " + www.error); continue; }
+                if (!string.IsNullOrEmpty(www.error)) { Debug.LogWarning("[Umamusume companion] step " + f + ": " + www.error); continue; }
                 var type = Path.GetExtension(f).ToLowerInvariant() == ".ogg" ? AudioType.OGGVORBIS : AudioType.WAV;
                 var clip = www.GetAudioClip(false, false, type);
                 while (clip != null && clip.loadState == AudioDataLoadState.Loading) yield return null;
                 if (clip != null && clip.length > 0.03f) { clip.name = Path.GetFileNameWithoutExtension(f); stepClips.Add(clip); }
             }
-            JaLoader.Console.Log("FukuUncle", "Footsteps: " + stepClips.Count + " sounds");
+            JaLoader.Console.Log(CompanionStorage.ModId, "Footsteps: " + stepClips.Count + " sounds");
         }
 
         AudioSource StepSource()
         {
             if (stepSource != null) return stepSource;
-            var go = new GameObject("FukuSteps");
+            var go = new GameObject("CompanionSteps");
             go.transform.SetParent(transform, false);
             stepSource = go.AddComponent<AudioSource>();
             var src = GetComponent<AudioSource>();

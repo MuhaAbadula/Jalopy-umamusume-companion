@@ -15,7 +15,7 @@ namespace UmamusumeCompanion
     /// </summary>
     public static class PropMesh
     {
-        /// <summary>models\&lt;current model&gt;\props folder of the deployed pack (set by FukuUncle from the Model dropdown).</summary>
+        /// <summary>models\&lt;current model&gt;\props folder of the deployed pack (set by UmamusumeCompanion from the Model dropdown).</summary>
         public static string Dir;
 
         static readonly Dictionary<string, Mesh> meshes = new Dictionary<string, Mesh>();
@@ -39,7 +39,7 @@ namespace UmamusumeCompanion
             catch (Exception e)
             {
                 failed.Add(name);
-                Debug.LogWarning("[UncleSwap] PropMesh: " + name + " not loaded: " + e.Message);
+                Debug.LogWarning("[Umamusume companion] PropMesh: " + name + " not loaded: " + e.Message);
                 return null;
             }
         }
@@ -66,7 +66,7 @@ namespace UmamusumeCompanion
             catch (Exception e)
             {
                 m = null;
-                Debug.LogWarning("[UncleSwap] PropMesh: material " + png + " not loaded: " + e.Message);
+                Debug.LogWarning("[Umamusume companion] PropMesh: material " + png + " not loaded: " + e.Message);
             }
             mats[png] = m;
             return m;

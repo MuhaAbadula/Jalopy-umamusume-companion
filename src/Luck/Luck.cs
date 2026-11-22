@@ -9,7 +9,7 @@ namespace UmamusumeCompanion
     /// Task 08 + 19: the luck of the day. Level -2..+2 (L1 great luck = +2 ... L5 bad luck = -2), told once per day:
     /// in the morning after the alarm line (Morning.cs), else in the car when you first drive off.
     /// The draw is seeded by the game's DirectorC.daysPassed (part of the save), so a reload gives the same level.
-    /// ModSaves\FukuUncle\luck.txt keeps the level with its forDay; another day in the game = pending, drawn again.
+    /// ModSaves\UmamusumeCompanion\luck.txt keeps the level with its forDay; another day in the game = pending, drawn again.
     /// Other modules read <see cref="Level"/>; game effects go through LuckFx.
     /// </summary>
     public static class Luck
@@ -48,7 +48,7 @@ namespace UmamusumeCompanion
 
         static string StatePath
         {
-            get { return Path.Combine(Path.Combine(Path.Combine(Application.persistentDataPath, "ModSaves"), "FukuUncle"), "luck.txt"); }
+            get { return Path.Combine(CompanionStorage.SaveDirectory, "luck.txt"); }
         }
 
         // ---- the game's day ----
@@ -82,7 +82,7 @@ namespace UmamusumeCompanion
             salt = 0;
             AnnouncedAt = -1f;
             Save();
-            Debug.Log("[UncleSwap] Luck: day " + d + " (luck.txt had day " + was + "): pending, seed " + Seed(d, 0));
+            Debug.Log("[Umamusume companion] Luck: day " + d + " (luck.txt had day " + was + "): pending, seed " + Seed(d, 0));
         }
 
         static void Load()
@@ -110,10 +110,10 @@ namespace UmamusumeCompanion
                     }
                 }
                 if (!hasForDay) { forDay = -1; pending = true; }   // pre-0.35 file: no game day, draw again
-                if (pending) Debug.Log("[UncleSwap] Luck: day " + forDay + " pending (load)");
-                else Debug.Log("[UncleSwap] Luck: day " + forDay + " seed " + Seed(forDay, salt) + " -> L=" + level + " (loaded" + (forced ? ", forced" : "") + ")");
+                if (pending) Debug.Log("[Umamusume companion] Luck: day " + forDay + " pending (load)");
+                else Debug.Log("[Umamusume companion] Luck: day " + forDay + " seed " + Seed(forDay, salt) + " -> L=" + level + " (loaded" + (forced ? ", forced" : "") + ")");
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] Luck: can't read state: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] Luck: can't read state: " + e.Message); }
         }
 
         static void Save()
@@ -124,7 +124,7 @@ namespace UmamusumeCompanion
                 File.WriteAllLines(StatePath, new[] { "level=" + level, "forDay=" + forDay, "pending=" + (pending ? 1 : 0),
                     "forced=" + (forced ? 1 : 0), "salt=" + salt, "shopRemarkDay=" + shopRemarkDay });
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] Luck: can't save state: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] Luck: can't save state: " + e.Message); }
         }
 
         /// <summary>A real motel sleep ended (daysPassed is already +1): a new day, the luck is drawn again.</summary>
@@ -136,7 +136,7 @@ namespace UmamusumeCompanion
             salt = 0;
             AnnouncedAt = -1f;
             Save();
-            Debug.Log("[UncleSwap] Luck: new day " + forDay);
+            Debug.Log("[Umamusume companion] Luck: new day " + forDay);
         }
 
         /// <summary>Seed of a day (+ debug salt): same on every machine and every load.</summary>
@@ -187,7 +187,7 @@ namespace UmamusumeCompanion
             forDay = d;
             forced = false;
             Apply(lvl);
-            Debug.Log("[UncleSwap] Luck: day " + d + " seed " + seed + " -> L=" + lvl + " (seeded" + (salt > 0 ? ", debug salt " + salt : "")
+            Debug.Log("[Umamusume companion] Luck: day " + d + " seed " + seed + " -> L=" + lvl + " (seeded" + (salt > 0 ? ", debug salt " + salt : "")
                 + (noBad ? ", yesterday was bad" : "") + ", " + source + ")");
             return level;
         }
@@ -200,7 +200,7 @@ namespace UmamusumeCompanion
             if (d >= 0) forDay = d;
             forced = true;
             Apply(lvl);
-            Debug.Log("[UncleSwap] Luck: day " + forDay + " seed " + Seed(forDay, salt) + " -> L=" + level + " (forced, " + source + ")");
+            Debug.Log("[Umamusume companion] Luck: day " + forDay + " seed " + Seed(forDay, salt) + " -> L=" + level + " (forced, " + source + ")");
         }
 
         static void Apply(int lvl)
@@ -215,7 +215,7 @@ namespace UmamusumeCompanion
         public static string Key(int lvl) { return "fortune_" + (3 - lvl); }
     }
 
-    public partial class FukuDriver
+    public partial class CompanionDriver
     {
         enum Fort { None, Start, Pray, Tell }
         Fort fort = Fort.None;
@@ -229,14 +229,14 @@ namespace UmamusumeCompanion
         void FortBegin(string source, int forceLevel)
         {
             if (fort != Fort.None || life == null) return;
-            if (!Luck.Mine) { Debug.Log("[UncleSwap] Luck: fortune (" + source + ") skipped, not this character"); return; }
+            if (!Luck.Mine) { Debug.Log("[Umamusume companion] Luck: fortune (" + source + ") skipped, not this character"); return; }
             fortSource = source;
             fortForce = forceLevel;
             fort = Fort.Start;
             fortAt = Time.time;
             fortTalkSeen = false;
             fortPose = false;
-            Debug.Log("[UncleSwap] Luck: fortune starts (" + source + ")");
+            Debug.Log("[Umamusume companion] Luck: fortune starts (" + source + ")");
         }
 
         bool FortCanSay() { return life != null && (life.CanSay == null || life.CanSay()); }
@@ -255,7 +255,7 @@ namespace UmamusumeCompanion
                 {
                     fortL5bDone = true;
                     bool said = life.StorySay != null && life.StorySay("fortune_5b");
-                    Debug.Log("[UncleSwap] Luck: " + (said ? "line fortune_5b" : "no line fortune_5b"));
+                    Debug.Log("[Umamusume companion] Luck: " + (said ? "line fortune_5b" : "no line fortune_5b"));
                 }
             }
 
@@ -267,11 +267,11 @@ namespace UmamusumeCompanion
                 case Fort.Start:
                     if (!fortTalkSeen)
                     {
-                        if (t > 10f) { Debug.Log("[UncleSwap] Luck: fortune skipped (bubble busy)"); fort = Fort.None; return; }
+                        if (t > 10f) { Debug.Log("[Umamusume companion] Luck: fortune skipped (bubble busy)"); fort = Fort.None; return; }
                         if (!FortCanSay()) return;
                         fortTalkSeen = true;
                         fortAt = now;
-                        if (life.StorySay == null || !life.StorySay("fortune_start")) Debug.Log("[UncleSwap] Luck: no line fortune_start");
+                        if (life.StorySay == null || !life.StorySay("fortune_start")) Debug.Log("[Umamusume companion] Luck: no line fortune_start");
                         return;
                     }
                     // the line typed out (or 3 s), then the 3 s freeze
@@ -297,11 +297,11 @@ namespace UmamusumeCompanion
                     {
                         string key = Luck.Key(Luck.Level);
                         bool said = life.StorySay != null && life.StorySay(key);
-                        Debug.Log("[UncleSwap] Luck: " + (said ? "line " + key : "no line " + key));
+                        Debug.Log("[Umamusume companion] Luck: " + (said ? "line " + key : "no line " + key));
                         if (said) life.FortAnnounced(Luck.Level);
                         fort = Fort.None;
                     }
-                    else if (t > 10f) { Debug.Log("[UncleSwap] Luck: announcement skipped (bubble busy)"); fort = Fort.None; }
+                    else if (t > 10f) { Debug.Log("[Umamusume companion] Luck: announcement skipped (bubble busy)"); fort = Fort.None; }
                     return;
             }
         }
@@ -326,9 +326,9 @@ namespace UmamusumeCompanion
         /// <summary>Called by Morning after the alarm pose (task 07 hook).</summary>
         void FortMorning()
         {
-            if (!Luck.Enabled) { Debug.Log("[UncleSwap] Luck: toggle off"); return; }
+            if (!Luck.Enabled) { Debug.Log("[Umamusume companion] Luck: toggle off"); return; }
             if (!Luck.Pending) return;
-            if (mornSilent) { Debug.Log("[UncleSwap] Luck: Istanbul morning, after her talk in the car"); return; }
+            if (mornSilent) { Debug.Log("[Umamusume companion] Luck: Istanbul morning, after her talk in the car"); return; }
             FortBegin("morning", 99);
         }
 
@@ -370,7 +370,7 @@ namespace UmamusumeCompanion
             fortOutT = -1f;
             beat = null;
             if (GestureWeight > 0f && StopGesture != null) StopGesture();
-            Debug.Log("[UncleSwap] Luck: pose pray");
+            Debug.Log("[Umamusume companion] Luck: pose pray");
             return true;
         }
 
@@ -400,7 +400,7 @@ namespace UmamusumeCompanion
             {
                 fortOutT += dt;
                 outK = 1f - Mathf.SmoothStep(0f, 1f, fortOutT / 0.5f);
-                if (fortOutT >= 0.5f) { fortT = fortOutT = -1f; fortW = 0f; Debug.Log("[UncleSwap] Luck: pose done"); return; }
+                if (fortOutT >= 0.5f) { fortT = fortOutT = -1f; fortW = 0f; Debug.Log("[Umamusume companion] Luck: pose done"); return; }
             }
             fortW = Mathf.SmoothStep(0f, 1f, fortT / 0.5f) * outK;
             Face.Want("asleep", fortW, 0.15f);   // eyes closed

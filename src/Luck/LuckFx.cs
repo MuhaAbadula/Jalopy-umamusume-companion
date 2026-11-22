@@ -76,10 +76,10 @@ namespace UmamusumeCompanion
             return new System.Random(Luck.Seed(Mathf.Max(0, Luck.Day), h));
         }
 
-        /// <summary>[UncleSwap] LuckFx: &lt;fx&gt; L=&lt;l&gt; &lt;was&gt; -&gt; &lt;now&gt;</summary>
+        /// <summary>[Umamusume companion] LuckFx: &lt;fx&gt; L=&lt;l&gt; &lt;was&gt; -&gt; &lt;now&gt;</summary>
         public static void Log(string fx, string was, string now)
         {
-            Debug.Log("[UncleSwap] LuckFx: " + fx + " L=" + L + " " + was + " -> " + now);
+            Debug.Log("[Umamusume companion] LuckFx: " + fx + " L=" + L + " " + was + " -> " + now);
         }
 
         /// <summary>The shop remark is said once per game day (in the first shop).</summary>
@@ -97,18 +97,18 @@ namespace UmamusumeCompanion
         {
             if (!Luck.Mine) return false;   // task 30: another character has no luck lines
             float now = Time.realtimeSinceStartup;
-            if (now - saidAt < SayGap) { Debug.Log("[UncleSwap] LuckFx: line " + key + " skipped (5 min gap)"); return false; }
-            FukuDriver d = null;
-            try { d = UnityEngine.Object.FindObjectOfType<FukuDriver>(); } catch (Exception) { }
+            if (now - saidAt < SayGap) { Debug.Log("[Umamusume companion] LuckFx: line " + key + " skipped (5 min gap)"); return false; }
+            CompanionDriver d = null;
+            try { d = UnityEngine.Object.FindObjectOfType<CompanionDriver>(); } catch (Exception) { }
             string why = d != null ? d.LuckFxSay(key) : "no driver";
-            if (why != null) { Debug.Log("[UncleSwap] LuckFx: line " + key + " skipped (" + why + ")"); return false; }
+            if (why != null) { Debug.Log("[Umamusume companion] LuckFx: line " + key + " skipped (" + why + ")"); return false; }
             saidAt = now;
-            Debug.Log("[UncleSwap] LuckFx: line " + key);
+            Debug.Log("[Umamusume companion] LuckFx: line " + key);
             return true;
         }
     }
 
-    public partial class FukuDriver
+    public partial class CompanionDriver
     {
         /// <summary>LuckFx remark: null = said, else why not.</summary>
         internal string LuckFxSay(string key)

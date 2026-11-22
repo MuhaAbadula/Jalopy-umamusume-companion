@@ -12,7 +12,7 @@ namespace UmamusumeCompanion
     /// camera's projection), so the small glass shows only a few dozen texels across, and it redraws every 2-6 frames
     /// (frameCount). Setting "Mirror quality" = High, for RV_Mirror_* only (door mirrors untouched): a texture the size of the
     /// screen, 24-bit depth, bilinear, MSAA x4 when the camera renders forward, redrawn every frame (qualityValue is 4 for the
-    /// length of that one call, then back). "Game default" puts a game-style texture back. Log: [UncleSwap] mirror: ...
+    /// length of that one call, then back). "Game default" puts a game-style texture back. Log: [Umamusume companion] mirror: ...
     /// </summary>
     public static class MirrorQuality
     {
@@ -27,13 +27,13 @@ namespace UmamusumeCompanion
         {
             if (applied) return;
             texRef = AccessTools.FieldRefAccess<MirrorReflection, RenderTexture>("m_ReflectionTexture");
-            var h = new Harmony("osobl.jalopy.uncleswap.mirror");
+            var h = new Harmony("osobl.jalopy.umamusumecompanion.mirror");
             h.Patch(AccessTools.Method(typeof(MirrorReflection), "OnWillRenderObject"),
                 prefix: new HarmonyMethod(typeof(MirrorQuality), nameof(Prefix)),
                 finalizer: new HarmonyMethod(typeof(MirrorQuality), nameof(Finalizer)),
                 transpiler: new HarmonyMethod(typeof(MirrorQuality), nameof(Transpiler)));
             applied = true;
-            Debug.Log("[UncleSwap] mirror: patch on, quality " + (Level > 0 ? "high" : "game default") + " (game mirror setting " + MirrorReflection.qualityValue + ")");
+            Debug.Log("[Umamusume companion] mirror: patch on, quality " + (Level > 0 ? "high" : "game default") + " (game mirror setting " + MirrorReflection.qualityValue + ")");
         }
 
         static bool IsRearView(MirrorReflection m)
@@ -108,7 +108,7 @@ namespace UmamusumeCompanion
             Vector3 toViewer = Vector3.Dot(up, cur.transform.position - rr.bounds.center) >= 0f ? up : -up;
             lifted[id] = m.transform.localPosition;
             m.transform.position += toViewer * Lift;
-            Debug.Log("[UncleSwap] mirror: " + m.transform.parent.name + " glass moved " + Lift + " u towards the viewer (z-fight with the housing)");
+            Debug.Log("[Umamusume companion] mirror: " + m.transform.parent.name + " glass moved " + Lift + " u towards the viewer (z-fight with the housing)");
         }
 
         static void Prefix(MirrorReflection __instance, out int __state)
@@ -130,7 +130,7 @@ namespace UmamusumeCompanion
                     if (!clipLogged)
                     {
                         clipLogged = true;
-                        Debug.Log("[UncleSwap] mirror: " + __instance.transform.parent.name + " oblique clip at the glass on (transpiled " + transpiled
+                        Debug.Log("[Umamusume companion] mirror: " + __instance.transform.parent.name + " oblique clip at the glass on (transpiled " + transpiled
                             + ", mirror up " + (clipNormal == up ? "faces" : "faces away from") + " the viewer)");
                     }
                 }
@@ -147,7 +147,7 @@ namespace UmamusumeCompanion
                 __state = MirrorReflection.qualityValue;
                 MirrorReflection.qualityValue = 4;   // the game's top level: redraw every frame
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] mirror: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] mirror: " + e.Message); }
         }
 
         static Exception Finalizer(Exception __exception, int __state)
@@ -183,7 +183,7 @@ namespace UmamusumeCompanion
         static void Swap(MirrorReflection m, RenderTexture old, RenderTexture now, string what)
         {
             texRef(m) = now;
-            Debug.Log("[UncleSwap] mirror: " + m.transform.parent.name + " reflection " + old.width + "x" + old.height
+            Debug.Log("[Umamusume companion] mirror: " + m.transform.parent.name + " reflection " + old.width + "x" + old.height
                 + " (game mirror setting " + MirrorReflection.qualityValue + ") -> " + now.width + "x" + now.height
                 + (now.antiAliasing > 1 ? " MSAA x" + now.antiAliasing : "") + ", " + what
                 + (what == "high" ? ", every frame" : ""));

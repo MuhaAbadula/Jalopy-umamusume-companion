@@ -12,7 +12,7 @@ namespace UmamusumeCompanion
     /// target through WantReachTo / ReachTo, the action fires when the hand is there or as far as it goes), then a 10 s window:
     /// a pat = caught (prank_caught, face shy, giggle), the player undoes it (the kind's UndoneBy) = undone (prank_undone, sulk).
     /// Scheduler: one every PrankMinutes x 0.7..1.25 of driving, none in the first 180 s after boarding, never the same twice
-    /// in a row, only when nothing else is going on (PrankBlock). Log: [UncleSwap] Prank: id start|acted|done|caught|undone|skip why.
+    /// in a row, only when nothing else is going on (PrankBlock). Log: [Umamusume companion] Prank: id start|acted|done|caught|undone|skip why.
     /// Also here: her radio trick (own will, not a prank: next song / louder, pleased face, no giggle, no caught/undone) and the hat hold while
     /// her window is open (any pack with a "hat" prop).
     /// </summary>
@@ -82,7 +82,7 @@ namespace UmamusumeCompanion
                         foreach (var t in typeof(Life).GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic))
                             if (t.IsSubclassOf(typeof(PrankKind)) && !t.IsAbstract) l.Add(t);
                     }
-                    catch (Exception e) { Debug.LogWarning("[UncleSwap] Prank: kinds lookup failed: " + e.Message); }
+                    catch (Exception e) { Debug.LogWarning("[Umamusume companion] Prank: kinds lookup failed: " + e.Message); }
                     prankTypes = l.ToArray();
                 }
                 foreach (var t in prankTypes)
@@ -93,7 +93,7 @@ namespace UmamusumeCompanion
                         k.L = this;
                         prankKinds.Add(k);
                     }
-                    catch (Exception e) { Debug.LogWarning("[UncleSwap] Prank: " + t.Name + " not made: " + e.Message); }
+                    catch (Exception e) { Debug.LogWarning("[Umamusume companion] Prank: " + t.Name + " not made: " + e.Message); }
                 }
                 prankKinds.Sort((a, b) => string.CompareOrdinal(a.Id, b.Id));
                 var ids = new List<string>();
@@ -126,7 +126,7 @@ namespace UmamusumeCompanion
         bool sulkClip;
 
         bool PranksHere { get { return CharFeatures.Has("pranks"); } }
-        static void PLog(string s) { Debug.Log("[UncleSwap] Prank: " + s); }
+        static void PLog(string s) { Debug.Log("[Umamusume companion] Prank: " + s); }
 
         /// <summary>A prank is under way or its 10 s window is open: no radio/window moves of her own.</summary>
         bool PrankBusy { get { return pState != PState.None; } }
@@ -200,7 +200,7 @@ namespace UmamusumeCompanion
                         pOpenUntil = Mathf.Max(pOpenUntil, Mathf.Min(now + PrankWindow, pActAt + 25f));
                     string how = null;
                     try { how = pk.UndoneBy(now); }
-                    catch (Exception e) { Debug.LogWarning("[UncleSwap] Prank: " + pk.Id + " UndoneBy: " + e.Message); }
+                    catch (Exception e) { Debug.LogWarning("[Umamusume companion] Prank: " + pk.Id + " UndoneBy: " + e.Message); }
                     if (pState != PState.Open) break;   // the kind ended it itself
                     if (how != null) { PrankUndone(now, how); break; }
                     if (now > pOpenUntil) PrankEnd("end, no reaction");
@@ -236,7 +236,7 @@ namespace UmamusumeCompanion
             foreach (var k in kinds)
             {
                 try { k.Tick(now, inCar, kIdle); }
-                catch (Exception e) { Debug.LogWarning("[UncleSwap] Prank: " + k.Id + " Tick: " + e.Message); }
+                catch (Exception e) { Debug.LogWarning("[Umamusume companion] Prank: " + k.Id + " Tick: " + e.Message); }
             }
 
             PrankLines(now);
@@ -291,7 +291,7 @@ namespace UmamusumeCompanion
             string note = null;
             Beat b = null;
             try { b = k.Start(out note); }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] Prank: " + k.Id + " Start: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] Prank: " + k.Id + " Start: " + e.Message); }
             if (b == null) { PLog(k.Id + " skip no beat"); return "no beat"; }
             if (GestureWeight > 0f && StopGesture != null) StopGesture();
             pk = k;
@@ -311,7 +311,7 @@ namespace UmamusumeCompanion
         {
             if (pk == null || pState != PState.Doing) return;
             try { pk.Arm(b, env); }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] Prank: " + pk.Id + " Arm: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] Prank: " + pk.Id + " Arm: " + e.Message); }
         }
 
         /// <summary>From DoAction at the beat's ActAt: the prank itself.</summary>
@@ -351,7 +351,7 @@ namespace UmamusumeCompanion
             if (k == null) return;
             PLog(k.Id + " " + why);
             try { k.End(); }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] Prank: " + k.Id + " End: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] Prank: " + k.Id + " End: " + e.Message); }
         }
 
         void PrankUndone(float now, string how)
@@ -400,7 +400,7 @@ namespace UmamusumeCompanion
             var v = Vol();
             // louder only if it plays quietly; else the next song
             trickVolUp = v != null && v.volumeSetting == 1 && Random.value < 0.5f;
-            Debug.Log("[UncleSwap] radio trick: start, " + (trickVolUp ? "volume up" : "next song"));
+            Debug.Log("[Umamusume companion] radio trick: start, " + (trickVolUp ? "volume up" : "next song"));
             // bug 1 (user): no mockery: no smug face, no giggle, no look at him; she just likes the new song
             return new Beat { Name = "radio_trick", Dur = 2.4f, Look = Look.Radio, LookW = 0.9f, Face = "focused", FaceW = 0.4f, ActAt = 0.9f, WaitReach = true };
         }
@@ -415,7 +415,7 @@ namespace UmamusumeCompanion
         void RadioTrickAct(float now)
         {
             nextRadioTrickOk = now + Random.Range(300f, 600f);
-            if (radio == null || car == null || !car.radioOn) { Debug.Log("[UncleSwap] radio trick: skip, radio off"); return; }
+            if (radio == null || car == null || !car.radioOn) { Debug.Log("[Umamusume companion] radio trick: skip, radio off"); return; }
             var v = Vol();
             string how;
             if (trickVolUp && v != null && v.volumeSetting == 1)
@@ -427,7 +427,7 @@ namespace UmamusumeCompanion
             }
             else { radio.NextSong(); how = "next song"; }
             sheTurnedRadio = false;   // no radio_off_by_player line if he switches it off now
-            Debug.Log("[UncleSwap] radio trick: " + how + (ReachDone ? ", hand short " + ReachShort.ToString("F3") + " u" : ", hand still on its way"));
+            Debug.Log("[Umamusume companion] radio trick: " + how + (ReachDone ? ", hand short " + ReachShort.ToString("F3") + " u" : ", hand still on its way"));
             QueueLine("prank_radio", 0.5f, 6f);
             Emote("hum", 3f, 0.7f);
         }
@@ -440,7 +440,7 @@ namespace UmamusumeCompanion
                 if (v.handle != null)
                     iTween.RotateBy(v.handle, iTween.Hash("amount", v.volumeRotAmount2, "time", v.tweenTime, "islocal", true, "easetype", v.dialEaseType));
             }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] radio trick: volume knob turn failed: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] radio trick: volume knob turn failed: " + e.Message); }
         }
 
         void QueueLine(string key, float delay, float window)
@@ -456,7 +456,7 @@ namespace UmamusumeCompanion
             if (Say == null) { pLine = null; return; }
             if (CanSay == null || CanSay())
             {
-                Debug.Log("[UncleSwap] remark: " + pLine);
+                Debug.Log("[Umamusume companion] remark: " + pLine);
                 Say(pLine);
                 pLine = null;
             }
@@ -519,7 +519,7 @@ namespace UmamusumeCompanion
             if (pState == PState.Open) PrankEnd("end, debug restart");
             string own = null;
             try { own = k.DebugStart(); }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] Prank: " + k.Id + " DebugStart: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] Prank: " + k.Id + " DebugStart: " + e.Message); }
             if (own != null) return own;
             beat = null;
             pClock = Mathf.Max(pClock, 60f);
@@ -681,7 +681,7 @@ namespace UmamusumeCompanion
             var bones = hatProp.Renderer.bones;
             var bp = hatProp.Renderer.sharedMesh.bindposes;
             int hi = Array.IndexOf(bones, head.T);
-            if (hi < 0 || hi >= bp.Length) { Debug.Log("[UncleSwap] hat: head bone not in the hat renderer, no hat hold"); hatProp = null; return; }
+            if (hi < 0 || hi >= bp.Length) { Debug.Log("[Umamusume companion] hat: head bone not in the hat renderer, no hat hold"); hatProp = null; return; }
             // head-local axes of her bind space (Y up, Z forward): constant, from the head's rest rotation
             Quaternion inv = Quaternion.Inverse(head.Rest);
             Vector3 fL = inv * Vector3.forward, rL = inv * Vector3.right;
@@ -699,7 +699,7 @@ namespace UmamusumeCompanion
                     if (d > best[i]) { best[i] = d; hatRing[i] = p; }
                 }
             }
-            Debug.Log("[UncleSwap] hat: " + verts.Length + " verts, brim front " + best[0].ToString("F3") + " / side " + best[2].ToString("F3") + " (head-local units)");
+            Debug.Log("[Umamusume companion] hat: " + verts.Length + " verts, brim front " + best[0].ToString("F3") + " / side " + best[2].ToString("F3") + " (head-local units)");
         }
 
         void HatStep(bool inCar, bool slp)
@@ -762,7 +762,7 @@ namespace UmamusumeCompanion
             if (!hatLogged && hatW >= 0.99f)
             {
                 hatLogged = true;
-                Debug.Log("[UncleSwap] hat: hold with " + hatArm.Hand.name + ", wrist off target by " + ((hatArm.Hand.position - wrist).magnitude / r).ToString("F2")
+                Debug.Log("[Umamusume companion] hat: hold with " + hatArm.Hand.name + ", wrist off target by " + ((hatArm.Hand.position - wrist).magnitude / r).ToString("F2")
                     + " head radii, grip " + ((grip - c).magnitude / r).ToString("F2") + " head radii from the head centre");
             }
         }

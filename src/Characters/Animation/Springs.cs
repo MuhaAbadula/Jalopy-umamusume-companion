@@ -79,7 +79,7 @@ namespace UmamusumeCompanion
             }
             return false;
         }
-        /// <summary>Task 31 bug 4: 0 standing .. 1 seated in the car (FukuDriver seatBlend). Kinematic coat chains then
+        /// <summary>Task 31 bug 4: 0 standing .. 1 seated in the car (CompanionDriver seatBlend). Kinematic coat chains then
         /// lie on the thighs up to the knees and hang along the shins (SeatDrape), never below her ankles: Sweep's long
         /// coat hung straight down through the cab floor. No collision, so nothing can shake.</summary>
         public float Seated;
@@ -113,7 +113,7 @@ namespace UmamusumeCompanion
             h = 1f / Mathf.Max(30f, d.SubstepHz);
             iters = Mathf.Max(1, d.Iterations);
             var restRot = new Dictionary<string, Quaternion>();
-            foreach (var b in d.Bones) restRot[b.Name] = FukuDriver.Rot(b.Rest);
+            foreach (var b in d.Bones) restRot[b.Name] = CompanionDriver.Rot(b.Rest);
 
             foreach (var c in d.Colliders)
             {
@@ -185,7 +185,7 @@ namespace UmamusumeCompanion
             hipBone = legs[0].Bone.parent;
             Matrix4x4 h;
             if (hipBone == null || !rest.TryGetValue(hipBone.name, out h) || !rest.ContainsKey("Knee_L") || !rest.ContainsKey("Knee_R")) return;
-            Quaternion hinv = Quaternion.Inverse(FukuDriver.Rot(h));
+            Quaternion hinv = Quaternion.Inverse(CompanionDriver.Rot(h));
             latRest = hinv * Vector3.right;
             Vector3 kL = rest["Knee_L"].GetColumn(3), kR = rest["Knee_R"].GetColumn(3);
             var defs = new Dictionary<string, CharPack.Chain>();
@@ -232,7 +232,7 @@ namespace UmamusumeCompanion
                 ch.Seat = new Vector3[n + 1];
             }
             drapeOk = true;
-            var sb = new System.Text.StringBuilder("[UncleSwap] springs: long coat, seated it lies on the thighs and hangs over the knees:");
+            var sb = new System.Text.StringBuilder("[Umamusume companion] springs: long coat, seated it lies on the thighs and hangs over the knees:");
             foreach (var ch in chains)
                 if (ch.Seat != null)
                     sb.Append(' ').Append(ch.Name.Replace("_00", "")).Append(ch.SeatFront > 0.5f ? (ch.SeatShelf > 0f ? " lap" : " side") : " back");
@@ -302,7 +302,7 @@ namespace UmamusumeCompanion
         {
             var rest = new Dictionary<string, Matrix4x4>();
             foreach (var b in d.Bones) rest[b.Name] = b.Rest;
-            var sb = new System.Text.StringBuilder("[UncleSwap] springs: " + chains.Count + " chains");
+            var sb = new System.Text.StringBuilder("[Umamusume companion] springs: " + chains.Count + " chains");
             int warn = 0;
             foreach (var c in d.Chains)
             {
@@ -590,7 +590,7 @@ namespace UmamusumeCompanion
             sorted.Sort((a, b) => b.JitShow.CompareTo(a.JitShow));
             var sb = new System.Text.StringBuilder();
             // hits below are per second (the window is 2 s)
-            sb.AppendFormat("[UncleSwap] physics: frames {0} steps/frame {1:F2} dt {2:F4}..{3:F4} frame={4}\n",
+            sb.AppendFormat("[Umamusume companion] physics: frames {0} steps/frame {1:F2} dt {2:F4}..{3:F4} frame={4}\n",
                 dbgFrames, dbgFrames > 0 ? (float)dbgSteps / dbgFrames : 0f, dbgDtMin, dbgDtMax, frame != null ? frame.name : "world");
             sb.AppendFormat("  resets: init {0} frameChange {1} teleport {2}; max root move between frames {3:F3} bind units\n", dbgResetInit, dbgResetFrame, dbgResetTele, dbgRootMove);
             for (int i = 0; i < Mathf.Min(8, sorted.Count); i++)

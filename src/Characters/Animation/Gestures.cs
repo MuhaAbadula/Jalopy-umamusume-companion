@@ -240,9 +240,9 @@ namespace UmamusumeCompanion
                 }
                 catch (System.Exception e)
                 {
-                    Debug.LogWarning("[UncleSwap] clip " + f + ": " + e);
+                    Debug.LogWarning("[Umamusume companion] clip " + f + ": " + e);
                     // loud: a walk clip that failed silently cost three rounds of tuning a walk nobody saw
-                    JaLoader.Console.LogError("FukuUncle", "Animation " + Path.GetFileName(f) + " failed to load: " + e.Message);
+                    JaLoader.Console.LogError(CompanionStorage.ModId, "Animation " + Path.GetFileName(f) + " failed to load: " + e.Message);
                 }
             }
         }

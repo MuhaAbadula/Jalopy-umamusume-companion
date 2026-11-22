@@ -12,7 +12,7 @@ namespace UmamusumeCompanion
         internal static void Install()
         {
             if (installed) return;
-            new Harmony("jalopy.umacommands.paint").Patch(
+            new Harmony("jalopy.umamusumecompanion.paint").Patch(
                 AccessTools.Method(typeof(PaintJobManager), nameof(PaintJobManager.ApplyPaintjob)),
                 transpiler: new HarmonyMethod(typeof(PaintSelection), nameof(KeepSelection)));
             installed = true;

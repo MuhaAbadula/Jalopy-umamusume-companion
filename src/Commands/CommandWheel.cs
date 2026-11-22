@@ -61,7 +61,7 @@ namespace UmamusumeCompanion
         {
             if (!lookPatched)
             {
-                new Harmony("jalopy.umacommands.look").Patch(AccessTools.Method(typeof(MouseLook), "FixedUpdate"),
+                new Harmony("jalopy.umamusumecompanion.look").Patch(AccessTools.Method(typeof(MouseLook), "FixedUpdate"),
                     prefix: new HarmonyMethod(typeof(CompanionMod), nameof(AllowLook)));
                 lookPatched = true;
             }
@@ -87,7 +87,7 @@ namespace UmamusumeCompanion
             if (active != this)
             {
                 if (!Input.GetKeyDown(key) || !Playing()) return;
-                var driver = FindObjectOfType<FukuDriver>();
+                var driver = FindObjectOfType<CompanionDriver>();
                 companion = driver == null ? null : new Companion(driver);
                 if (companion == null || !companion.Present) { Notify("Умы сейчас нет рядом"); return; }
                 view = Camera.main;

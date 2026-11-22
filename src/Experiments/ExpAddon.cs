@@ -15,9 +15,9 @@ namespace UmamusumeCompanion
     /// The engine started after a pour starts the variant until the motel or 15 min of driving:
     /// A1 top speed +15 %, engine wear x2; A2 fuel use -30 %, top speed -10 %; A3 smoke 30-60 s, top speed -20 %.
     /// Top speed / fuel via postfixes on CarPerformanceC.UpdatePerformanceTopSpeed / UpdateFuelEconomy.
-    /// Log: [UncleSwap] Exp: A? armed|go|walk|pour|undone|start|end.
+    /// Log: [Umamusume companion] Exp: A? armed|go|walk|pour|undone|start|end.
     /// </summary>
-    public partial class FukuDriver
+    public partial class CompanionDriver
     {
         enum PourPh { Walk, Pop, Open, Pour, Back, Close }
 
@@ -527,8 +527,8 @@ namespace UmamusumeCompanion
         {
             var cp = car.GetComponent<CarPerformanceC>();
             if (cp == null) return;
-            try { cp.UpdatePerformanceTopSpeed(); } catch (Exception e) { Debug.LogWarning("[UncleSwap] Exp: top speed recompute: " + e.Message); }
-            try { cp.UpdateFuelEconomy(); } catch (Exception e) { Debug.LogWarning("[UncleSwap] Exp: fuel recompute: " + e.Message); }
+            try { cp.UpdatePerformanceTopSpeed(); } catch (Exception e) { Debug.LogWarning("[Umamusume companion] Exp: top speed recompute: " + e.Message); }
+            try { cp.UpdateFuelEconomy(); } catch (Exception e) { Debug.LogWarning("[Umamusume companion] Exp: fuel recompute: " + e.Message); }
         }
 
         void Smoke(CarLogicC car, bool on)
@@ -628,12 +628,12 @@ namespace UmamusumeCompanion
                 done = true;
                 try
                 {
-                    var h = new Harmony("osobl.jalopy.uncleswap.expcar");
+                    var h = new Harmony("osobl.jalopy.umamusumecompanion.expcar");
                     h.Patch(AccessTools.Method(typeof(CarPerformanceC), "UpdatePerformanceTopSpeed"), postfix: new HarmonyMethod(typeof(CarPatches), nameof(TopSpeedPost)));
                     h.Patch(AccessTools.Method(typeof(CarPerformanceC), "UpdateFuelEconomy"), postfix: new HarmonyMethod(typeof(CarPatches), nameof(FuelPost)));
                     ExpFx.Log("car patches on");
                 }
-                catch (Exception e) { Debug.LogWarning("[UncleSwap] Exp: car patches failed: " + e.Message); }
+                catch (Exception e) { Debug.LogWarning("[Umamusume companion] Exp: car patches failed: " + e.Message); }
             }
 
             static void TopSpeedPost(CarPerformanceC __instance)

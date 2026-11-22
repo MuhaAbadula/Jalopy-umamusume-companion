@@ -9,7 +9,7 @@ namespace UmamusumeCompanion
     /// <summary>
     /// Task 17: in-game debug panel (toggle "DebugPanel" in the settings, Ctrl + key "DebugPanelKey", default F4).
     /// Buttons jump straight to test situations: the motel lot, a real bed sleep (BedLogicC.Trigger, so the real morning
-    /// runs), a night drive, triggers, the old debug keys, time. Every press logs "[UncleSwap] Debug: <button> -> result".
+    /// runs), a night drive, triggers, the old debug keys, time. Every press logs "[Umamusume companion] Debug: <button> -> result".
     /// While open the cursor is free, mouse look and world clicks are off.
     /// </summary>
     public class DebugPanel : MonoBehaviour
@@ -35,12 +35,12 @@ namespace UmamusumeCompanion
         {
             inst = this;
             Application.logMessageReceived += OnLog;
-            // task 22: the border luck patch is applied here (this component is added in FukuUncle.Start, panel on or off)
+            // task 22: the border luck patch is applied here (this component is added in CompanionMod.Start, panel on or off)
             try { LuckBorder.Apply(); }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] LuckFx: Border transpiler not found (" + e.Message + ")"); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] LuckFx: Border transpiler not found (" + e.Message + ")"); }
             // task 55: the Japanese segment hook (inactive until the debug button arms it)
             try { JapanRoad.Apply(); }
-            catch (Exception e) { Debug.LogWarning("[UncleSwap] JapanRoad: fail patch (" + e.Message + ")"); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] JapanRoad: fail patch (" + e.Message + ")"); }
         }
 
         void OnDestroy()
@@ -51,7 +51,7 @@ namespace UmamusumeCompanion
 
         static void OnLog(string msg, string stack, LogType type)
         {
-            if (msg == null || !msg.StartsWith("[UncleSwap]") || msg.StartsWith("[UncleSwap] Debug:")) return;
+            if (msg == null || !msg.StartsWith("[Umamusume companion]") || msg.StartsWith("[Umamusume companion] Debug:")) return;
             lastLog = msg.Substring(11).Trim();
         }
 
@@ -81,7 +81,7 @@ namespace UmamusumeCompanion
             if (mm != null) mm.lockCursor = false;   // MainMenuC locks the cursor again on any key or click
             FreeCursor();
             RefreshStatus();
-            Debug.Log("[UncleSwap] Debug: panel open");
+            Debug.Log("[Umamusume companion] Debug: panel open");
         }
 
         void Close()
@@ -155,7 +155,7 @@ namespace UmamusumeCompanion
                 B("Radio trick now", () => Life.Current != null ? Life.Current.DebugRadioTrick() : "she is not here", false));
             Row(B("Reach test (next cab target)", () => Life.Current != null ? Life.Current.DebugReach() : "she is not here", false));
             GUILayout.Label("Experiments (Tachyon)");
-            Row(B("Potion effect now (in turn)", () => D(d => d.DebugPotion()), false), B("Stop effect", FukuDriver.DebugStopFx, false),
+            Row(B("Potion effect now (in turn)", () => D(d => d.DebugPotion()), false), B("Stop effect", CompanionDriver.DebugStopFx, false),
                 B("Offer a vial now", () => D(d => d.DebugOffer()), false), B("Journal summary", () => D(d => d.ExpSummaryNow()), false));
             Row(B("Additive: arm (A1..A3 in turn)", () => D(d => d.DebugAddonArm()), false), B("Additive: pour now", () => D(d => d.DebugAddonNow()), false),
                 B("Additive: off", () => D(d => d.DebugAddonStop()), false));
@@ -214,25 +214,25 @@ namespace UmamusumeCompanion
             if (b.CloseFirst) Close();   // the action moves the player or starts a game sequence: give the controls back first
             string r;
             try { r = b.Act() ?? "done"; }
-            catch (Exception e) { r = "failed: " + e.Message; Debug.LogError("[UncleSwap] Debug: " + b.Label + " failed: " + e); }
+            catch (Exception e) { r = "failed: " + e.Message; Debug.LogError("[Umamusume companion] Debug: " + b.Label + " failed: " + e); }
             result = b.Label + ": " + r;
-            Debug.Log("[UncleSwap] Debug: " + b.Label + " -> " + r);
-            try { JaLoader.Console.Log("FukuUncle", "Debug: " + result); } catch (Exception) { }
+            Debug.Log("[Umamusume companion] Debug: " + b.Label + " -> " + r);
+            try { JaLoader.Console.Log(CompanionStorage.ModId, "Debug: " + result); } catch (Exception) { }
             RefreshStatus();
         }
 
         // ------------------------------------------------------------ world access
-        static FukuDriver driverCache;
-        static FukuDriver Drv()
+        static CompanionDriver driverCache;
+        static CompanionDriver Drv()
         {
-            if (driverCache == null) driverCache = FindObjectOfType<FukuDriver>();
+            if (driverCache == null) driverCache = FindObjectOfType<CompanionDriver>();
             return driverCache;
         }
 
-        static string D(Func<FukuDriver, string> f)
+        static string D(Func<CompanionDriver, string> f)
         {
             var d = Drv();
-            return d != null ? f(d) : "she is not here (no FukuDriver)";
+            return d != null ? f(d) : "she is not here (no CompanionDriver)";
         }
 
         static UncleLogicC Uncle()
@@ -433,7 +433,7 @@ namespace UmamusumeCompanion
                 PlacePlayer(p + Vector3.up * 0.1f, car.eulerAngles.y);
                 you = "you stand at your door";
             }
-            Debug.Log("[UncleSwap] Debug: motel " + m.transform.root.name + " room " + m.roomNumber + ", car at " + spot.position.ToString("F1") + ", route level " + rg.routeLevel);
+            Debug.Log("[Umamusume companion] Debug: motel " + m.transform.root.name + " room " + m.roomNumber + ", car at " + spot.position.ToString("F1") + ", route level " + rg.routeLevel);
             return "car parked at the motel (room " + (m.roomNumber + 1) + "), " + you + "; her: " + her + (eve != null ? "; " + eve : "");
         }
 
@@ -664,7 +664,7 @@ namespace UmamusumeCompanion
         }
     }
 
-    public partial class FukuDriver
+    public partial class CompanionDriver
     {
         /// <summary>Debug panel status: seat / bed / morning / outing state, plus the doze phase.</summary>
         public string DebugState()
@@ -699,7 +699,7 @@ namespace UmamusumeCompanion
             var ai = GetComponent<AIPath>();
             if (ai != null) ai.target = null;
             u.StartCoroutine(u.UncleEnterCar());
-            Debug.Log("[UncleSwap] Debug: she is put in her seat (" + why + ")");
+            Debug.Log("[Umamusume companion] Debug: she is put in her seat (" + why + ")");
             return "put in her seat";
         }
 
@@ -734,7 +734,7 @@ namespace UmamusumeCompanion
             var col = GetComponent<Collider>();
             if (col == null) return "no collider on the uncle";
             trig.SendMessage("OnTriggerEnter", col, SendMessageOptions.DontRequireReceiver);
-            Debug.Log("[UncleSwap] Debug: she is put on the room's bed (" + trig.name + ")");
+            Debug.Log("[Umamusume companion] Debug: she is put on the room's bed (" + trig.name + ")");
             return "on the room's bed";
         }
     }

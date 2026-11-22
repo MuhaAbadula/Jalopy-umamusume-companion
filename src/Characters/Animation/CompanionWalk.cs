@@ -14,7 +14,7 @@ namespace UmamusumeCompanion
     /// - debug: "follow me" makes the uncle (and so her) walk after the player.
     /// Older clips (no ground-per-loop) keep the v0.18 ankle-crossing sync in UpdateWalk.
     /// </summary>
-    public partial class FukuDriver
+    public partial class CompanionDriver
     {
         class LegIK
         {
@@ -100,7 +100,7 @@ namespace UmamusumeCompanion
             {
                 lastWant = want;
                 if (want) walkStartAt = Time.time;
-                Debug.Log("[UncleSwap] walk: " + (want ? "start" : "stop") + " at " + Time.time.ToString("F2") + " s, speed "
+                Debug.Log("[Umamusume companion] walk: " + (want ? "start" : "stop") + " at " + Time.time.ToString("F2") + " s, speed "
                     + (rootSpeed / walkLegLen).ToString("F2") + " legs/s" + (turning ? " (turning)" : ""));
             }
             float cycle = gestures.WalkCycle * LegUnit();                      // ground per loop at her size
@@ -317,7 +317,7 @@ namespace UmamusumeCompanion
             SolveLeg(legL, tL, w, kneeFwd);
             SolveLeg(legR, tR, w, kneeFwd);
             if (WalkDebug && Time.time - walkStartAt < 4f)
-                Debug.Log("[UncleSwap] walkf " + Time.time.ToString("F3") + " ph " + walkPhase.ToString("F3") + " c " + cl.ToString("F2") + "/" + cr.ToString("F2")
+                Debug.Log("[Umamusume companion] walkf " + Time.time.ToString("F3") + " ph " + walkPhase.ToString("F3") + " c " + cl.ToString("F2") + "/" + cr.ToString("F2")
                     + " pin " + legL.LockW.ToString("F2") + "/" + legR.LockW.ToString("F2") + " drift " + legL.Drift.ToString("F3") + "/" + legR.Drift.ToString("F3")
                     + " reachShort " + (drop / leg).ToString("F3") + " v " + (rootSpeed / walkLegLen).ToString("F2") + " mix " + gestures.WalkBlend.ToString("F2")
                     + " pace " + autoPace.ToString("F2") + " hipOff " + (hipOffAvg.magnitude / leg).ToString("F3"));
@@ -325,7 +325,7 @@ namespace UmamusumeCompanion
             if (Time.time >= nextWalkLog)
             {
                 nextWalkLog = Time.time + 2f;
-                Debug.Log("[UncleSwap] walk: speed " + (rootSpeed / leg).ToString("F2") + " legs/s, phase rate " + walkRate.ToString("F2")
+                Debug.Log("[Umamusume companion] walk: speed " + (rootSpeed / leg).ToString("F2") + " legs/s, phase rate " + walkRate.ToString("F2")
                     + "/s, root above floor " + (Vector3.Dot(transform.position, up) - g).ToString("F2") + ", hip above floor "
                     + (Vector3.Dot(hipLink.Girl.position, up) - g).ToString("F2") + " (learned " + hipAbove.ToString("F2") + "), ankles "
                     + (Vector3.Dot(legL.Ankle.position, up) - g).ToString("F2") + "/" + (Vector3.Dot(legR.Ankle.position, up) - g).ToString("F2")

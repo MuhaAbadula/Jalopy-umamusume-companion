@@ -15,7 +15,7 @@ namespace UmamusumeCompanion
         public static void Apply()
         {
             if (applied) return;
-            var h = new Harmony("osobl.jalopy.uncleswap.boot");
+            var h = new Harmony("osobl.jalopy.umamusumecompanion.boot");
             h.Patch(AccessTools.Method(typeof(InventoryLogicC), "Trigger"), prefix: new HarmonyMethod(typeof(BootPatch), nameof(Store)));
             h.Patch(AccessTools.Method(typeof(ShopC), "Payed"), prefix: new HarmonyMethod(typeof(BootPatch), nameof(Paid)));
             var order = AccessTools.Method(typeof(EngineComponentsCataloguePageC), "SendOrderOut");
@@ -61,7 +61,7 @@ namespace UmamusumeCompanion
             if (L == null || __instance == null || __instance.shoppingList == null) return;
             foreach (var o in __instance.shoppingList)
                 if (o != null) L.MarkOrdered(o.name);
-            Debug.Log("[UncleSwap] event: Laika order, " + __instance.shoppingList.Count + " parts");
+            Debug.Log("[Umamusume companion] event: Laika order, " + __instance.shoppingList.Count + " parts");
         }
     }
 }
