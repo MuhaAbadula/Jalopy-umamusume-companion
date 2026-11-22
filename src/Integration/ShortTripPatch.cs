@@ -1,3 +1,4 @@
+#if DEBUG
 using HarmonyLib;
 
 namespace UmamusumeCompanion
@@ -35,3 +36,4 @@ namespace UmamusumeCompanion
         }
     }
 }
+#endif

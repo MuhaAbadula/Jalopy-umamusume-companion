@@ -17,15 +17,27 @@ namespace UmamusumeCompanion
         public override string ModName => "Umamusume companion";
         public override string ModAuthor => "Osobl";
         public override string ModDescription => "Travel with an Umamusume companion. Use the command wheel to ask her to follow, wait, board the car or fetch a crate.";
-        public override string ModVersion => "0.55.2";
+        public override string ModVersion => "0.55.3";
         public override JaLoader.Common.WhenToInit WhenToInitMod => JaLoader.Common.WhenToInit.InGame;
         public override bool UseAssets => true;
 
         CompanionDriver driver;
-        partial void RegisterPanelSettings();
+        partial void RegisterDebugSettings();
         partial void StartPanel();
         partial void RefreshPanelSetting();
-        partial void UpdatePanelShortcut(bool ctrl);
+        partial void UpdateDebugShortcuts(bool ctrl);
+
+        bool ShowOriginalPassenger
+        {
+            get
+            {
+#if DEBUG
+                return GetToggleValue("ShowUncle");
+#else
+                return false;
+#endif
+            }
+        }
 
         internal static bool PanelIsOpen
         {
@@ -101,19 +113,9 @@ namespace UmamusumeCompanion
             AddSlider("SeatLift", "Seat height in the car", 0, 40, 18, true);
             AddSlider("ArmSpread", "Arms away from the body (standing, degrees)", 0, 30, 12, true);
             AddSlider("Posture", "Posture: how much of the uncle's hunch to remove (%)", 0, 100, 60, true);
-            AddToggle("ShowUncle", "Show the uncle too (debug)", false);
-            AddToggle("PhysicsDebug", "Write physics stats to output_log.txt (debug)", false);
-            RegisterPanelSettings();
+            RegisterDebugSettings();
             AddKeybind("FetchCrate", "Fetch the nearest roadside crate into the boot (while stopped)", KeyCode.J);
             AddKeybind("Outing", "In a stopped car: she gets out and walks with you. Outside: wait here / come along. She gets back in when you drive", KeyCode.G);
-            AddKeybind("JumpTown", "Debug: Ctrl + this key = sleep and wake up in the next town's motel", KeyCode.F9);
-            AddKeybind("Gesture", "Debug: Ctrl + this key = play the test gesture", KeyCode.F11);
-            AddKeybind("DozeKey", "Debug: Ctrl + this key = she falls asleep now / wakes up", KeyCode.F8);
-            AddKeybind("Lean", "Debug: Ctrl + this key = lean on the door now / stop (window must be open)", KeyCode.F12);
-            AddKeybind("Follow", "Debug: Ctrl + this key = she walks after you / stops (to watch her walk)", KeyCode.F7);
-            AddKeybind("FortuneKey", "Fukukitaru debug: Ctrl + this key = she tells the fortune now (new draw)", KeyCode.F5);
-            AddKeybind("FortuneCycle", "Fukukitaru debug: Ctrl + this key = next luck level L1..L5, said at once (L5: L5b after 60 s)", KeyCode.F6);
-            AddKeybind("ShortTrip", "Debug: Ctrl + this key = short trip on/off (routes you pick are one segment) + the fastest engine", KeyCode.F10);
             // task 47: the new-game reset must hook the main menu's New Game, before any game scene
             try { Souvenirs.Apply(); }
             catch (Exception e) { JaLoader.Console.LogError(ModID, "Souvenir patch failed: " + e.Message); }
@@ -133,21 +135,10 @@ namespace UmamusumeCompanion
                 Doze.OnG();   // asleep: G wakes her first, her line goes before the outing remark
                 JaLoader.Console.Log(ModID, driver.OutingKey());
             }
-            if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("DozeKey")) && driver != null) JaLoader.Console.Log(ModID, driver.DozeKey());
-            if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("JumpTown"))) JumpToNextTown();
-            if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("ShortTrip"))) ShortTrip();
-            UpdatePanelShortcut(ctrl);
-            if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("FortuneKey")) && driver != null) JaLoader.Console.Log(ModID, driver.FortuneDebugRedraw());
-            if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("FortuneCycle")) && driver != null) JaLoader.Console.Log(ModID, driver.FortuneDebugCycle());
-            if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("Lean")) && driver != null) driver.ToggleLean();
-            if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("Follow")) && driver != null) JaLoader.Console.Log(ModID, driver.ToggleFollow());
-            if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("Gesture")) && driver != null)
-            {
-                string g = driver.PlayGesture(null);
-                JaLoader.Console.Log(ModID, g != null ? "Gesture: " + g : "No gesture clips in the character's anims folder.");
-            }
+            UpdateDebugShortcuts(ctrl);
         }
 
+#if DEBUG
         /// <summary>
         /// Debug: every route on the map becomes 1 road segment long (no stop-offs), so after picking a route you
         /// drive one segment and arrive at the next town in the normal way (motel, check-in, bed).
@@ -268,6 +259,8 @@ namespace UmamusumeCompanion
                 JaLoader.Console.LogError(ModID, "Jump failed: " + e);
             }
         }
+
+#endif
 
         string[] FindModels()
         {
@@ -398,10 +391,12 @@ namespace UmamusumeCompanion
             driver.WindScale = GetSliderValue("Wind") / 100f;
             driver.SetBackpack(GetToggleValue("BagSeat"), GetSliderValue("BagBack") / 100f,
                 (GetSliderValue("BagHeight") - 50f) / 100f, (GetSliderValue("BagSide") - 50f) / 100f);
+#if DEBUG
             driver.PhysicsDebug = GetToggleValue("PhysicsDebug");
             driver.WalkDebug = GetToggleValue("PhysicsDebug");
+#endif
             driver.SetBrightness(GetSliderValue("Brightness") / 100f);
-            driver.SetUncleVisible(GetToggleValue("ShowUncle"));
+            driver.SetUncleVisible(ShowOriginalPassenger);
         }
 
         IEnumerator Setup()
@@ -435,7 +430,7 @@ namespace UmamusumeCompanion
                 float bs = info.GetFloat("body_scale", 1f);
                 if (bs < 0.5f || bs > 1.5f) { Debug.LogWarning("[Umamusume companion] Char: body_scale=" + bs + " out of 0.5..1.5, 1 used"); bs = 1f; }
                 driver.BodyScale = bs;
-                driver.Build(pack, dir, !GetToggleValue("ShowUncle"));
+                driver.Build(pack, dir, !ShowOriginalPassenger);
                 RoadSpots.HerHeight = driver.HeightUnits;
                 ApplySettings();
 

@@ -12,9 +12,19 @@ namespace UmamusumeCompanion
         DebugPanel panel;
         internal KeyCode PanelKey() { return GetPrimaryKeybind("DebugPanelKey"); }
 
-        partial void RegisterPanelSettings()
+        partial void RegisterDebugSettings()
         {
+            AddToggle("ShowUncle", "Show the uncle too (debug)", false);
+            AddToggle("PhysicsDebug", "Write physics stats to output_log.txt (debug)", false);
             AddToggle("DebugPanel", "Debug panel for testing: motel, bed sleep, night drive, triggers (Ctrl + the key below)", false);
+            AddKeybind("JumpTown", "Debug: Ctrl + this key = sleep and wake up in the next town's motel", KeyCode.F9);
+            AddKeybind("Gesture", "Debug: Ctrl + this key = play the test gesture", KeyCode.F11);
+            AddKeybind("DozeKey", "Debug: Ctrl + this key = she falls asleep now / wakes up", KeyCode.F8);
+            AddKeybind("Lean", "Debug: Ctrl + this key = lean on the door now / stop (window must be open)", KeyCode.F12);
+            AddKeybind("Follow", "Debug: Ctrl + this key = she walks after you / stops (to watch her walk)", KeyCode.F7);
+            AddKeybind("FortuneKey", "Fukukitaru debug: Ctrl + this key = she tells the fortune now (new draw)", KeyCode.F5);
+            AddKeybind("FortuneCycle", "Fukukitaru debug: Ctrl + this key = next luck level L1..L5, said at once (L5: L5b after 60 s)", KeyCode.F6);
+            AddKeybind("ShortTrip", "Debug: Ctrl + this key = short trip on/off (routes you pick are one segment) + the fastest engine", KeyCode.F10);
             AddKeybind("DebugPanelKey", "Debug: Ctrl + this key = open/close the debug panel (needs the Debug panel toggle)", KeyCode.F4);
         }
 
@@ -34,8 +44,20 @@ namespace UmamusumeCompanion
             DebugPanel.Allowed = GetToggleValue("DebugPanel");
         }
 
-        partial void UpdatePanelShortcut(bool ctrl)
+        partial void UpdateDebugShortcuts(bool ctrl)
         {
+            if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("DozeKey")) && driver != null) JaLoader.Console.Log(ModID, driver.DozeKey());
+            if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("JumpTown"))) JumpToNextTown();
+            if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("ShortTrip"))) ShortTrip();
+            if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("FortuneKey")) && driver != null) JaLoader.Console.Log(ModID, driver.FortuneDebugRedraw());
+            if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("FortuneCycle")) && driver != null) JaLoader.Console.Log(ModID, driver.FortuneDebugCycle());
+            if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("Lean")) && driver != null) driver.ToggleLean();
+            if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("Follow")) && driver != null) JaLoader.Console.Log(ModID, driver.ToggleFollow());
+            if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("Gesture")) && driver != null)
+            {
+                string g = driver.PlayGesture(null);
+                JaLoader.Console.Log(ModID, g != null ? "Gesture: " + g : "No gesture clips in the character's anims folder.");
+            }
             if (ctrl && Input.GetKeyDown(PanelKey()))
             {
                 if (!DebugPanel.Allowed) JaLoader.Console.Log(ModID, "Debug panel is off: switch on \"Debug panel\" in the mod settings.");
