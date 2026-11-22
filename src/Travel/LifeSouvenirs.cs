@@ -183,7 +183,7 @@ namespace UmamusumeCompanion
             why = null;
             var row = Souvenirs.Row.Live;
             var cam = Camera.main;
-            if (row == null || cam == null || !Souvenirs.Here || Time.timeScale <= 0f || DebugPanel.IsOpen) return 0;
+            if (row == null || cam == null || !Souvenirs.Here || Time.timeScale <= 0f || CompanionMod.PanelIsOpen) return 0;
             var drag = cam.GetComponent<DragRigidbodyC>();
             if (drag != null && (drag.isHolding1 != null || (drag.inputRestrict && !drag.inputRestrictDropOnly))) return 0;
             float reach = drag != null && drag.maxRayDistance > 0f ? drag.maxRayDistance : 4.25f;

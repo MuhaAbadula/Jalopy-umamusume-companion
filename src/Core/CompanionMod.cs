@@ -17,12 +17,27 @@ namespace UmamusumeCompanion
         public override string ModName => "Umamusume companion";
         public override string ModAuthor => "Osobl";
         public override string ModDescription => "Travel with an Umamusume companion. Use the command wheel to ask her to follow, wait, board the car or fetch a crate.";
-        public override string ModVersion => "0.55.1";
+        public override string ModVersion => "0.55.2";
         public override JaLoader.Common.WhenToInit WhenToInitMod => JaLoader.Common.WhenToInit.InGame;
         public override bool UseAssets => true;
 
         CompanionDriver driver;
-        DebugPanel panel;
+        partial void RegisterPanelSettings();
+        partial void StartPanel();
+        partial void RefreshPanelSetting();
+        partial void UpdatePanelShortcut(bool ctrl);
+
+        internal static bool PanelIsOpen
+        {
+            get
+            {
+#if DEBUG
+                return DebugPanel.IsOpen;
+#else
+                return false;
+#endif
+            }
+        }
         string[] models = new string[0];
 
         string ModelsDir => Path.Combine(AssetsPath, "models");
@@ -88,7 +103,7 @@ namespace UmamusumeCompanion
             AddSlider("Posture", "Posture: how much of the uncle's hunch to remove (%)", 0, 100, 60, true);
             AddToggle("ShowUncle", "Show the uncle too (debug)", false);
             AddToggle("PhysicsDebug", "Write physics stats to output_log.txt (debug)", false);
-            AddToggle("DebugPanel", "Debug panel for testing: motel, bed sleep, night drive, triggers (Ctrl + the key below)", false);
+            RegisterPanelSettings();
             AddKeybind("FetchCrate", "Fetch the nearest roadside crate into the boot (while stopped)", KeyCode.J);
             AddKeybind("Outing", "In a stopped car: she gets out and walks with you. Outside: wait here / come along. She gets back in when you drive", KeyCode.G);
             AddKeybind("JumpTown", "Debug: Ctrl + this key = sleep and wake up in the next town's motel", KeyCode.F9);
@@ -98,7 +113,6 @@ namespace UmamusumeCompanion
             AddKeybind("Follow", "Debug: Ctrl + this key = she walks after you / stops (to watch her walk)", KeyCode.F7);
             AddKeybind("FortuneKey", "Fukukitaru debug: Ctrl + this key = she tells the fortune now (new draw)", KeyCode.F5);
             AddKeybind("FortuneCycle", "Fukukitaru debug: Ctrl + this key = next luck level L1..L5, said at once (L5: L5b after 60 s)", KeyCode.F6);
-            AddKeybind("DebugPanelKey", "Debug: Ctrl + this key = open/close the debug panel (needs the Debug panel toggle)", KeyCode.F4);
             AddKeybind("ShortTrip", "Debug: Ctrl + this key = short trip on/off (routes you pick are one segment) + the fastest engine", KeyCode.F10);
             // task 47: the new-game reset must hook the main menu's New Game, before any game scene
             try { Souvenirs.Apply(); }
@@ -122,11 +136,7 @@ namespace UmamusumeCompanion
             if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("DozeKey")) && driver != null) JaLoader.Console.Log(ModID, driver.DozeKey());
             if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("JumpTown"))) JumpToNextTown();
             if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("ShortTrip"))) ShortTrip();
-            if (ctrl && Input.GetKeyDown(PanelKey()))
-            {
-                if (!DebugPanel.Allowed) JaLoader.Console.Log(ModID, "Debug panel is off: switch on \"Debug panel\" in the mod settings.");
-                else if (panel != null) panel.Toggle();
-            }
+            UpdatePanelShortcut(ctrl);
             if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("FortuneKey")) && driver != null) JaLoader.Console.Log(ModID, driver.FortuneDebugRedraw());
             if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("FortuneCycle")) && driver != null) JaLoader.Console.Log(ModID, driver.FortuneDebugCycle());
             if (ctrl && Input.GetKeyDown(GetPrimaryKeybind("Lean")) && driver != null) driver.ToggleLean();
@@ -143,8 +153,6 @@ namespace UmamusumeCompanion
         /// drive one segment and arrive at the next town in the normal way (motel, check-in, bed).
         /// Works for routes not picked yet; the game re-rolls distances after the next sleep.
         /// </summary>
-        internal KeyCode PanelKey() { return GetPrimaryKeybind("DebugPanelKey"); }
-
         internal void ShortTrip()
         {
             try
@@ -282,17 +290,15 @@ namespace UmamusumeCompanion
         {
             base.Start();
             StartWheel();
-            panel = gameObject.GetComponent<DebugPanel>();
-            if (panel == null) panel = gameObject.AddComponent<DebugPanel>();
-            panel.Owner = this;
-            DebugPanel.Allowed = GetToggleValue("DebugPanel");
+            try { LuckBorder.Apply(); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] LuckFx: Border transpiler not found (" + e.Message + ")"); }
+            StartPanel();
             LoadCharInfo();
             Luck.Enabled = GetToggleValue("Fortune") && Luck.Mine;   // no luck effects for another character, even before Setup
             ApplyRoad();
             UmaFm.Dir = Path.Combine(Path.Combine(AssetsPath, "radio"), "umafm");   // task 44
             UmaFm.Enabled = GetToggleValue("UmaFm");
             News.RadioDir = Path.Combine(AssetsPath, "radio");   // task 52
-            JapanRoad.Dir = Path.Combine(AssetsPath, "road");    // task 56: japan.unity3d
             ApplyNews();
             try { UmaFm.Apply(); }
             catch (Exception e) { JaLoader.Console.LogError(ModID, "Uma FM patch failed: " + e.Message); }
@@ -349,7 +355,7 @@ namespace UmamusumeCompanion
 
         void ApplySettings()
         {
-            DebugPanel.Allowed = GetToggleValue("DebugPanel");
+            RefreshPanelSetting();
             MirrorQuality.Level = GetDropdownValue("MirrorQuality") == 0 ? 1 : 0;   // task 40 bug 3
             UmaFm.Enabled = GetToggleValue("UmaFm");
             ApplyNews();

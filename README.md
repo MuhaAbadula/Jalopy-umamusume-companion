@@ -7,7 +7,7 @@
 ## Установка
 
 1. Если вы впервые ставите моды на Jalopy, [установите JaLoader](https://github.com/theLeaxx/JaLoader/wiki/Installing-JaLoader-via-JaPatcher), запустите игру один раз и закройте её.
-2. [Скачайте установщик для Windows](https://github.com/MuhaAbadula/Umamusume-companion/releases/download/v0.55.1/Umamusume-companion-0.55.1-Windows.exe), запустите его и нажмите **ОК**. Он сам найдёт папку игры. Если попросит указать файл, выберите `Jalopy.exe`.
+2. [Скачайте установщик для Windows](https://github.com/MuhaAbadula/Umamusume-companion/releases/download/v0.55.2/Umamusume-companion-0.55.2-Windows.exe), запустите его и нажмите **ОК**. Он сам найдёт папку игры. Если попросит указать файл, выберите `Jalopy.exe`.
 
 Запустите Jalopy, выберите спутницу в настройках мода и перезапустите игру. Чтобы дать команду, удерживайте **V**, наведите мышь на действие и отпустите клавишу.
 
@@ -16,7 +16,7 @@
 
 Если спутница и команды раньше стояли двумя отдельными модами, закройте игру и перенесите их старые DLL из папки модов в резервную папку перед установкой.
 
-Для ручной установки распакуйте [ZIP версии 0.55.1](https://github.com/MuhaAbadula/Umamusume-companion/releases/download/v0.55.1/Umamusume-companion-0.55.1.zip) рядом с `Jalopy.exe`. Если вы выбрали другую папку модов в JaLoader, перенесите туда содержимое `Jalopy_Data/Mods` из архива. Перед ручным обновлением сохраните копию своих изменённых файлов.
+Для ручной установки распакуйте [ZIP версии 0.55.2](https://github.com/MuhaAbadula/Umamusume-companion/releases/download/v0.55.2/Umamusume-companion-0.55.2.zip) рядом с `Jalopy.exe`. Если вы выбрали другую папку модов в JaLoader, перенесите туда содержимое `Jalopy_Data/Mods` из архива. Перед ручным обновлением сохраните копию своих изменённых файлов.
 
 </details>
 
@@ -53,7 +53,7 @@ dotnet build UmamusumeCompanion.csproj -c Release "-p:GameDir=D:\SteamLibrary\st
 - `src/Characters` отвечает за модели, анимации, голос и поведение спутниц.
 - `src/Paint`, `src/Radio`, `src/Luck`, `src/Pranks` и `src/Experiments`
   содержат соответствующие игровые механики.
-- `src/Integration` содержит патчи игры, а `src/Diagnostics` — панель отладки.
+- `src/Integration` содержит патчи игры, а `src/Diagnostics` — панель для отладочных сборок.
 
 ## Правообладатель
 

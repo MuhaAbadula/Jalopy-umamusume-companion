@@ -193,11 +193,13 @@ namespace UmamusumeCompanion
                     trackLogAt = -1f;
                     float fw, fh;
                     PLog("N5 tracking: the middle of the glass is " + Miss(out fw, out fh).ToString("F1") + " deg off her eyes (glass shows " + fw.ToString("F1") + " x " + fh.ToString("F1") + " deg)");
+#if DEBUG
                     if (DebugPanel.Allowed)
                     {
                         try { Probe(); }
                         catch (System.Exception ex) { PLog("N5 probe failed: " + ex.Message); }
                     }
+#endif
                 }
             }
 
@@ -442,11 +444,13 @@ namespace UmamusumeCompanion
                     float m = Miss(out fw, out fh);
                     PLog("N5 aim check (model) after the turn: the middle of the glass is " + m.ToString("F1") + " deg off her eyes (glass shows "
                         + fw.ToString("F1") + " x " + fh.ToString("F1") + " deg)");
+#if DEBUG
                     if (DebugPanel.Allowed)
                     {
                         try { Probe(); }
                         catch (System.Exception e) { PLog("N5 probe failed: " + e.Message); }
                     }
+#endif
                 }
                 if (pT0 >= 0f && mesh != null)
                 {

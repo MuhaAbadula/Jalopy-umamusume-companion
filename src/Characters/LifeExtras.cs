@@ -196,7 +196,7 @@ namespace UmamusumeCompanion
         // v0.21 listened to Fire1 alone, so a mouse click never reached the pat (no "pat:" line in the log).
         static bool GameClick()
         {
-            if (DebugPanel.IsOpen) return false;   // a click on the debug panel is not a pat
+            if (CompanionMod.PanelIsOpen) return false;   // a click on the debug panel is not a pat
             try
             {
                 var mm = MainMenuC.Global;

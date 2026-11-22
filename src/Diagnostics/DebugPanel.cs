@@ -6,6 +6,44 @@ using UnityEngine;
 
 namespace UmamusumeCompanion
 {
+#if DEBUG
+    public sealed partial class CompanionMod
+    {
+        DebugPanel panel;
+        internal KeyCode PanelKey() { return GetPrimaryKeybind("DebugPanelKey"); }
+
+        partial void RegisterPanelSettings()
+        {
+            AddToggle("DebugPanel", "Debug panel for testing: motel, bed sleep, night drive, triggers (Ctrl + the key below)", false);
+            AddKeybind("DebugPanelKey", "Debug: Ctrl + this key = open/close the debug panel (needs the Debug panel toggle)", KeyCode.F4);
+        }
+
+        partial void StartPanel()
+        {
+            try { JapanRoad.Apply(); }
+            catch (Exception e) { Debug.LogWarning("[Umamusume companion] JapanRoad: fail patch (" + e.Message + ")"); }
+            JapanRoad.Dir = System.IO.Path.Combine(AssetsPath, "road");    // task 56: japan.unity3d
+            panel = gameObject.GetComponent<DebugPanel>();
+            if (panel == null) panel = gameObject.AddComponent<DebugPanel>();
+            panel.Owner = this;
+            DebugPanel.Allowed = GetToggleValue("DebugPanel");
+        }
+
+        partial void RefreshPanelSetting()
+        {
+            DebugPanel.Allowed = GetToggleValue("DebugPanel");
+        }
+
+        partial void UpdatePanelShortcut(bool ctrl)
+        {
+            if (ctrl && Input.GetKeyDown(PanelKey()))
+            {
+                if (!DebugPanel.Allowed) JaLoader.Console.Log(ModID, "Debug panel is off: switch on \"Debug panel\" in the mod settings.");
+                else if (panel != null) panel.Toggle();
+            }
+        }
+    }
+
     /// <summary>
     /// Task 17: in-game debug panel (toggle "DebugPanel" in the settings, Ctrl + key "DebugPanelKey", default F4).
     /// Buttons jump straight to test situations: the motel lot, a real bed sleep (BedLogicC.Trigger, so the real morning
@@ -35,12 +73,7 @@ namespace UmamusumeCompanion
         {
             inst = this;
             Application.logMessageReceived += OnLog;
-            // task 22: the border luck patch is applied here (this component is added in CompanionMod.Start, panel on or off)
-            try { LuckBorder.Apply(); }
-            catch (Exception e) { Debug.LogWarning("[Umamusume companion] LuckFx: Border transpiler not found (" + e.Message + ")"); }
-            // task 55: the Japanese segment hook (inactive until the debug button arms it)
-            try { JapanRoad.Apply(); }
-            catch (Exception e) { Debug.LogWarning("[Umamusume companion] JapanRoad: fail patch (" + e.Message + ")"); }
+
         }
 
         void OnDestroy()
@@ -663,6 +696,8 @@ namespace UmamusumeCompanion
             catch (Exception e) { status = "status failed: " + e.Message; }
         }
     }
+
+#endif
 
     public partial class CompanionDriver
     {

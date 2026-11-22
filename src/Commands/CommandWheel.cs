@@ -78,7 +78,7 @@ namespace UmamusumeCompanion
         {
             var menu = MainMenuC.Global;
             return Application.isFocused && Time.timeScale > 0f && menu != null && menu.isPaused == 0 &&
-                   !DebugPanel.IsOpen && (JaLoader.Console.Instance == null || !JaLoader.Console.Instance.Visible) &&
+                   !CompanionMod.PanelIsOpen && (JaLoader.Console.Instance == null || !JaLoader.Console.Instance.Visible) &&
                    (menu.map == null || !menu.map.GetComponent<MapLogicC>().isBookOpen);
         }
 
