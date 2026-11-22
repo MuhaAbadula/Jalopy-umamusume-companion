@@ -630,6 +630,7 @@ namespace UmamusumeCompanion
             }
 
             girlSmr = girlRoot.gameObject.AddComponent<SkinnedMeshRenderer>();
+            if (CharFeatures.Has("boot_snack")) fullBellyShape = mesh.GetBlendShapeIndex("Oguri_Full");
             girlSmr.sharedMesh = mesh;
             girlSmr.bones = girlBones;
             girlSmr.rootBone = girlBones[0];
@@ -1012,6 +1013,7 @@ namespace UmamusumeCompanion
                 }
             }
             if (life != null) life.PoseBones(Time.deltaTime);
+            if (snackStarted >= 0f) life.PoseSnack(Time.time - snackStarted, snackProp);
             PoseCrateHands();
             PoseExpHands();   // task 87
 
@@ -1081,6 +1083,7 @@ namespace UmamusumeCompanion
             UpdateFollow();
             UpdateOuting();
             ShopReceipt();
+            UpdateBootSnack();
             UpdateExp();   // task 87
             MornUpdate();
             FortUpdate();
@@ -1116,6 +1119,7 @@ namespace UmamusumeCompanion
             if (life != null)
             {
                 life.Update(dt, InCar(), asleep, talking);
+                if (snackStarted >= 0f) SnackFace();
                 life.Face.Step(dt, 1f - 0.75f * talkBlend);
                 acc = life.Face.Acc;
             }

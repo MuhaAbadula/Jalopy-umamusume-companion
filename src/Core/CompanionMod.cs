@@ -17,7 +17,7 @@ namespace UmamusumeCompanion
         public override string ModName => "Umamusume companion";
         public override string ModAuthor => "Osobl";
         public override string ModDescription => "Travel with an Umamusume companion. Use the command wheel to ask her to follow, wait, board the car or fetch a crate.";
-        public override string ModVersion => "0.55.3";
+        public override string ModVersion => "0.55.4";
         public override JaLoader.Common.WhenToInit WhenToInitMod => JaLoader.Common.WhenToInit.InGame;
         public override bool UseAssets => true;
 
@@ -276,6 +276,14 @@ namespace UmamusumeCompanion
                 JaLoader.Console.LogError(ModID, "Can't list models: " + e.Message);
             }
             list.Sort(StringComparer.OrdinalIgnoreCase);
+            // JaLoader saves the dropdown index. Put the sixth pack after the existing choices.
+            int oguri = list.FindIndex(name => string.Equals(name, "oguricap", StringComparison.OrdinalIgnoreCase));
+            if (oguri >= 0)
+            {
+                string pack = list[oguri];
+                list.RemoveAt(oguri);
+                list.Add(pack);
+            }
             return list.ToArray();
         }
 

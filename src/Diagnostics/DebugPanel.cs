@@ -187,6 +187,12 @@ namespace UmamusumeCompanion
             if (!string.IsNullOrEmpty(result)) GUILayout.Label("> " + result);
             scroll = GUILayout.BeginScrollView(scroll);
 
+            if (CharFeatures.Has("boot_snack"))
+            {
+                GUILayout.Label("Oguri Cap");
+                Row(B("Preview snack (no food needed)", () => TestSnack(true), false),
+                    B("Eat 1 packet from boot", () => TestSnack(false), false));
+            }
             GUILayout.Label("Motel");
             Row(B("To the motel now", ToMotel, true), B("Sleep in the motel bed now", SleepNow, true));
             GUILayout.Label("Morning shopping (Nice Nature)");
@@ -288,6 +294,16 @@ namespace UmamusumeCompanion
         {
             var d = Drv();
             return d != null ? f(d) : "she is not here (no CompanionDriver)";
+        }
+
+        string TestSnack(bool preview)
+        {
+            var d = Drv();
+            if (d == null) return "Companion is still loading.";
+            string reason = d.DebugBootSnack(preview);
+            if (reason != null) return reason;
+            Close();
+            return preview ? "Playing snack preview." : "Eating one packet from the boot.";
         }
 
         static UncleLogicC Uncle()

@@ -1,6 +1,6 @@
 # Umamusume companion — мод для Jalopy
 
-Вместо дяди с вами в «Лайке» поедет одна из пяти героинь Umamusume.
+Вместо дяди с вами в «Лайке» поедет одна из шести героинь Umamusume.
 
 > [!IMPORTANT]
 > **Этот мод сделан целиком вайбкодингом.** Я лишь придумывал, как это будет выглядеть, и тестировал итог.
@@ -8,7 +8,7 @@
 ## Установка
 
 1. Если JaLoader ещё не стоит, [установите его](https://github.com/theLeaxx/JaLoader/wiki/Installing-JaLoader-via-JaPatcher), а затем один раз запустите игру.
-2. Закройте Jalopy. Запустите [установщик мода для Windows](https://github.com/MuhaAbadula/Umamusume-companion/releases/download/v0.55.3/Umamusume-companion-0.55.3-Windows.exe) и нажмите **ОК**. Если он попросит найти игру, укажите `Jalopy.exe`.
+2. Закройте Jalopy. Запустите [установщик мода для Windows](https://github.com/MuhaAbadula/Umamusume-companion/releases/download/v0.55.4/Umamusume-companion-0.55.4-Windows.exe) и нажмите **ОК**. Если он попросит найти игру, укажите `Jalopy.exe`.
 3. В настройках мода выберите спутницу и перезапустите игру.
 
 В поездке удерживайте **V**, наведите мышь на нужную команду и отпустите клавишу.
@@ -16,7 +16,7 @@
 <details>
 <summary>Если ставите вручную или обновляетесь с двух отдельных модов</summary>
 
-Распакуйте [ZIP версии 0.55.3](https://github.com/MuhaAbadula/Umamusume-companion/releases/download/v0.55.3/Umamusume-companion-0.55.3.zip) рядом с `Jalopy.exe`. Если в JaLoader выбрана своя папка модов, перенесите туда содержимое `Jalopy_Data/Mods` из архива.
+Распакуйте [ZIP версии 0.55.4](https://github.com/MuhaAbadula/Umamusume-companion/releases/download/v0.55.4/Umamusume-companion-0.55.4.zip) рядом с `Jalopy.exe`. Если в JaLoader выбрана своя папка модов, перенесите туда содержимое `Jalopy_Data/Mods` из архива.
 
 Если спутница и команды раньше стояли отдельно, перед установкой перенесите обе старые DLL из папки модов в резервную папку.
 
@@ -29,5 +29,6 @@
 - Нарита Тайшин (Narita Taishin)
 - Найс Нейча (Nice Nature)
 - Свип Тошо (Sweep Tosho)
+- Огури Кэп (Oguri Cap)
 
 Модели, персонажи и их голоса принадлежат компании Cygames.

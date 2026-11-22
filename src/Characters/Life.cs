@@ -289,6 +289,7 @@ namespace UmamusumeCompanion
             nextEar = Time.time + Random.Range(1f, 3f);
             nextTailWag = Time.time + Random.Range(5f, 12f);
             InitExtras(bones);
+            if (CharFeatures.Has("boot_snack")) BindSnackGrip(bones);
             DozeInit(bones);
             MornInit(bones);
             Current = this;
@@ -1077,10 +1078,10 @@ namespace UmamusumeCompanion
             return gap;
         }
 
-        static void SolveArm(Arm a, Vector3 target, Vector3 pole, float w)
+        static void SolveArm(Arm a, Vector3 target, Vector3 pole, float w, Vector3 handLocalEnd = default(Vector3))
         {
             if (a == null || w <= 0.001f) return;
-            Vector3 A = a.Upper.position, B = a.Fore.position, C = a.Hand.position;
+            Vector3 A = a.Upper.position, B = a.Fore.position, C = a.Hand.TransformPoint(handLocalEnd);
             float l1 = (B - A).magnitude, l2 = (C - B).magnitude;
             if (l1 < 1e-5f || l2 < 1e-5f) return;
             Vector3 d = target - A;
@@ -1094,7 +1095,7 @@ namespace UmamusumeCompanion
             Quaternion upperOrig = a.Upper.rotation, foreOrig = a.Fore.rotation;
             Quaternion upperSolved = Quaternion.FromToRotation(B - A, E - A) * upperOrig;
             a.Upper.rotation = upperSolved;
-            Vector3 B2 = a.Fore.position, C2 = a.Hand.position;
+            Vector3 B2 = a.Fore.position, C2 = a.Hand.TransformPoint(handLocalEnd);
             Quaternion foreSolved = Quaternion.FromToRotation(C2 - B2, A + dn * dist - B2) * a.Fore.rotation;
             a.Upper.rotation = Quaternion.Slerp(upperOrig, upperSolved, w);
             a.Fore.rotation = Quaternion.Slerp(foreOrig, foreSolved, w);

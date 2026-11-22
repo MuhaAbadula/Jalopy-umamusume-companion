@@ -1,0 +1,7 @@
+name=Огури Кэп
+name_en=Oguri Cap
+name_acc=Огури Кэп
+height_m=1.67
+body_scale=1.0801
+voice_pitch=1.0
+features=seated_tail,boot_snack,souvenirs
