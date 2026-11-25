@@ -206,8 +206,10 @@ namespace UmamusumeCompanion
         {
             var st = new Station { Name = St(uma) };
             string real = Path.Combine(Path.Combine(RadioDir ?? "", "news"), st.Name);
+            string english = Path.Combine(Path.Combine(RadioDir ?? "", "news_en"), st.Name);
             string test = Path.Combine(Path.Combine(RadioDir ?? "", "news_test"), st.Name);
-            st.Dir = File.Exists(Path.Combine(real, "list.tsv")) ? real : File.Exists(Path.Combine(test, "list.tsv")) ? test : real;
+            if (GameText.English && File.Exists(Path.Combine(english, "list.tsv"))) st.Dir = english;
+            else st.Dir = File.Exists(Path.Combine(real, "list.tsv")) ? real : File.Exists(Path.Combine(test, "list.tsv")) ? test : real;
             string list = Path.Combine(st.Dir, "list.tsv");
             try
             {

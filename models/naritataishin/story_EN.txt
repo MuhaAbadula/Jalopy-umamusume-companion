@@ -1,0 +1,149 @@
+# naritataishin | Story | English
+istanbul_morning=Morning. I woke up on my own. Don't make things up.
+istanbul_morning=Saw the engines yesterday. Two of them. Rusty, but they're still there.
+istanbul_morning=Just like I thought. Boilers, pistons, connecting rods. It even smells of coal.
+istanbul_morning=I bought a gear at the market. Brass one. Not for you.
+istanbul_morning=I wanted to stay. But they're waiting for me back home. Hayahide rang the motel.
+istanbul_morning=Let's go. I miss a quiet room. Not the people.
+istanbul_morning=Open the [b]Map[/b] and pick the route back.
+
+back_6=Goodbye, Istanbul. It wasn't bad.
+back_6=The city's noisy. But the station was worth it.
+
+back_6_2=They drink tea from thimbled cups. Like hourglasses.
+back_6_2=Should've bought a cup. Forgot. Happens.
+
+back_6_3=I've got the gear in my pocket. Brass, warm.
+back_6_3=Avoid the potholes. I'll drop it if I have to, I'll kick it.
+
+back_5=On the way there, I just stared out the window and stayed silent.
+back_5=I'm silent now too. But it's not boring anymore.
+
+back_5_2=Bulgarians nod the other way round. Nodding means “no”.
+back_5_2=It works for me. If you nod, they'll get it wrong.
+
+back_5_3=The clouds are low here. Like a balloon from a simple game.
+back_5_3=It's basic, I know. Don't look at me.
+
+back_4=Hayahide says he can't sleep because of me. Lies. It's Ticket.
+back_4=Though... maybe I am too.
+
+back_4_2=Sea again. It's noisy. Fine, it doesn't bother me.
+back_4_2=People are louder. You can ignore the sea.
+
+back_4_3=Kreek grumbles I go to bed late. She's my roommate.
+back_4_3=Can't go to bed early. One more time, then sleep. Always like this.
+
+back_3=They opened the border here. Thousands left for the west.
+back_3=A crowd. But for something like this, I guess it's worth it.
+
+back_3_2=In Hungary they eat goulash with paprika. I'll cook it at home. Not for you.
+back_3_2=For you too. If you stop chatting.
+
+back_3_3=See those rails along the road? Rusty. Good.
+back_3_3=You can drive along them for ages.
+
+back_2=Germany's near soon. I want home, to a quiet room.
+back_2=It'll be quiet without the road. No, I didn't say that.
+
+back_2_2=There are clock faces with figures on Prague's town hall. They're six hundred years old.
+back_2_2=Mechanical gears, still working. I want to see it. Not now.
+
+back_2_3=Will they check us at the border? Gears aren't considered illegal.
+back_2_3=If they ask, I'll say it's a part. It's true.
+
+back_1=Last day on the road. Weird, I don't want it to end.
+back_1=You can stop by sometimes. If you want. I don't mind.
+
+back_1_2=So many Trabants. Smoking. Two-stroke, like our Laika.
+back_1_2=Simple engine. I like that.
+
+back_1_3=What'll I do at home? Cook curry. Lie down. No, put the gear on the table first.
+back_1_3=Fine, I'll decide later. You didn't hear anything.
+
+turn_start=Huh? Are we heading back? ...Hm.
+turn_start=Shame. I wanted to see the station. Don't tell anyone I said that.
+turn_start=The rails won't go anywhere. They'll wait.
+turn_start=We'll go again when I want. Not sooner.
+
+home_5=Thick woods. Quiet. I like it here.
+home_5=Tell me if you want to stop. Not because I'm tired.
+
+home_5_2=Bulgarian yogurt's famous. Said to taste good with honey.
+home_5_2=We'll buy a jar next time. Not for you. Hm.
+
+home_5_3=They dry peppers in bunches on the walls here. Red ones.
+home_5_3=Beautiful colour. Fiery. I'm not eating it.
+
+home_4=Pretty. Even if we didn't make it, it's not bad.
+home_4=I liked driving. ...No, I didn't say that.
+
+home_4_2=Dubrovnik behind a stone wall. The wall's old and strong.
+home_4_2=Good construction. Stands for centuries without falling apart.
+
+home_4_3=It'll lower the wheel; I'll hold the jack. Don't imagine stuff.
+home_4_3=You change it, I'll pass you the keys.
+
+home_3=Ten thousand left for the west from here in '89.
+home_3=All together, noisy, but it worked. Well, a crowd's useful too.
+
+home_3_2=Hungary. Goulash with paprika, smells from the road.
+home_3_2=I'll cook it at home. Not for you. Hm.
+
+home_3_3=Wondering how to build a clock from gears.
+home_3_3=Not working yet. I'll fix it. Don't disturb me.
+
+home_2=They made a cartoon about a mole in Czechoslovakia. Kids watch it.
+home_2=The mole fixes things there too. Like you. Just louder.
+
+home_2_2=They argued for ages in ČSSR over whether to use a hyphen or not in the name.
+home_2_2=Over a single dash. Stupid argument. Hm.
+
+home_2_3=Not tired? It's not concern. If you fall asleep driving, I'll have to walk.
+home_2_3=Want me to drive? ...No. Laika won't listen to me. Forget it.
+
+home_1=Dresden's behind us. Berlin next. Almost home.
+home_1=I'm not even cursing Laika. Almost. ...Okay, I am.
+
+home_1_2=I'll take Laika's engine apart bit by bit when we get home. Curious how it works.
+home_1_2=But next time, you drive again.
+
+home_1_3=Well, there we go. Delivered it. Didn't crash it.
+home_1_3=No thanks. Rest tomorrow, decide the day after.
+
+doze_fall=One more time... then sleep...
+doze_fall=Not sleeping. My eyes are resting...
+
+doze_mumble=Ticket... leave me alone... I'm sleeping...
+doze_mumble=Gears... wrong.
+doze_mumble=One more lap... mmm...
+
+doze_pat=...Hm.
+
+doze_wake_bump=Huh? I wasn't sleeping.
+doze_wake_bump=What? Where are we?
+
+doze_wake_crash=Ugh. What was that?
+
+doze_wake_thunder=Thunder? ...I wasn't sleeping.
+
+doze_wake_stop=Arrived? It drove fine. Don't get cocky.
+
+wake_wait=I'll wait in the car. If you fall asleep again, I'll kick you.
+
+wake_alarm=Get up. I'm already up.
+wake_alarm=Up you go. Not kicked yet.
+wake_alarm=Stop sleeping. Time's ticking.
+wake_alarm=Get up. I won't repeat it.
+wake_alarm=Wake up. There's work to do.
+wake_crash=Get up. I checked the car at night. Don't mess it up again.
+wake_alarm_s1=Get up. Quick.
+wake_alarm_s1=Getting going. No need to repeat it.
+wake_alarm_s2=Up you get. Off we go.
+wake_alarm_s2=Stop sleeping. Time's ticking.
+wake_alarm_s3=Up. Let's head out while it's quiet.
+wake_alarm_s3=Wake up. It's a decent morning.
+wake_alarm_s4=Hey. Get up. I wasn't waiting. Just woke up.
+wake_alarm_s4=Up. It's... a nice morning out there.
+wake_alarm_s5=Up. Or I'll kick you.
+wake_alarm_s5=Up. I've already packed everything.

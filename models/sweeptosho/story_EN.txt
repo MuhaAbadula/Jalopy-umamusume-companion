@@ -1,0 +1,140 @@
+# sweeptosho | Story | English
+istanbul_morning=Morning. I woke up by myself, no need for you. See how independent I am?
+istanbul_morning=I bought tulip bulbs at the market yesterday. A whole bag of them! Gran's going to love them.
+istanbul_morning=I dreamt about Gran's garden last night. There's an empty flower bed right by the steps. It's like it was waiting for me.
+istanbul_morning=I wanted to stay here longer... but tulips are planted in autumn, before the cold. Otherwise nothing grows in spring.
+istanbul_morning=And I want Gran to see I made it there. Without a broom!
+istanbul_morning=I'll show it to dad too. He'll cry again, of course.
+istanbul_morning=Right, we're going home! Open the [b]Map[/b] and pick the way back.
+
+back_6=Bye, Istanbul! Don't worry, little bulbs. I'll get you home.
+back_6=Dad called the motel. He was crying into the phone again. I told him I was bringing him a tulip, and he cried even harder.
+
+back_6_2=Saw what they use for tea in Istanbul? Cups with a tulip-shaped waist.
+back_6_2=They put tulips on everything there, even the tea glasses! I should've pinched one for my spells. Fine, I'd have paid. Probably.
+
+back_6_3=I've got the bag of bulbs on my lap. I'm holding it with both hands like a crystal ball.
+back_6_3=So avoid the potholes, familiar. All of them. Or I'll cast a spell. Hehe ♪ Joke. Almost.
+
+back_5=You know, I kept grumbling at the car on the way there.
+back_5=But now I'm looking at the mountains and I'm not even grumbling. Almost.
+
+back_5_2=Bulgaria's famous for its peppers, by the way. Familiar, if you see a pepper stall, drive past it.
+back_5_2=Don't look like that. I can't even stand looking at them in an image. Green, bitter—ugh!
+
+back_5_3=Look, the ears on the hat are sticking out. Gran made them move with mine.
+back_5_3=They stick out when I'm happy. But it's just a draft now! A draft, familiar! Don't look!
+
+back_4=What should we call the tulip? Swippy the First? Or Great Witch?
+back_4=Okay, you can suggest one too. But I'll pick it anyway.
+
+back_4_2=Sea again. Beautiful. On a broom, I'd fly right over the water.
+back_4_2=Though the car's not bad either. Just don't tell anyone I said that.
+
+back_4_3=Gran's probably already dug the bed by the porch. She prepares everything ahead of time, even when not asked.
+back_4_3=If she hasn't, I won't tell her. It's Gran. She gets it.
+
+back_3=The bridge in Sturovo still isn't fixed. Gran'll be upset.
+back_3=Never mind. I'll become a great witch and fix it with one spell.
+
+back_3_2=Gran says they invented a cake called “Dobos” in Hungary. Lots of layers, with a caramel top that needs breaking with a spoon.
+back_3_2=I want one of those. It's an order, familiar. Someday. Not right now—I can wait.
+
+back_3_3=I'm talking to the bulbs. Gran says flowers grow better if you talk to them.
+back_3_3=As long as they stay silent, they're listening. Or waiting for me to stop talking. No, probably the latter.
+
+back_2=Just a bit more, and Germany. I miss my bed. And Gran's biscuits!
+back_2=Oh. Am I missing home? Witches don't miss things. Well, maybe a bit.
+
+back_2_2=Prague's somewhere nearby. They say they brought a clay giant to life there once. It's called a golem.
+back_2_2=That's some proper magic! I could do that too. But for now I've got tulips. I'll bring something to life later.
+
+back_2_3=Familiar, are we gonna get checked at the border? Bulbs aren't illegal, are they?
+back_2_3=If they ask, I'll say they're magical. Then they'll definitely leave us alone. They might even get scared.
+
+back_1=Last day on the road. Strangely, I'm even sad it's ending.
+back_1=We'll plant a bulb with Gran's, and it'll bloom in spring.
+back_1=And you'll come watch, familiar. It's an order!
+
+back_1_2=There are so many Trabants here! They're smoking like Gran's kettles. Ugh, but I like it.
+back_1_2=Our Laika 601 Deluxe has the same engine—two-stroke. Gran used to fiddle with it. So they're practically family.
+
+back_1_3=What's the first thing I'll do when I get home? Plant a bulb. No, parfae first. No, plant it first...
+back_1_3=Right, I'll decide at the door. Witches always decide at the last minute. You didn't hear anything, familiar.
+
+turn_start=What?! We're turning round? Well... fine. I wanted to go further, though.
+turn_start=But the tulips can wait. They're flowers—no rush for them.
+turn_start=Since we're going back, that's what I've decided. The witch decides herself. Got it, familiar?
+turn_start=We'll go again when I want. Not sooner.
+
+home_5=The woods around here are thick. There're definitely ghosts around. Not that I'm scared. Just checking if you are.
+home_5=No, don't answer. I know you're scared. Don't worry, I'll keep an eye on things.
+
+home_5_2=Bulgarian yogurt's said to be famous. Add honey on top and it's almost like parfae.
+home_5_2=Familiar, remember: next time we'll get a jar. And honey. It's an order.
+
+home_5_3=They say Bulgarians nod the other way round. Shaking your head means “yes”, nodding means “no”.
+home_5_3=You'd get lost, familiar. I won't. I'm a witch—I remember everything first time.
+
+home_4=It's beautiful here. You know, even if we didn't make it, I'm glad we went at all.
+home_4=I used to hate the Laika 601 Deluxe. Today I can almost stand it. That's a big achievement!
+
+home_4_2=Dubrovnik's hidden behind a stone wall. An entire city, with the wall acting like a protective spell.
+home_4_2=They say it's been standing for centuries. Good spells! I wish I had ones to make the broom fly at last.
+
+home_4_3=If a tyre pops, I'll do the magic while you hold the jack. Puff-puff—done!
+home_4_3=Right, it won't pop. I put a shield on it. Well, almost. I didn't have enough mana for everything.
+
+home_3=You know, last year thousands left East Germany via Hungary. They opened the borders here.
+home_3=See? The strongest spells come from working together. Gran wasn't lying.
+
+home_3_2=Familiar, did you see that? They're drying peppers in bunches right on the walls! Whole walls of peppers. Ugh!
+home_3_2=Drive around houses like that. Always. I'm not turning away—I'm just looking the other way.
+
+home_3_3=I'm inventing a new spell. Wait... chamomile, lavender, hydrangea, and anything that moves by itself!
+home_3_3=It doesn't work yet. The broom still won't fly. No worries, I'll tweak it.
+
+home_2=I heard they made a cartoon about a mole in Czechoslovakia. Kids watch it all over the world.
+home_2=A mole who fixes everything and helps everyone. Almost like you, familiar. Just not as cute.
+
+home_2_2=In Czechoslovakia, they argued for ages over whether to use a hyphen in the country name. Czechs and Slovaks couldn't agree.
+home_2_2=Over just a single dash! Parfa would have settled them. No one argues with parfa.
+
+home_2_3=Familiar, you not tired? It's no trouble. Just if you fall asleep behind the wheel, I'm not walking home.
+home_2_3=Want me to cast some strength? Puff-puff! No? Nah, fine. My mana's running low too.
+
+home_1=Dresden's behind us, Berlin's ahead. Right on the doorstep. I'm not even complaining about the Laika 601 Deluxe. Almost.
+home_1=Home, Gran, biscuits. Take it easy, familiar. No, hurry up!
+
+home_1_2=While the tulips wait, I'll fix the broom. Gran's an engineer—twisting a few screws is a piece of cake for her.
+home_1_2=But don't relax, familiar: you'll still be driving next time. It's an order.
+
+home_1_3=Well, delivered. Good job. Not that I'm grateful. It just worked out well!
+home_1_3=Resting tomorrow. Deciding where to go the day after.
+
+doze_fall=Witches don't sleep at night... I'll just... cover my eyes...
+doze_fall=Mana's gone... Wake me up at the motel.
+
+doze_mumble=Pahira... gerbera... mmm...
+doze_mumble=Familiar... go to class for me...
+doze_mumble=Parfait... the biggest one...
+
+doze_pat=Hee-hee... ♪
+
+doze_wake_bump=Huh?! I wasn't sleeping! I was casting spells with my eyes closed.
+doze_wake_bump=What? Where are we? Did you wake me up?
+
+doze_wake_crash=Oi! Who gave that push? A ghost?!
+
+doze_wake_thunder=Thunder?! Who's casting spells without asking?!
+
+doze_wake_stop=We're here already? Well, you drove alright for a familiar.
+
+wake_wait=I'll wait in the car. If you fall asleep again, I'll draw you moustaches.
+
+wake_alarm=Get up... Witches sleep in the morning, but familiars don't. So get up you.
+wake_alarm=Up! I'm already up—almost a miracle.
+wake_alarm=Stop sleeping! Since I'm awake, it's time for you too.
+wake_alarm=Up, up! I'm bored alone.
+wake_alarm=Ugh, get up! I woke up early just because of you.
+wake_crash=Wake up! I cast protective spells on the car last night. Don't break it again.

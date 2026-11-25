@@ -12,15 +12,24 @@ namespace UmamusumeCompanion
     {
         static readonly HashSet<string> Names = new HashSet<string> {
             "Fukukitaru 07", "Daikichi After Dark", "Tachyon Spectrum",
-            "Taishin Last Spurt", "Tosho Witching Hour"
+            "Taishin Last Spurt", "Tosho Witching Hour", "Nice Nature Postcard"
         };
         static readonly Dictionary<string, Sprite> Icons = new Dictionary<string, Sprite>();
+        static readonly Dictionary<string, string> RussianDescriptions = new Dictionary<string, string> {
+            { "Daikichi After Dark", "Фукукитару. Большая удача. Иллюстрация — さぼてんむし (Pixiv 93851935)." },
+            { "Fukukitaru 07", "Иташа с Фукукитару из Umamusume. Иллюстрация — さぼてんむし (Pixiv 93851935)." },
+            { "Nice Nature Postcard", "Открытка домой. Nice Nature." },
+            { "Tachyon Spectrum", "Агнес Тахион / Эксперимент" },
+            { "Taishin Last Spurt", "Нарита Тайшин / Рывок" },
+            { "Tosho Witching Hour", "Свип Тошо / Магия" }
+        };
 
         internal static void Install()
         {
-            var patch = new Harmony("jalopy.umacommands.paintstock");
+            var patch = new Harmony("jalopy.umamusumecompanion.paintstock");
             var page = typeof(EngineComponentsCataloguePageC);
             patch.Patch(AccessTools.Method(typeof(ModHelper), "CreatePaintJobBox"),
+                prefix: Hook(nameof(LocalizeDescription)),
                 postfix: Hook(nameof(UseRegularCatalogue)));
             patch.Patch(AccessTools.Method(page, "SelectPaintDecals"), prefix: Hook(nameof(AddCandidates)));
             patch.Patch(AccessTools.Method(page, "PaintDecalsGo"), postfix: Hook(nameof(ShowOriginalColours)));
@@ -28,6 +37,13 @@ namespace UmamusumeCompanion
         }
 
         static HarmonyMethod Hook(string name) => new HarmonyMethod(typeof(PaintStock), name);
+
+        static void LocalizeDescription(string name, ref string description)
+        {
+            string russian;
+            if (RussianDescriptions.TryGetValue(name, out russian) && GameText.Russian)
+                description = russian;
+        }
 
         static void UseRegularCatalogue(string name, GameObject __result)
         {

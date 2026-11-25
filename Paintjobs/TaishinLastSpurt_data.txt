@@ -1,7 +1,7 @@
 {
   "Name": "Taishin Last Spurt",
   "Author": "UmaCommands",
-  "Description": "NARITA TAISHIN / 疾走",
+  "Description": "Narita Taishin / Sprint",
   "Price": 60,
   "UsesPreviewIcon": true,
   "ArtSource": "https://jp.pinterest.com/pin/e1_AfqPShx85ijRYTtWm8Xc9DARFOFXnlUHJf2ZwqRzPWFKiZ-O4-IS/"

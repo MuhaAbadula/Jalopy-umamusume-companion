@@ -84,7 +84,9 @@ namespace UmamusumeCompanion
             if (!allStored)
             {
                 OutingKey(); // Follow -> Wait beside the open crate.
-                CompanionMod.Current?.Notify("Ума: «Подойди к багажнику! Помоги, весь товар не влез».", 9f);
+                CompanionMod.Current?.Notify(GameText.Choose(
+                    "Come round to the boot! I can't fit everything in.",
+                    "Ума: «Подойди к багажнику! Помоги, весь товар не влез»."), 9f);
             }
             return allStored;
         }

@@ -30,7 +30,8 @@ namespace UmamusumeCompanion
             return KeyCode.V;
         }
 
-        static readonly string[] Labels = { "Выйди из\nмашины", "Иди за мной", "Остановись", "Зайди\nв машину", "Забери ящик" };
+        static readonly string[] EnglishLabels = { "Get out", "Follow me", "Wait here", "Get in", "Fetch crate" };
+        static readonly string[] RussianLabels = { "Выйди из\nмашины", "Иди за мной", "Остановись", "Зайди\nв машину", "Забери ящик" };
         const float Step = 360f / 5;
         const float DeadZone = 0.31f;
         static readonly Color Ink = new Color32(52, 43, 35, 255);
@@ -43,7 +44,7 @@ namespace UmamusumeCompanion
         internal static CompanionMod Current { get; private set; }
         static bool lookPatched;
         Companion companion;
-        readonly string[] reasons = new string[Labels.Length];
+        readonly string[] reasons = new string[EnglishLabels.Length];
         KeyCode key;
         Vector2 pointer;
         Camera view;
@@ -71,7 +72,6 @@ namespace UmamusumeCompanion
 
         // Leave the game's cursor and camera component state under the game's control.
         static bool AllowLook() => active == null;
-        public override void OnSettingsLoaded() { key = GetPrimaryKeybind("Wheel"); }
         public override void OnSettingsReset() { key = GetPrimaryKeybind("Wheel"); }
 
         static bool Playing()
@@ -89,7 +89,7 @@ namespace UmamusumeCompanion
                 if (!Input.GetKeyDown(key) || !Playing()) return;
                 var driver = FindObjectOfType<CompanionDriver>();
                 companion = driver == null ? null : new Companion(driver);
-                if (companion == null || !companion.Present) { Notify("Умы сейчас нет рядом"); return; }
+                if (companion == null || !companion.Present) { Notify(Companion.Absent); return; }
                 view = Camera.main;
                 look = MainMenuC.Global.GetComponent<MouseLook>();
                 if (view == null || look == null) return;
@@ -108,12 +108,12 @@ namespace UmamusumeCompanion
                     if (Input.GetKeyUp(key) && selected >= 0)
                     {
                         try { Notify(companion.Run((Command)selected)); }
-                        catch (Exception e) { Debug.LogException(e); Notify("Не удалось выполнить команду"); }
+                        catch (Exception e) { Debug.LogException(e); Notify(GameText.Choose("Couldn't give the command", "Не удалось выполнить команду")); }
                     }
                     return;
                 }
             }
-            for (int i = 0; i < Labels.Length; i++) reasons[i] = companion.Unavailable((Command)i);
+            for (int i = 0; i < reasons.Length; i++) reasons[i] = companion.Unavailable((Command)i);
         }
 
         void FixedUpdate()
@@ -131,7 +131,7 @@ namespace UmamusumeCompanion
         {
             if (point.sqrMagnitude < DeadZone * DeadZone) return -1;
             float angle = Mathf.Atan2(point.x, -point.y) * Mathf.Rad2Deg;
-            return Mathf.FloorToInt(Mathf.Repeat(angle + Step / 2f, 360f) / Step) % Labels.Length;
+            return Mathf.FloorToInt(Mathf.Repeat(angle + Step / 2f, 360f) / Step) % EnglishLabels.Length;
         }
 
         void Close() { if (active == this) active = null; }
@@ -204,13 +204,14 @@ namespace UmamusumeCompanion
             GUI.color = Color.white;
             if (open)
             {
+                var labels = GameText.Russian ? RussianLabels : EnglishLabels;
                 if (sector == null) { sector = Mask(true); disc = Mask(false); }
                 var rect = new Rect(center.x - radius, center.y - radius, radius * 2, radius * 2);
                 // Pressed metal bezel, recessed dial and enamel sectors.
                 Face(center + Vector2.up * radius * 0.018f, radius * 1.055f, Ink);
                 Face(center, radius * 1.048f, Steel);
                 Face(center, radius * 1.021f, Ink);
-                for (int i = 0; i < Labels.Length; i++)
+                for (int i = 0; i < labels.Length; i++)
                 {
                     GUIUtility.RotateAroundPivot(i * Step, center);
                     bool available = reasons[i] == null;
@@ -229,7 +230,7 @@ namespace UmamusumeCompanion
                     float a = i * Step * Mathf.Deg2Rad;
                     var pos = center + new Vector2(Mathf.Sin(a), -Mathf.Cos(a)) * radius * 0.67f;
                     GUI.color = Color.white;
-                    Text(pos, radius * 0.82f, radius * 0.35f, Labels[i], font,
+                    Text(pos, radius * 0.82f, radius * 0.35f, labels[i], font,
                         i == selected ? Paper : available ? Ink : Muted);
                 }
                 Face(center, radius * 0.30f, Steel);
@@ -246,10 +247,11 @@ namespace UmamusumeCompanion
                     Face(p, Mathf.Max(2f, radius * 0.013f), Paper);
                 }
                 GUI.color = Color.white;
-                Text(center, radius * 0.55f, radius * 0.25f, "УМА", font + 2, Paper);
+                Text(center, radius * 0.55f, radius * 0.25f, GameText.Choose("UMA", "УМА"), font + 2, Paper);
             }
-            string hint = !open ? notice : selected < 0 ? "Отпусти в центре для отмены" :
-                          reasons[selected] ?? ("Отпусти " + key + ", чтобы дать команду");
+            string hint = !open ? notice : selected < 0
+                ? GameText.Choose("Release in the centre to cancel", "Отпусти в центре для отмены")
+                : reasons[selected] ?? string.Format(GameText.Choose("Release {0} to give the command", "Отпусти {0}, чтобы дать команду"), key);
             label.fontSize = font;
             float w = Mathf.Min(Screen.width - 12f, label.CalcSize(new GUIContent(hint)).x + 44f);
             var hintCenter = center + Vector2.up * (radius * 1.07f + font * 1.4f);

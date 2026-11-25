@@ -1,0 +1,7 @@
+name=Найс Нейча
+name_en=Nice Nature
+name_acc=Найс Нейчу
+voice_pitch=1.0
+features=shopping,seated_tail,souvenirs
+height_m=1.57
+body_scale=1.0134

@@ -272,6 +272,15 @@ namespace UmamusumeCompanion
             return Item(k) + " " + Country(k) + ": she places it when free";
         }
 
+        public static string DebugQueueAll()
+        {
+            if (!Here) return "Souvenirs are unavailable for this companion.";
+            if (Count == 6) return "All 6 are already on the dash.";
+            for (int k = 1; k <= 6; k++) Mark(k, "debug", false);
+            Forced = true;
+            return "Close the panel. She will place the remaining souvenirs in turn when seated and free.";
+        }
+
         /// <summary>Debug "Remove souvenirs": this pack only, this save.</summary>
         public static string DebugRemove()
         {

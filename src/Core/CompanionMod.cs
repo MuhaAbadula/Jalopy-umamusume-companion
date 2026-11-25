@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using JaLoader;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UmamusumeCompanion
 {
     /// <summary>
     /// Replaces the uncle with any character exported by blender/export_char.py.
-    /// Packs live in Mods\Assets\UmamusumeCompanion\models\&lt;name&gt;\char.bin (+ textures); pick one in the settings.
+    /// Packs live in Mods\Assets\UmamusumeCompanion\models\&lt;name&gt;\char.bin (+ textures).
     /// </summary>
     public sealed partial class CompanionMod : Mod
     {
@@ -17,7 +18,7 @@ namespace UmamusumeCompanion
         public override string ModName => "Umamusume companion";
         public override string ModAuthor => "Osobl";
         public override string ModDescription => "Travel with an Umamusume companion. Use the command wheel to ask her to follow, wait, board the car or fetch a crate.";
-        public override string ModVersion => "0.55.4";
+        public override string ModVersion => "0.55.5";
         public override JaLoader.Common.WhenToInit WhenToInitMod => JaLoader.Common.WhenToInit.InGame;
         public override bool UseAssets => true;
 
@@ -51,71 +52,82 @@ namespace UmamusumeCompanion
             }
         }
         string[] models = new string[0];
+        int confirmedModel = -1;
+        bool confirmingModel;
 
         string ModelsDir => Path.Combine(AssetsPath, "models");
+        internal int ModelCount => models.Length;
+        internal bool NeedsCompanionChoice => confirmedModel < 0 && ModelCount > 0;
+        internal int SelectedModel => Mathf.Clamp(GetDropdownValue("Model"), 0, ModelCount - 1);
+
+        static string WheelLabel => GameText.Choose("Command wheel (hold)", "Круговое меню команд (удерживать)");
+        static string ModelLabel => GameText.Choose("Companion (applies when entering a trip)", "Спутница (сменится при входе в поездку)");
+        static string NewsGameLabel => GameText.Choose("News bulletins on the in-game radio", "Новости на радио игры");
+        static string NewsUmaLabel => GameText.Choose("Racing news on Uma FM", "Новости скачек на Uma FM");
+        static string NewsGapLabel => GameText.Choose("Time between news bulletins (min)", "Перерыв между выпусками, мин");
 
         public override void SettingsDeclaration()
         {
             CompanionStorage.ImportPreviousSave();
             base.SettingsDeclaration();
             InstantiateSettings();
-            AddKeybind("Wheel", "Круговое меню команд (удерживать)", LegacyWheelBinding());
+            AddKeybind("Wheel", WheelLabel, LegacyWheelBinding());
             models = FindModels();
-            AddDropdown("Model", "Character (restart the game to switch)", models.Length > 0 ? models : new[] { "(none found)" }, 0);
+            AddDropdown("Model", ModelLabel, ModelLabels(), 0);
             AddToggle("Physics", "Hair, skirt and tail physics", true);
-            AddToggle("Lively", "Lively: face, gaze, little things she does in the car", true);
-            AddToggle("OwnWalk", "Her own walk and stance (instead of the uncle's)", true);
-            AddSlider("StepVolume", "Her footsteps volume (%)", 0, 150, 70, true);
+            AddToggle("Lively", "Facial expressions, gaze and idle animations", true);
+            AddToggle("OwnWalk", "Use the companion's own walk and stance", true);
+            AddSlider("StepVolume", "Companion footstep volume (%)", 0, 150, 70, true);
             // new id again (WalkPace 80, WalkPace2 60 were saved): 0 = her own Uma pace
-            AddSlider("WalkPace3", "Her walking speed: 0 = as in Uma Musume (auto), else % of the uncle's", 0, 100, 0, true);
-            AddSlider("BedLift", "Lying in the motel bed: hip height (cm)", 0, 40, 8, true);
-            AddToggle("Doze", "She dozes off on long night drives", true);
-            AddSlider("DozeMinutes", "Doze: minutes of driving before she falls asleep", 1, 20, 6, true);
-            AddSlider("DozeFrom", "Doze: night starts at (hour)", 0, 23, 22, true);
-            AddSlider("DozeTo", "Doze: night ends at (hour)", 0, 23, 5, true);
-            AddToggle("Morning", "In the motel morning she is up first, wakes you and stays in the room; she is in her seat when you get to the car", true);
-            AddToggle("Fortune", "Fukukitaru: fortune of the day, in the morning she tells your luck", true);
-            AddSlider("Luck1", "Fukukitaru: fortune, chance of great luck (%)", 0, 100, 10, true);
-            AddSlider("Luck2", "Fukukitaru: fortune, chance of luck (%)", 0, 100, 25, true);
-            AddSlider("Luck3", "Fukukitaru: fortune, chance of average luck (%)", 0, 100, 30, true);
-            AddSlider("Luck4", "Fukukitaru: fortune, chance of small luck (%)", 0, 100, 25, true);
-            AddSlider("Luck5", "Fukukitaru: fortune, chance of bad luck (%)", 0, 100, 10, true);
-            AddToggle("LuckFx", "Fukukitaru: luck affects the game: shop prices, crate sales, part wear, border search", true);
-            AddToggle("LuckShop", "Fukukitaru: luck, shelf prices in shops", true);
-            AddToggle("LuckCrates", "Fukukitaru: luck, sell price of cargo crates", true);
-            AddToggle("LuckWear", "Fukukitaru: luck, part wear while driving", true);
-            AddToggle("LuckBorder", "Fukukitaru: luck, border search chance", true);
-            AddSlider("LuckStrength", "Fukukitaru: luck effects strength (%): 0 = as in the game, 100 = normal, 200 = double", 0, 200, 100, true);
+            AddSlider("WalkPace3", "Walking speed (% of the uncle's, 0 for her own pace)", 0, 100, 0, true);
+            AddSlider("BedLift", "Hip height in the motel bed (cm)", 0, 40, 8, true);
+            AddToggle("Doze", "Doze off on long night drives", true);
+            AddSlider("DozeMinutes", "Night driving before dozing off (min)", 1, 20, 6, true);
+            AddSlider("DozeFrom", "Start of the night (hour)", 0, 23, 22, true);
+            AddSlider("DozeTo", "End of the night (hour)", 0, 23, 5, true);
+            AddToggle("Morning", "Wake up with your companion at motels", true);
+            AddToggle("Fortune", "Fukukitaru reads your fortune each morning", true);
+            AddSlider("Luck1", "Chance of great luck (%)", 0, 100, 10, true);
+            AddSlider("Luck2", "Chance of good luck (%)", 0, 100, 25, true);
+            AddSlider("Luck3", "Chance of average luck (%)", 0, 100, 30, true);
+            AddSlider("Luck4", "Chance of a little luck (%)", 0, 100, 25, true);
+            AddSlider("Luck5", "Chance of bad luck (%)", 0, 100, 10, true);
+            AddToggle("LuckFx", "Fukukitaru's fortune affects the trip", true);
+            AddToggle("LuckShop", "Luck affects shop prices", true);
+            AddToggle("LuckCrates", "Luck affects crate resale prices", true);
+            AddToggle("LuckWear", "Luck affects part wear", true);
+            AddToggle("LuckBorder", "Luck affects the chance of a border search", true);
+            AddSlider("LuckStrength", "Luck effect strength (%, 0 for base game behaviour)", 0, 200, 100, true);
             AddToggle("Pranks", "Sweep: pranks and radio tricks", true);
-            AddSlider("PrankMinutes", "Sweep: pranks, about every N minutes of driving (0 = never)", 0, 30, 12, true);
+            AddSlider("PrankMinutes", "Driving between Sweep's pranks (min, 0 for off)", 0, 30, 12, true);
             AddToggle("Experiments", "Tachyon: experiments (potions for you at stops, additives for the Laika)", true);   // task 87
-            AddSlider("PotionMinutes", "Tachyon: potions, about every N minutes (0 = never)", 0, 60, 30, true);
-            AddSlider("AddonMinutes", "Tachyon: additives, about every N minutes of driving (0 = never)", 0, 60, 35, true);
-            AddToggle("ExpStrong", "Tachyon: strong camera effects (off = only mild ones)", true);
-            AddDropdown("MirrorQuality", "Rear-view mirror picture (High: sharp, every frame; Game default if FPS drops)", new[] { "High", "Game default" }, 0);
-            AddToggle("Souvenirs", "Souvenirs on the dashboard: in each country she puts a keepsake on the dash (click one to hear about it)", true);
-            AddToggle("StayIstanbul", "She does not leave in Istanbul and rides back home with you", true);
-            AddSlider("ReturnTalkGap", "Way home: minutes of driving between her talks", 2, 10, 4, true);   // task 60
-            AddToggle("HideSuitcase", "Hide the uncle's suitcase while she carries it (it still works in the car)", true);
-            AddToggle("UmaFm", "Uma FM: click the radio once more for Uma Musume songs (ogg in Mods/Assets/UmamusumeCompanion/radio/umafm)", true);
-            AddToggle("NewsGame", "Новости на радио игры", true);   // task 52
-            AddToggle("NewsUma", "Новости скачек на Uma FM", true);
-            AddSlider("NewsGap", "Перерыв между выпусками, мин", 1, 30, 8, true);
-            AddSlider("HeadBob", "Head bob to the radio: share of the music time (%), 0 = never, 100 = always", 0, 100, 30, true);
-            AddSlider("SelfActDelay", "Radio/window delay after boarding (s), 0 = none", 0, 300, 90, true);
-            AddSlider("Activity","How often she does something on her own (%)", 30, 200, 80, true);
-            AddSlider("Wind", "Wind in her hair with her window open (%)", 0, 200, 100, true);
-            AddToggle("BagSeat", "In the car the backpack goes on the back seat", true);
-            AddSlider("BagBack", "Backpack on the seat: how far behind her (cm)", 30, 250, 150, true);
-            AddSlider("BagHeight", "Backpack on the seat: height (cm, 50 = her hips)", 0, 200, 80, true);
-            AddSlider("BagSide", "Backpack on the seat: sideways (cm, 50 = behind her, more = to her right)", 0, 100, 50, true);
+            AddSlider("PotionMinutes", "Time between Tachyon's potions (min, 0 for off)", 0, 60, 30, true);
+            AddSlider("AddonMinutes", "Driving between Tachyon's additives (min, 0 for off)", 0, 60, 35, true);
+            AddToggle("ExpStrong", "Intense camera effects for Tachyon's experiments", true);
+            AddDropdown("MirrorQuality", "Rear-view mirror quality", new[] { "High", "Game default" }, 0);
+            AddToggle("Souvenirs", "Dashboard souvenirs (click one to hear about it)", true);
+            AddToggle("StayIstanbul", "Bring your companion home from Istanbul", true);
+            AddSlider("ReturnTalkGap", "Driving between conversations on the way home (min)", 2, 10, 4, true);   // task 60
+            AddToggle("HideSuitcase", "Hide the uncle's suitcase when carried", true);
+            AddToggle("UmaFm", "Uma FM station (click the radio again to tune in)", true);
+            AddToggle("NewsGame", NewsGameLabel, true);
+            AddToggle("NewsUma", NewsUmaLabel, true);
+            AddSlider("NewsGap", NewsGapLabel, 1, 30, 8, true);
+            AddSlider("HeadBob", "Time spent nodding along to the radio (%)", 0, 100, 30, true);
+            AddSlider("SelfActDelay", "Delay before using the radio or window after getting in (s)", 0, 300, 90, true);
+            AddSlider("Activity", "Companion activity frequency (%)", 30, 200, 80, true);
+            AddSlider("Wind", "Wind strength with the passenger window open (%)", 0, 200, 100, true);
+            AddToggle("BagSeat", "Put the backpack on the back seat", true);
+            AddSlider("BagBack", "Backpack distance behind the companion (cm)", 30, 250, 150, true);
+            AddSlider("BagHeight", "Backpack height (cm, 50 at hip level)", 0, 200, 80, true);
+            AddSlider("BagSide", "Backpack sideways position (cm, 50 centred)", 0, 100, 50, true);
             AddSlider("Brightness", "Brightness (game objects use about 50)", 20, 100, 55, true);
-            AddSlider("SeatLift", "Seat height in the car", 0, 40, 18, true);
-            AddSlider("ArmSpread", "Arms away from the body (standing, degrees)", 0, 30, 12, true);
-            AddSlider("Posture", "Posture: how much of the uncle's hunch to remove (%)", 0, 100, 60, true);
+            AddSlider("SeatLift", "Sitting height in the car (cm)", 0, 40, 18, true);
+            AddSlider("ArmSpread", "Arm angle when standing (degrees)", 0, 30, 12, true);
+            AddSlider("Posture", "How much to straighten her posture (%)", 0, 100, 60, true);
             RegisterDebugSettings();
-            AddKeybind("FetchCrate", "Fetch the nearest roadside crate into the boot (while stopped)", KeyCode.J);
-            AddKeybind("Outing", "In a stopped car: she gets out and walks with you. Outside: wait here / come along. She gets back in when you drive", KeyCode.G);
+            AddKeybind("FetchCrate", "Fetch the nearest roadside crate (while stopped)", KeyCode.J);
+            AddKeybind("Outing", "Get out of the parked car or switch between waiting and following", KeyCode.G);
             // task 47: the new-game reset must hook the main menu's New Game, before any game scene
             try { Souvenirs.Apply(); }
             catch (Exception e) { JaLoader.Console.LogError(ModID, "Souvenir patch failed: " + e.Message); }
@@ -287,6 +299,87 @@ namespace UmamusumeCompanion
             return list.ToArray();
         }
 
+        string[] ModelLabels()
+        {
+            if (models.Length == 0)
+                return new[] { GameText.Choose("No companion packs found", "Спутницы не установлены") };
+            var labels = new string[models.Length];
+            for (int i = 0; i < models.Length; i++)
+            {
+                var info = ReadModelInfo(i);
+                string englishName = info.Get("name_en", models[i]);
+                labels[i] = GameText.Russian ? info.Get("name", englishName) : englishName;
+            }
+            return labels;
+        }
+
+        void ChangedLanguage(LanguageCode language)
+        {
+            if (UIManager.Instance == null) return;
+            var model = GetDropdown("Model");
+            if (model == null) return;
+            var names = ModelLabels();
+            if (model.options.Count == names.Length)
+            {
+                for (int i = 0; i < names.Length; i++)
+                    model.options[i].text = ModelLabel + ": " + names[i];
+                model.RefreshShownValue();
+            }
+
+            var modelRoot = model.transform;
+            while (modelRoot != null && modelRoot.name != "Model_Dropdown") modelRoot = modelRoot.parent;
+            if (modelRoot == null || modelRoot.parent == null) return;
+            var holder = modelRoot.parent;
+            var wheel = holder.Find("Wheel_Keybind/HeaderText")?.GetComponent<Text>();
+            if (wheel != null) wheel.text = WheelLabel;
+            var gap = holder.Find("NewsGap_Slider")?.GetComponentInChildren<Text>();
+            if (gap != null) gap.text = NewsGapLabel;
+            RefreshToggleLabel(GetToggle("NewsGame"), NewsGameLabel);
+            RefreshToggleLabel(GetToggle("NewsUma"), NewsUmaLabel);
+        }
+
+        static void RefreshToggleLabel(Dropdown toggle, string label)
+        {
+            if (toggle == null || toggle.options.Count != 2) return;
+            toggle.options[0].text = label + ": On";
+            toggle.options[1].text = label + ": Off";
+            toggle.RefreshShownValue();
+        }
+
+        internal CharInfo ReadModelInfo(int index) => CharInfo.Load(Path.Combine(ModelsDir, models[index]));
+        internal string ModelId(int index) => models[index];
+
+        public override void OnSettingsLoaded()
+        {
+            base.OnSettingsLoaded();
+            key = GetPrimaryKeybind("Wheel");
+            string pack = CompanionStorage.ReadSelectedPack();
+            confirmedModel = Array.FindIndex(models, name => string.Equals(name, pack, StringComparison.OrdinalIgnoreCase));
+            if (confirmedModel >= 0) GetDropdown("Model").value = confirmedModel;
+
+            try { CompanionPicker.Register(this); }
+            catch (Exception e) { JaLoader.Console.LogError(ModID, "Companion menu: " + e); }
+        }
+
+        internal bool ConfirmCompanion(int index)
+        {
+            if (index < 0 || index >= ModelCount) return false;
+            var dropdown = GetDropdown("Model");
+            int previous = dropdown.value;
+            confirmingModel = true;
+            try
+            {
+                dropdown.value = index;
+                SaveModSettings();
+                if (confirmedModel == index) return true;
+            }
+            catch (Exception e) { JaLoader.Console.LogError(ModID, "Saving companion: " + e); }
+            finally { confirmingModel = false; }
+
+            dropdown.value = previous;
+            return false;
+        }
+
         public override void Start()
         {
             base.Start();
@@ -315,6 +408,15 @@ namespace UmamusumeCompanion
         public override void OnSettingsSaved()
         {
             base.OnSettingsSaved();
+            if (ModelCount > 0 && (confirmingModel || confirmedModel >= 0))
+            {
+                int index = SelectedModel;
+                if (index != confirmedModel)
+                {
+                    CompanionStorage.WriteSelectedPack(models[index]);
+                    confirmedModel = index;
+                }
+            }
             key = GetPrimaryKeybind("Wheel");
             ApplySettings();
         }

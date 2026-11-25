@@ -1,0 +1,140 @@
+# agnestachyon | Story | English
+istanbul_morning=Morning. I barely slept. Too much data to process.
+istanbul_morning=I went up the Galata Tower yesterday. The wind up there is fierce. I think Çelebi was counting on it.
+istanbul_morning=I stood by the railing, trying to work out what he must've felt before jumping.
+istanbul_morning=Still, he took off alone. There are two of us on the way back. That's a different experiment altogether.
+istanbul_morning=I bought some spices as well. Saffron, mastic, cardamom. One little bag and the whole Laika smells like a laboratory.
+istanbul_morning=The data's collected. It needs to be processed at home, in proper conditions.
+istanbul_morning=Right, let's head back. Open the [b]Map[/b] and choose the return route.
+
+back_6=Goodbye, Istanbul. I'll be back here with a new hypothesis.
+back_6=The Bosphorus bridge in the mirror. The structure holds its weight perfectly. Recording this.
+
+back_6_2=Saw what they use for tea here? Cups with handles. Super handy for holding hot drinks.
+back_6_2=I drank it with five sugar cubes. The seller watched with respect. Or maybe worry.
+
+back_6_3=The spice packet's on my lap. Avoid potholes, assistant.
+back_6_3=If the saffron spills all over the car, the Laika'll be yellow inside. Forever.
+
+back_5=I measured everything on the way there. Speed, wear, your pulse.
+back_5=And now I'm just watching the mountains. Seems the brain needs that too to function.
+
+back_5_2=Bulgaria is famous for yogurt. Special bacteria. Want to get a sample.
+back_5_2=Don't look like that. It's science. And it's tasty with honey too.
+
+back_5_3=You know, when an idea hits me, my hair stands on end.
+back_5_3=It's standing now. No, I won't say what the idea is. Ku-ku-ku...
+
+back_4=We need to come up with a name for that Istanbul spice mixture. “Tachyon Bosporus”? “Formula 601”?
+back_4=You can suggest your own. But I'll still be the one to choose.
+
+back_4_2=Sea again. Beautiful. You know how far it is if we run along the shore? I counted.
+back_4_2=My legs couldn't handle that distance. But with you and the Laika 601 Deluxe, we made it.
+
+back_4_3=Kafe must have noticed I'm not here by now. She always notices everything.
+back_4_3=I'll bring her coffee from the market. Then maybe she'll forgive me.
+
+back_3=The bridge in Sturovo still hasn't been fixed. Shame.
+back_3=Though a missing bridge is also a great motivator. Someone will build it someday.
+
+back_3_2=In Hungary, they invented a cake called “Dobos”. Lots of layers, with a caramel top.
+back_3_2=Assistant, that's a high-calorie research subject. I want to study it. Not right now. I can wait.
+
+back_3_3=I've rechecked the data. Your driving skills have improved significantly.
+back_3_3=So my potions are working. Or maybe you've just gotten better at driving. I lean towards the first option.
+
+back_2=Germany's almost here. I miss the lab. And my teapot.
+back_2=Hm. Missed it. Odd feeling. Need to note that down.
+
+back_2_2=Prague's somewhere nearby. Legend has it a rabbi molded a giant from clay and brought it to life. A golem.
+back_2_2=Creating life from nothing... Strong hypothesis. I doubt I'll test it.
+
+back_2_3=Assistant, will they inspect us at the border? Spices aren't illegal, are they?
+back_2_3=If they ask, I'll say it's for research. Sounds serious and scares everyone.
+
+back_1=Last day on the road. Strangely, I don't want the experiment to end.
+back_1=I'll write a report when I get home. Long one. You'll be a co-author.
+back_1=Don't get your hopes up. Co-authors take meds too.
+
+back_1_2=So many Trabants here. Two-stroke, like our Laika. Smoke like my flasks.
+back_1_2=Almost relatives. Good we didn't abandon her.
+
+back_1_3=What'll I do first when I get home? The meds. No, tea first. No, meds first...
+back_1_3=Right, I'll decide at the door. You heard nothing.
+
+turn_start=Huh? Going back? Well... Honestly, it's a shame. I wanted to see it through.
+turn_start=Better to call off an experiment early than to have it blow up.
+turn_start=We already have the data. We'll process it, fix the errors and try again.
+turn_start=We'll try again. Reproducibility, my dear assistant.
+
+home_5=The woods around here are thick. There must be some interesting mushrooms. For research, not eating.
+home_5=No, we're not stopping. I'm holding back. That's part of the experiment too.
+
+home_5_2=Bulgarian yogurt is famous for its bacteria. Add honey on top and it's almost a dessert.
+home_5_2=Next time we'll bring a jar. And honey. For research.
+
+home_5_3=They say Bulgarians nod the other way round. Shaking your head means “yes”, nodding means “no”.
+home_5_3=Interesting reversal of reflexes. You'd get confused. I've already retrained myself. Almost.
+
+home_4=It's beautiful here. Even if we didn't make it, I'm glad we drove here.
+home_4=A negative result's still a result. Good scientists know that.
+
+home_4_2=Dubrovnik behind a stone wall. An entire city, and the wall's held up for centuries.
+home_4_2=What strong construction. I wish I had those kind of joints in my legs.
+
+home_4_3=If one of our tyres goes flat, I'll calculate while you operate the jack. Division of labour.
+home_4_3=Alright, it won't go flat. I've worked out the odds. Low. Almost.
+
+home_3=Last year, thousands left East Germany via Hungary. They opened the border here.
+home_3=One open door and a chain reaction started.
+
+home_3_2=They dry peppers in bunches right on the walls. Capsaicin. Interesting stuff, but bitter.
+home_3_2=I don't like bitter things. Drive around such houses. I'm not looking away, I'm just looking the other way.
+
+home_3_3=Working on a new potion. Wait... sugar, caffeine, and a bit of that glowing stuff...
+home_3_3=Not working yet. No worries, I'll fine-tune it. You get to try it first.
+
+home_2=I heard they made a cartoon about a mole in Czechoslovakia. Kids watch it all over the world.
+home_2=A mole who fixes everything. Almost like you. Just not as fluffy.
+
+home_2_2=They argued in Czechoslovakia for ages about whether to use a hyphen in the country name.
+home_2_2=Over a single dash. Like two scientists arguing over a comma in a formula. I understand them.
+
+home_2_3=Aren't you tired? That's not caring. Just a tired driver ruins the data.
+home_2_3=Want a boost potion? No? Well, fine. The side effects would still be interesting.
+
+home_1=Dresden's behind us, Berlin's ahead. Right on our doorstep.
+home_1=Lab, tea, cake. Don't rush. No, rush!
+
+home_1_2=I'll start a new series of experiments back home. Based on what we've seen.
+home_1_2=And you, don't relax: the next drive's still yours. Guinea pigs don't go on holiday.
+
+home_1_3=Well done, you delivered it. Not that I'm grateful. Just good results.
+home_1_3=We rest tomorrow. The day after, I'll decide what to measure next.
+
+doze_fall=I'll just... close my eyes... to rest my eyesight...
+doze_fall=Blood sugar's dropping... Wake me up at the motel.
+
+doze_mumble=The speed of light... not the limit... mmm...
+doze_mumble=Guinea pig... drink... it's not dangerous...
+doze_mumble=Another... bit of sugar...
+
+doze_pat=Mmm... kukuku...
+
+doze_wake_bump=Huh?! I wasn't sleeping. I was pondering a hypothesis with my eyes closed.
+doze_wake_bump=What? Where are we? How long was I out?
+
+doze_wake_crash=Ouch! What was that? Are the flasks intact?!
+
+doze_wake_thunder=Thunder?! The discharge was close...
+
+doze_wake_stop=Are we there already? You drove well. No unnecessary bumps. I'll note that.
+
+wake_wait=I'll wait in the car. If you fall asleep again, I'll wake you with a drug.
+
+wake_alarm=Good morning. Give me your hand. Let's start the day with a blood test. I'm joking. Almost.
+wake_alarm=Up! I'm already up, and that's almost a miracle for me.
+wake_alarm=Get up. I worked all night yet still woke up before you.
+wake_alarm=Up, up! The road's waiting, and the data's waiting too.
+wake_alarm=Wake up, guinea pig. Your pulse is steady, but we need to go.
+wake_crash=Wake up. After yesterday's shock, I checked you while you slept. You'll live. Just don't break the car.

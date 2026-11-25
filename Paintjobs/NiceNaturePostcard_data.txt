@@ -1,0 +1,9 @@
+{
+  "Name": "Nice Nature Postcard",
+  "Author": "Umamusume Companion / xispy903",
+  "Description": "A postcard home from Nice Nature.",
+  "Price": 60,
+  "UsesPreviewIcon": true,
+  "ArtSource": "https://jp.pinterest.com/pin/e1_AfqPShx9oi9X6cWfB5WOpbmO3s2TLtMyApbE6Yr6JefIHrxqW18k/",
+  "OriginalArt": "https://x.com/xispy903/status/2097204236690022594"
+}

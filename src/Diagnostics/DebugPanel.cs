@@ -222,6 +222,8 @@ namespace UmamusumeCompanion
                 B("Additive: off", () => D(d => d.DebugAddonStop()), false));
             GUILayout.Label("Souvenirs (" + Souvenirs.Count + " on the dash)");
             Row(B("Souvenir now", Souvenirs.DebugNow, false), B("Remove souvenirs", Souvenirs.DebugRemove, false));
+            if (Souvenirs.Here)
+                Row(B("Queue all 6 souvenirs", Souvenirs.DebugQueueAll, false));
             if (Luck.Mine)
             {
                 GUILayout.Label("Fortune");

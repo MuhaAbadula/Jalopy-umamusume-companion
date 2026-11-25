@@ -1,7 +1,7 @@
 {
   "Name": "Tachyon Spectrum",
   "Author": "UmaCommands",
-  "Description": "AGNES TACHYON / 実験",
+  "Description": "Agnes Tachyon / Experiment",
   "Price": 60,
   "UsesPreviewIcon": true,
   "ArtSource": "https://jp.pinterest.com/pin/e1_AfqPShyOiJ3GGKNpTGM0bSeVf0ApCmFMsI9PwdI7KBtCnzAIFL-Gag/"

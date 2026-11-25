@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
@@ -12,7 +13,10 @@ namespace UmamusumeCompanion.Installer
 {
     internal static class Program
     {
-        const string Title = "Umamusume companion для Jalopy";
+        static readonly bool Russian = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ru";
+        static readonly string Title = Text("Umamusume companion for Jalopy", "Umamusume companion для Jalopy");
+
+        static string Text(string english, string russian) { return Russian ? russian : english; }
 
         [STAThread]
         static void Main()
@@ -22,25 +26,29 @@ namespace UmamusumeCompanion.Installer
             {
                 try
                 {
-                    if (!single.WaitOne(0)) throw new IOException("Установщик уже открыт.");
+                    if (!single.WaitOne(0)) throw new IOException(Text("The installer is already open.", "Установщик уже открыт."));
                     string game = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Jalopy", "JalopyPath", null) as string;
                     if (game == null || !File.Exists(Path.Combine(game, "Jalopy.exe")))
                     {
-                        using (var pick = new OpenFileDialog { Title = "Выберите Jalopy.exe", Filter = "Jalopy|Jalopy.exe" })
+                        using (var pick = new OpenFileDialog { Title = Text("Select Jalopy.exe", "Выберите Jalopy.exe"), Filter = "Jalopy|Jalopy.exe" })
                         {
                             if (pick.ShowDialog() != DialogResult.OK) return;
                             game = Path.GetDirectoryName(pick.FileName);
                         }
                     }
                     string mods = ModsFolder(game);
-                    if (MessageBox.Show("Установить мод в Jalopy?\n\n" + game + "\n\nПапка модов:\n" + mods,
+                    string confirmation = Text("Install the mod for this copy of Jalopy?\n\n{0}\n\nMods folder\n{1}",
+                        "Установить мод в Jalopy?\n\n{0}\n\nПапка модов:\n{1}");
+                    if (MessageBox.Show(string.Format(confirmation, game, mods),
                         Title, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
                     if (Process.GetProcessesByName("Jalopy").Length > 0)
-                        throw new IOException("Закройте Jalopy и снова запустите установщик.");
+                        throw new IOException(Text("Close Jalopy and run the installer again.",
+                            "Закройте Jalopy и снова запустите установщик."));
                     using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("package.zip"))
                     using (var archive = new ZipArchive(stream, ZipArchiveMode.Read))
                         Install(archive, game, mods);
-                    MessageBox.Show("Готово! Запустите Jalopy. Для команд спутнице удерживайте V.", Title);
+                    MessageBox.Show(Text("The mod is installed. Start Jalopy and hold V to open the command wheel.",
+                        "Готово! Запустите Jalopy. Для команд спутнице удерживайте V."), Title);
                 }
                 catch (Exception e) { MessageBox.Show(e.Message, Title, MessageBoxButtons.OK, MessageBoxIcon.Error); }
             }
@@ -49,7 +57,8 @@ namespace UmamusumeCompanion.Installer
         internal static string ModsFolder(string game)
         {
             if (!File.Exists(Path.Combine(game, @"Jalopy_Data\Managed\JaLoader.dll")))
-                throw new IOException("Сначала установите JaLoader для этой копии Jalopy.");
+                throw new IOException(Text("Install JaLoader for this copy of Jalopy first.",
+                    "Сначала установите JaLoader для этой копии Jalopy."));
             string config = Path.Combine(game, "JaSettings.json");
             string path = null;
             if (File.Exists(config))
@@ -60,7 +69,8 @@ namespace UmamusumeCompanion.Installer
             }
             else path = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Jalopy", "ModsLocation", null) as string;
             if (String.IsNullOrWhiteSpace(path) || !Path.IsPathRooted(path) || !Directory.Exists(path))
-                throw new IOException("Проверьте папку модов в настройках JaLoader и один раз запустите игру.");
+                throw new IOException(Text("Check the mods folder in your JaLoader settings and run Jalopy once.",
+                    "Проверьте папку модов в настройках JaLoader и один раз запустите игру."));
             return Path.GetFullPath(path);
         }
 
@@ -80,7 +90,8 @@ namespace UmamusumeCompanion.Installer
                     string name = mod ? entry.FullName.Substring(prefix.Length) : entry.FullName;
                     string target = Path.GetFullPath(Path.Combine(root, name));
                     if (!target.StartsWith(Path.GetFullPath(root).TrimEnd('\\') + "\\", StringComparison.OrdinalIgnoreCase))
-                        throw new InvalidDataException("Некорректный путь в архиве.");
+                        throw new InvalidDataException(Text("The archive contains an invalid file path.",
+                            "Некорректный путь в архиве."));
                     Directory.CreateDirectory(Path.GetDirectoryName(target));
                     string stage = target + "." + id + ".tmp";
                     string backup = null;

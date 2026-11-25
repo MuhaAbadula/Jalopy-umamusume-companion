@@ -9,6 +9,25 @@ namespace UmamusumeCompanion
         internal const string ModId = "UmamusumeCompanion";
         static string SaveRoot => Path.Combine(Application.persistentDataPath, "ModSaves");
         internal static string SaveDirectory => Path.Combine(SaveRoot, ModId);
+        static string SelectionFile => Path.Combine(SaveDirectory, "selected-companion.txt");
+
+        internal static string ReadSelectedPack()
+        {
+            try { return File.Exists(SelectionFile) ? File.ReadAllText(SelectionFile).Trim() : null; }
+            catch (IOException e) { Debug.LogWarning("[Umamusume companion] Reading companion choice: " + e.Message); }
+            catch (UnauthorizedAccessException e) { Debug.LogWarning("[Umamusume companion] Reading companion choice: " + e.Message); }
+            return null;
+        }
+
+        internal static void WriteSelectedPack(string pack)
+        {
+            string path = SelectionFile;
+            string pending = path + ".tmp";
+            Directory.CreateDirectory(SaveDirectory);
+            File.WriteAllText(pending, pack);
+            if (File.Exists(path)) File.Replace(pending, path, null);
+            else File.Move(pending, path);
+        }
 
         // JaLoader names both the settings folder and its JSON file after the mod ID.
         // Identify a previous companion installation by its feature-specific settings.

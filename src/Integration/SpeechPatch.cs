@@ -9,7 +9,7 @@ namespace UmamusumeCompanion
     /// <summary>
     /// The character's own dialogue: models\&lt;name&gt;\speech_&lt;LANG&gt;.txt ("key=text" lines, UTF-8, '#' comments)
     /// replaces the game's text for those keys of the "Speech" sheet in that language (LANG = RU, EN, ...).
-    /// Keys without an override, and languages without a file, keep the game's text.
+    /// Regional English variants can use the shared EN file. Other missing overrides keep the game's text.
     /// </summary>
     public static class SpeechPatch
     {
@@ -54,7 +54,11 @@ namespace UmamusumeCompanion
             if (sheetTitle != Sheet || key == null || byLang.Count == 0) return;
             Dictionary<string, string> map;
             string text;
-            if (byLang.TryGetValue(Language.CurrentLanguage().ToString(), out map) && map.TryGetValue(key, out text))
+            var language = Language.CurrentLanguage();
+            if (byLang.TryGetValue(language.ToString(), out map) && map.TryGetValue(key, out text))
+                __result = text;
+            else if (GameText.RegionalEnglish(language) &&
+                     byLang.TryGetValue("EN", out map) && map.TryGetValue(key, out text))
                 __result = text;
         }
     }

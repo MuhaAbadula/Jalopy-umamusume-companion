@@ -1,6 +1,6 @@
 {
   "Name": "Daikichi After Dark",
-  "Description": "Фукукитару. Большая удача. Иллюстрация — さぼてんむし (Pixiv 93851935).",
+  "Description": "Fukukitaru and a stroke of great luck. Illustration by さぼてんむし (Pixiv 93851935).",
   "Author": "UmaCommands / さぼてんむし",
   "Price": 60,
   "UsesPreviewIcon": true
