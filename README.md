@@ -7,28 +7,21 @@
 
 ## Установка
 
-1. Если JaLoader ещё не стоит, [установите его](https://github.com/theLeaxx/JaLoader/wiki/Installing-JaLoader-via-JaPatcher), а затем один раз запустите игру.
-2. Закройте Jalopy. Запустите [установщик мода для Windows](https://github.com/MuhaAbadula/Umamusume-companion/releases/download/v0.55.4/Umamusume-companion-0.55.4-Windows.exe) и нажмите **ОК**. Если он попросит найти игру, укажите `Jalopy.exe`.
-3. В настройках мода выберите спутницу и перезапустите игру.
+1. Если JaLoader ещё не установлен, [установите его](https://github.com/theLeaxx/JaLoader/wiki/Installing-JaLoader-via-JaPatcher) и один раз запустите игру.
+2. Закройте Jalopy и запустите [установщик мода для Windows](https://github.com/MuhaAbadula/Umamusume-companion/releases/download/v0.55.4/Umamusume-companion-0.55.4-Windows.exe).
+3. Выберите спутницу в настройках мода и перезапустите игру.
 
-В поездке удерживайте **V**, наведите мышь на нужную команду и отпустите клавишу.
+Для ручной установки распакуйте [ZIP](https://github.com/MuhaAbadula/Umamusume-companion/releases/download/v0.55.4/Umamusume-companion-0.55.4.zip) в папку с `Jalopy.exe`.
 
-<details>
-<summary>Если ставите вручную или обновляетесь с двух отдельных модов</summary>
-
-Распакуйте [ZIP версии 0.55.4](https://github.com/MuhaAbadula/Umamusume-companion/releases/download/v0.55.4/Umamusume-companion-0.55.4.zip) рядом с `Jalopy.exe`. Если в JaLoader выбрана своя папка модов, перенесите туда содержимое `Jalopy_Data/Mods` из архива.
-
-Если спутница и команды раньше стояли отдельно, перед установкой перенесите обе старые DLL из папки модов в резервную папку.
-
-</details>
+Чтобы дать команду, зажмите **V**, наведите курсор на команду и отпустите клавишу.
 
 ## Спутницы
 
 - **Агнес Тахион (Agnes Tachyon)** — предлагает водителю испытать зелья с неожиданными эффектами.
-- **Матиканэ Фукукитару (Matikanefukukitaru)** — гадает на удачу — от её прогноза зависят даже цены в магазине.
+- **Матиканэ Фукукитару (Matikanefukukitaru)** — гадает на удачу. От прогноза зависят цены в магазине.
 - **Нарита Тайшин (Narita Taishin)** — поначалу держится отстранённо, но в дороге постепенно теплеет к водителю.
 - **Найс Нейча (Nice Nature)** — после ночёвки в мотеле докупает бензин, масло и ремкомплект, если их не хватает.
-- **Свип Тошо (Sweep Tosho)** — шалит в салоне — может посигналить или дёрнуть ручник.
+- **Свип Тошо (Sweep Tosho)** — может в шутку посигналить или дёрнуть ручник.
 - **Огури Кэп (Oguri Cap)** — на остановках иногда съедает пачку сосисок из багажника.
 
 Модели, персонажи и их голоса принадлежат компании Cygames.
