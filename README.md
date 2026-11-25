@@ -1,27 +1,29 @@
-# Umamusume companion — мод для Jalopy
+# Umamusume companion for Jalopy
 
-Вместо дяди с вами в «Лайке» поедет одна из шести героинь Umamusume.
+English · [Русский](README.ru.md)
+
+Pick one of six Umamusume characters to ride in the Laika’s passenger seat in place of your uncle.
 
 > [!IMPORTANT]
-> **Этот мод сделан целиком вайбкодингом.** Я лишь придумывал, как это будет выглядеть, и тестировал итог.
+> **This mod was made entirely through vibe coding.** I came up with the ideas and tested the results.
 
-## Установка
+## Installation
 
-1. Если JaLoader ещё не установлен, [установите его](https://github.com/theLeaxx/JaLoader/wiki/Installing-JaLoader-via-JaPatcher) и один раз запустите игру.
-2. Закройте Jalopy и запустите [установщик мода для Windows](https://github.com/MuhaAbadula/Jalopy-umamusume-companion/releases/download/v0.55.4/Umamusume-companion-0.55.4-Windows.exe).
-3. Выберите спутницу в настройках мода и перезапустите игру.
+1. If you haven’t already installed JaLoader, follow the [JaLoader installation guide](https://github.com/theLeaxx/JaLoader/wiki/Installing-JaLoader-via-JaPatcher) and launch Jalopy once.
+2. Close Jalopy and run the [Windows mod installer](https://github.com/MuhaAbadula/Jalopy-umamusume-companion/releases/download/v0.55.4/Umamusume-companion-0.55.4-Windows.exe).
+3. Choose a companion in the mod settings, then restart the game.
 
-Для ручной установки распакуйте [ZIP](https://github.com/MuhaAbadula/Jalopy-umamusume-companion/releases/download/v0.55.4/Umamusume-companion-0.55.4.zip) в папку с `Jalopy.exe`.
+To install manually, extract the [ZIP](https://github.com/MuhaAbadula/Jalopy-umamusume-companion/releases/download/v0.55.4/Umamusume-companion-0.55.4.zip) into the folder containing `Jalopy.exe`.
 
-Чтобы дать команду, зажмите **V**, наведите курсор на команду и отпустите клавишу.
+To give your companion a command, hold **V**, point at the command you want, then release the key.
 
-## Спутницы
+## Companions
 
-- **Агнес Тахион (Agnes Tachyon)** — предлагает водителю испытать зелья с неожиданными эффектами.
-- **Матиканэ Фукукитару (Matikanefukukitaru)** — гадает на удачу. От прогноза зависят цены в магазине.
-- **Нарита Тайшин (Narita Taishin)** — поначалу держится отстранённо, но в дороге постепенно теплеет к водителю.
-- **Найс Нейча (Nice Nature)** — после ночёвки в мотеле докупает бензин, масло и ремкомплект, если их не хватает.
-- **Свип Тошо (Sweep Tosho)** — может в шутку посигналить или дёрнуть ручник.
-- **Огури Кэп (Oguri Cap)** — на остановках иногда съедает пачку сосисок из багажника.
+- **Agnes Tachyon** offers you potions to test, with unpredictable effects.
+- **Matikanefukukitaru** tells your fortune for the day. Even shop prices depend on the reading.
+- **Narita Taishin** keeps her distance at first, but gradually warms up to you on the road.
+- **Nice Nature** buys fuel, oil, or a repair kit after a motel stay if you’re running short.
+- **Sweep Tosho** sometimes honks the horn or pulls the handbrake for a laugh.
+- **Oguri Cap** sometimes helps herself to a pack of sausages from the trunk when you stop.
 
-Модели, персонажи и их голоса принадлежат компании Cygames.
+The models, characters, and voices belong to Cygames.

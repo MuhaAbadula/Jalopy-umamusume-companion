@@ -1,5 +1,7 @@
 # Спутницы
 
+[English](companions.en.md) · Русский
+
 В проекте шесть спутниц: Agnes Tachyon, Matikanefukukitaru, Narita Taishin, Nice Nature, Sweep Tosho и Oguri Cap. Реплики каждой лежат в её папке в `models/`.
 
 ## Nice Nature
