@@ -1,6 +1,6 @@
 # Umamusume companion — мод для Jalopy
 
-[English](README.md) · Русский
+[English](https://github.com/MuhaAbadula/Jalopy-umamusume-companion#umamusume-companion-for-jalopy) · Русский
 
 Вместо дяди с вами в «Лайке» поедет одна из шести героинь Umamusume.
 
